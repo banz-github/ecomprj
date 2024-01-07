@@ -1,0 +1,60 @@
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+        <main>
+            <!-- END OF INSIGHTS -->
+            <div class="recent-orders"> <!-- Make a new css -->
+                <h2>Profiles | Customers</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th> </th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>Customer Type</th>
+                                <th>Phone Number</th>
+                                <th>Verified</th>
+                                <th>Active</th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {% for cp in customers %}
+                            <tr>
+                                {% if cp.image %}
+                                <td style="text-align: center;"><img src="{{ cp.image.url }}" alt="" style="height: 3.2em; width: 3.2em; margin: auto;" /></td>
+                                {% else %}
+                                    <td>No Image</td>
+                                {% endif %}
+                                <td>{{cp.last_name}}</td>
+                                <td>{{cp.first_name}}</td>
+                                <td>{{cp.customerType}}</td>
+                                <td>{{cp.phone}}</td>
+
+                                {% if cp.verified == True %}
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+                                
+                                {% if cp.active == True %}
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+
+                                
+
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="#"  id="show-all-orders">Show All</a> <!-- self suggestion doblehin ung page-->
+            </div>
+        </main>
+
+        {% endblock content %}

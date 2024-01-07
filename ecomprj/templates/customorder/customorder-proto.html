@@ -1,0 +1,260 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+{% load humanize %}
+
+<style>
+    
+    .flex-container {
+        display: flex;
+        width: 100%;
+    }
+
+    .flex-container > div {
+        flex: 1;
+        text-align: center;
+        border: 1px solid #000;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .contact-from-area {
+        {% comment %} border: 2px solid #000; /* This sets a 2px solid black border */ {% endcomment %}
+        padding: 20px; /* Optional: Adds some padding inside the border */
+    }
+    
+    /* Add this to your CSS file */
+    .form-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch; /* Ensure both columns take up the same height */
+        width: 100%; /* Set the width to 100% to ensure it doesn't exceed the available space */
+    }
+    /* You can remove the width: 125% to prevent overlap */
+    
+    
+    .card {
+        max-width: 100%;
+    }
+    
+    /* Add this to your CSS file */
+    .fixed-size-box {
+        width: 100%;
+        height: 100%; /* Set the height to 100% to ensure it takes the entire height */
+        {% comment %} border: 2px solid black; {% endcomment %}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    
+    .left-container {
+        width: 50%;
+        padding-right: 10px; /* Add spacing between left and right containers */
+    }
+
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    /* Add any other custom styling here */
+    
+
+    .contact-form-style select {
+        height: 50px; /* Adjust the height as needed */
+        width: 100%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 15px; /* Add spacing between elements */
+        border-radius: 5px; /* Add rounded corners */
+    }
+
+    .textarea-style textarea {
+        height: 150px; /* Adjust the height as needed */
+        width: 100%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 15px; /* Add spacing between elements */
+        border-radius: 5px; /* Add rounded corners */
+    }
+
+    .submit {
+        background-color: #007BFF; /* Button background color */
+        color: #fff; /* Button text color */
+        border: none;
+        padding: 15px 30px;
+        cursor: pointer;
+        border-radius: 5px; /* Add rounded corners to the button */
+    }
+
+    /* Add any other custom styling here */
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<main class="main pages">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                <span></span> Pages <span></span> Contact
+            </div>
+        </div>
+    </div>
+    <div class="page-content pt-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-10 col-lg-12 m-auto">
+                    <section class="mb-50">
+                        <div class="row">
+                            <div class="col-xl-20">
+                                <h5 class="text-brand mb-10">Ataiza's Customizer</h5>
+                                <h2 class="mb-10">Customize your order (PROTOTYPE)</h2>
+                                <p class="text-muted mb-30 font-sm contact_us_p">Please keep in mind that the actual appearance, color, and texture may vary.</p>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="contact-from-area padding-20-row-col">
+                                                <div class="card-body">
+                                                    <img id="product-type-image" src="" alt="Selected Product Type Image">
+                                                    <!-- Content for your card goes here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                
+                                        <div class="col-md-6 col-lg-8">
+                                            <div class="contact-from-area padding-20-row-col">
+                                                <form class="contact-form-style mt-30" id="contact-form-ajax" action="" method="POST">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 mb-20">
+                                                            <div class="input-style">
+                                                                <select name="service_type" id="service_type" placeholder="Select Service Type">
+                                                                    <option value="" disabled selected>Select Service Type</option>
+                                                                    {% for choice in service_choices %}
+                                                                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                
+                                                        <div class="col-lg-6 col-md-6 mb-20">
+                                                            <div class="input-style">
+                                                                <select name="product_type" id="product_type" placeholder="Select Product Type">
+                                                                    <option value="" disabled selected>Select Product Type</option>
+                                                                    {% for product_type in product_types %}
+                                                                        <option value="{{ product_type.id }}">{{ product_type.title }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 mb-20">
+                                                            <div class="input-style">
+                                                                <select name="category" id="category" placeholder="Select Category">
+                                                                    <option value="" disabled selected>Select Category</option>
+                                                                    {% for category in categories %}
+                                                                        <option value="{{ category.id }}">{{ category.title }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                
+                                                        <div class="col-lg-6 col-md-6 mb-20">
+                                                            <div class="input-style">
+                                                                <select name="swatch" id="swatch" placeholder="Select Swatch">
+                                                                    <option value="" disabled selected>Select Swatch</option>
+                                                                    {% for swatch in swatches %}
+                                                                        <option value="{{ swatch.id }}">{{ swatch.title }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                
+                                                        <div class="col-lg-6 col-md-6 mb-20">
+                                                            <div class="input-style">
+                                                                <select name="swatch_color" id="swatch_color" placeholder="Select Swatch Color">
+                                                                    <option value="" disabled selected>Select Swatch Color</option>
+                                                                    <option value="{{ custom_product.swatch_color.id }}">{{ custom_product.swatch_color.color }}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-12 col-md-12 mb-20">
+                                                            <div class="textarea-style">
+                                                                <textarea name="note" id="note" placeholder="Additional notes or comments"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-12 col-md-12">
+                                                            <div class="button-container">
+                                                                <button class="submit submit-auto-width" type="submit">Update Changes</button>
+                                                                <button class="submit submit-auto-width" type="submit">Submit Order</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <p class="form-messege"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                            <div class="col-lg-4 pl-50 d-lg-block d-none">
+                                <img class="border-radius-15 mt-50" src="{% static 'assets/imgs/page/contact-2.png' %}" alt="" />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<script>
+    $(document).ready(function () {
+        // Get references to the select and right-container elements
+        const productTypeSelect = $('#product_type');
+        const productTypeImage = $('#product-type-image'); // Updated this line
+
+        // Add an event listener to the select element
+        productTypeSelect.on('change', function () {
+            const selectedOption = $(this).find('option:selected');
+
+            // Check if a valid option is selected
+            if (selectedOption.val()) {
+                const productTypeId = selectedOption.val();
+
+                // Make an AJAX request to retrieve the product type image
+                $.ajax({
+                    type: 'GET',
+                    url: '/get_product_type_image/',  // Replace with the actual URL for retrieving images
+                    data: { product_type_id: productTypeId },
+                    success: function (response) {
+                        // Update the product type image source
+                        productTypeImage.attr('src', response.image_url); // Updated this line
+                    },
+                    error: function () {
+                        console.log('Error loading product type image.');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+{% endblock content %}
+

@@ -1,0 +1,47 @@
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+        <main>
+            <!-- END OF INSIGHTS -->
+            <div class="recent-orders">
+                <h2>Recent Orders</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Orders</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Payment Status</th>
+                                <th>Total</th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {% for o in order_list %}
+                            <tr>
+                                <td>INVOICE_NO-{{o.id}}</td>
+                                <td>{{o.order_date}}</td>
+                                <td>{{o.product_status|title}}</td>
+                                {% if o.paid_status == True %}
+                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+                                <td>{{o.price|floatformat:2|intcomma}}</td>
+                                <td><a href="{% url 'core:order-detail' o.id %}" class="primary">View</a></td>
+                                {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
+
+                                <td class="warning">Pending</td>
+                                <td class="primary">Details</td> {% endcomment %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="#"  id="show-all-orders">Show All</a> <!-- self suggestion doblehin ung page-->
+            </div>
+        </main>
+
+        {% endblock content %}
