@@ -4,6 +4,12 @@ from userauths.models import Profile
 class ProductType(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='product_type/', null=True, blank=True)
+
+    fabric_yard = models.DecimalField(max_digits=10, decimal_places=2) #Not migrated yet
+    foam_amount = models.DecimalField(max_digits=10, decimal_places=2) #Not migrated yet
+
+
+
     def __str__(self):
         return self.name
 
@@ -11,6 +17,11 @@ class Material(models.Model):
     name = models.CharField(max_length=100)
     product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_type/material', null=True, blank=True)
+
+    fabric_peryard_price = models.DecimalField(max_digits=10, decimal_places=2) #Not migrated yet
+    foam_percubicft_price = models.DecimalField(max_digits=10, decimal_places=2) #Not migrated yet
+
+
     def __str__(self):
         return f"{self.name} - {self.product_type.name}"
 
