@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Order Summary</title>
+    <!-- Add any additional styles or scripts here -->
+</head>
+<body>
+
+<div>
+    <h1>Custom Order Summary</h1>
+
+    <!-- Display Product Type -->
+    <p><strong>Product Type:</strong> {{ product_type }}</p>
+
+    <!-- Display Material -->
+    <p><strong>Material:</strong> {{ material_name }}</p>
+
+    <!-- Display Color -->
+    <p><strong>Color:</strong> {{ color_name }}</p>
+
+    <!-- Display Color Image -->
+    {% if color.image %}
+        <p><strong>Color Image:</strong></p>
+        <img src="{{ color.image.url }}" style="max-width: 300px; max-height: 300px;">
+    {% else %}
+        <p>No image available for this color.</p>
+    {% endif %}
+
+    <!-- Add any additional information you want to display -->
+
+</div>
+
+</body>
+</html>

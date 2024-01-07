@@ -113,18 +113,7 @@
                 // Log the selected product type to the console
                 console.log('Selected Product Type:', productType);
     
-                // Redirect to the next page with the formatted material name and product type
-                //window.location.href = `/choose_color_x/${productType.toLowerCase()}/${selectedProductMaterial.toLowerCase()}/`;
-                
-                //BELOW IS KINDA LOOKS RIGHT, WRITTEN BY ME
-                //window.location.href = `/choose_color_x/${productType.toLowerCase()}/${selectedProductMaterial.toLowerCase()}/`;
-
-                //window.location.href = `/choose_color_x/${productType.toLowerCase()}/${selectedProductMaterial.toLowerCase()}/`;
-                
-                //works already (only on 1 word)
-                //window.location.href = `../choose_color_x/${productType.toLowerCase()}/${selectedProductMaterial.toLowerCase()}/`;
-
-
+ 
                 //works on two words
                 window.location.href = `../choose_color_x/${productType.toLowerCase()}/${selectedProductMaterial.toLowerCase().replace(/\s/g, '_')}/`;
 

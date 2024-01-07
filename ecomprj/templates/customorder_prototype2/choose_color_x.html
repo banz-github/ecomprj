@@ -101,7 +101,7 @@
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <script src="{% static 'assets/slider/script.js' %}"></script>
 
-    <script>
+    {% comment %} <script>
         document.addEventListener('DOMContentLoaded', function () {
             const nextButton = document.getElementById('nextButton');
     
@@ -121,7 +121,37 @@
                 console.log('Summary:', `Product Type: ${productType}, Material: ${productMaterial} and Color: ${selectedProductMaterialColor}`);
             });
         });
+    </script> {% endcomment %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nextButton = document.getElementById('nextButton');
+    
+            nextButton.addEventListener('click', function() {
+                // Get the selected product type
+                const productType = '{{ product_type }}';
+                console.log('Selected Product Type:', productType);
+    
+                // Get the selected product material
+                const productMaterial = '{{ material_name }}';
+                console.log('Selected Product Material:', productMaterial);
+    
+                // Get the selected product color (adjust the selector accordingly)
+                const selectedProductColor = document.querySelector('.swiper-slide-active .food-name').textContent.trim();
+                console.log('Selected Product Color:', selectedProductColor);
+    
+                // Replace spaces with underscores
+                const encodedProductMaterial = productMaterial.toLowerCase().replace(/\s/g, '_');
+                const encodedSelectedProductColor = selectedProductColor.toLowerCase().replace(/\s/g, '_');
+    
+                // Redirect to customorder_details.html with the selected parameters
+                window.location.href = `/customorder_prototype2/custom_order_details/${productType.toLowerCase()}/${encodedProductMaterial}/${encodedSelectedProductColor}/`;
+            });
+        });
     </script>
+    
+    
+    
     
     
 
