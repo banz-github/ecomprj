@@ -44,6 +44,9 @@ class FoamType(models.Model):
     name = models.CharField(max_length=100)
     foam_percubicft_price = models.DecimalField(max_digits=10, decimal_places=2) #Foam price per cubic feet (650)  (1 cubic feet is 44W x 80L x1/2H)
     image = models.ImageField(upload_to='foam_type', null=True, blank=True)
+
+    description = models.CharField(max_length=100, null=True, blank=True)
+
     def __str__(self):
         return self.name
 class CustomizationOrder(models.Model):
@@ -54,7 +57,7 @@ class CustomizationOrder(models.Model):
     foam_type = models.ForeignKey(FoamType, on_delete=models.CASCADE)
 
     qty = models.IntegerField(default=1)
-
+    ##############date
 
     customer_notes = models.TextField(null=True, blank=True, default="") #check muna ung sa messaging before imigrate
     

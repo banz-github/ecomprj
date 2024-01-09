@@ -1,0 +1,133 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customizer | Choose Foam</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{% static 'assets/slider/style.css' %}">
+    <script src="{% static 'assets/slider/script.js' %}"></script>
+
+    <style>
+        .next-button-container {
+            text-align: center;
+            margin-top: -1rem;
+        }
+
+        .next-button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        .swiper-wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+    
+        .swiper-slide {
+      /* Optional: Adjust margin to add spacing between slides */
+            margin: 0 10px;
+            border: 2px solid transparent; /* Add initial border styling */
+            border-radius: 8px; /* Adjust the corner's radius as needed */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+        }
+    
+        .swiper-slide.selected {
+            border-color: #fff; /* Change border color to white when selected */
+            box-shadow: 0 0 10px #383838; /* Add a subtle white glow effect */
+        }
+    
+    
+        .tranding-slide-img img {
+          /* Optional: Adjust max-width to control the maximum width of the images */
+          max-width: 100%;
+          height: auto;
+          background-color: rgb(197, 197, 197);
+        }
+    
+        @media (max-width: 425px) {
+          .swiper-slide {
+            width: 100%; /* Make each slide take up full width on smaller screens */
+          }
+        }
+      </style>
+
+
+</head>
+
+<body>
+    <section id="tranding">
+        <div class="container">
+            <h3 class="text-center section-heading" >Choose What Foam</h3>
+            <p class="disclaimer" >*Please note that the generated image is a visual representation. The actual product colors and textures may vary due to differences in monitors and screens.</p>
+        </div>
+
+
+
+        <div class="container">
+            <div class="swiper tranding-slider">
+                <div class="swiper-wrapper">
+                    {% for ft in foam_types %}
+                    <!-- Slide 1 -->
+                    <div class="swiper-slide tranding-slide" onclick="selectSlide(this)">
+                      <div class="tranding-slide-img">
+                        <img src="{{ft.image.url}}" alt="Tranding">
+                      </div>
+                      <div class="tranding-slide-content">
+                        <h1 class="food-price">{{ft.description}}</h1>
+                        <div class="tranding-slide-content-bottom">
+                          <h2 class="food-name">{{ft.name}}</h2>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <!-- Slide 2 -->
+                    
+                  </div>
+
+
+
+            <div class="next-button-container">
+                <button class="next-button" id="nextButton">Next</button>
+            </div>
+
+
+        </div>
+    </section>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    {% comment %} <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script> {% endcomment %}
+    <script src="{% static 'assets/slider/script.js' %}"></script> 
+
+    <script>
+        function selectSlide(element) {
+          // Remove 'selected' class from all slides
+          var slides = document.querySelectorAll('.swiper-slide');
+          slides.forEach(function (slide) {
+            slide.classList.remove('selected');
+          });
+    
+          // Add 'selected' class to the clicked slide
+          element.classList.add('selected');
+        }
+      </script>
+
+
+    
+    
+
+</body>
+
+</html>

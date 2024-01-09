@@ -1,10 +1,14 @@
 from django.urls import path
-from customorder_prototype2.views import choose_product_type, choose_material, choose_color, choose_material_x, choose_color_x,custom_details
+from customorder_prototype2.views import choose_product_type,choose_foam_x, choose_material, choose_color, choose_material_x, choose_color_x,custom_details
 
 product_types = ['bed', 'chair', 'sofa']  
 
 urlpatterns = [
     path('choose-product-type/', choose_product_type, name='choose_product_type'),
+
+    path('choose_foam_x/', choose_foam_x, name='choose_foam_x' ),
+
+
     path('choose-material/<slug:product_type>/', choose_material, name='choose_material'),
     path('choose-color/<int:material_id>/', choose_color, name='choose_color'),
 

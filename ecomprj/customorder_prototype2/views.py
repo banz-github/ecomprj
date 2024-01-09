@@ -3,12 +3,21 @@
 
 from django.shortcuts import render, HttpResponse
 from django.http import Http404
-from .models import ProductType, Material, Color
+from .models import ProductType, Material, Color,FoamType
 from urllib.parse import unquote
 
 def choose_product_type(request):
     product_types = ProductType.objects.all()
     return render(request, 'customorder_prototype2/choose_product_type.html', {'product_types': product_types})
+
+
+#bago
+def choose_foam_x(request):
+
+    foam_types = FoamType.objects.all()
+
+    return render(request, 'customorder_prototype2/choose_foam_x.html',{'foam_types': foam_types})
+
 
 def choose_material(request, product_type):
     product_type = product_type.capitalize()  # Capitalize the product type for consistency
