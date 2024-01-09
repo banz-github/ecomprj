@@ -80,7 +80,7 @@ class CustomizationOrder(models.Model):
     #Estimation
 
     #customer na umorder 
-    Profile = models.ForeignKey(Profile, on_delete=models.CASCADE) #customer na umorder
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE) #customer na umorder
     #phone = models.ForeignKey(Profile) #
     #address = models.ForeignKey(Address)
 

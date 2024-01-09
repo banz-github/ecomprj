@@ -1,10 +1,12 @@
 
 # views.py
 
-from django.shortcuts import render, HttpResponse
-from django.http import Http404
-from .models import ProductType, Material, Color,FoamType
+from django.shortcuts import render, HttpResponse, redirect
+from django.http import Http404, HttpResponseServerError
+from .models import ProductType, Material, Color,FoamType, CustomizationOrder
+from userauths.models import User,Profile
 from urllib.parse import unquote
+from django.contrib import messages
 
 def choose_product_type(request):
     product_types = ProductType.objects.all()
@@ -86,16 +88,18 @@ def choose_color_x(request, product_type, foam_types ,material_name):
 
     return render(request, 'customorder_prototype2/choose_color_x.html', {'colors': colors, 'product_type': product_type,'foam_types': foam_types, 'material_name': material_name})
 
-def custom_details(request, product_type,foam_types, material_name, color_name):
+
+#@login_required
+def custom_details(request, product_type, foam_types, material_name, color_name):
     product_type = product_type.upper()
     foam_types = foam_types.upper()
-    material_name = material_name.upper()  # Convert material name to uppercase
+    material_name = material_name.upper()
     color_name = color_name.upper()
 
-    material_name = material_name.replace('_', ' ')  # Replace underscores with spaces
+    material_name = material_name.replace('_', ' ')
     material_name = unquote(material_name)
 
-    color_name = color_name.replace('_', ' ')  # Replace underscores with spaces
+    color_name = color_name.replace('_', ' ')
     color_name = unquote(color_name)
 
     print('Reached customorder_details view')
@@ -105,20 +109,15 @@ def custom_details(request, product_type,foam_types, material_name, color_name):
     print('Received color_name:', color_name)
 
     product_type_instance = ProductType.objects.get(name=product_type)
-
     foam_type_instance = FoamType.objects.get(name=foam_types)
-
-    # Get the Material instance based on the name and product type
     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
 
-    # Get the color instance based on the name and material
     try:
         color_instance = Color.objects.get(name=color_name, material=material_instance)
 
         # Debugging information
         print('Color Image Path:', color_instance.image.url)
 
-        # Get all colors related to the specified material
         colors = Color.objects.filter(material=material_instance)
 
         context = {
@@ -127,13 +126,63 @@ def custom_details(request, product_type,foam_types, material_name, color_name):
             'material_name': material_name,
             'color_name': color_name,
             'color': color_instance,
+            'user_profile': request.user.profile,
         }
 
         return render(request, 'customorder_prototype2/customorder_details.html', context)
-    
+
     except Color.DoesNotExist:
-        # Handle Color.DoesNotExist exception
         raise Http404("Color does not exist")
+
+#The below is working
+# def custom_details(request, product_type,foam_types, material_name, color_name):
+#     product_type = product_type.upper()
+#     foam_types = foam_types.upper()
+#     material_name = material_name.upper()  # Convert material name to uppercase
+#     color_name = color_name.upper()
+
+#     material_name = material_name.replace('_', ' ')  # Replace underscores with spaces
+#     material_name = unquote(material_name)
+
+#     color_name = color_name.replace('_', ' ')  # Replace underscores with spaces
+#     color_name = unquote(color_name)
+
+#     print('Reached customorder_details view')
+#     print('Received product_type:', product_type)
+#     print('Received foam_types:', foam_types)
+#     print('Received material_name:', material_name)
+#     print('Received color_name:', color_name)
+
+#     product_type_instance = ProductType.objects.get(name=product_type)
+
+#     foam_type_instance = FoamType.objects.get(name=foam_types)
+
+#     # Get the Material instance based on the name and product type
+#     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
+
+#     # Get the color instance based on the name and material
+#     try:
+#         color_instance = Color.objects.get(name=color_name, material=material_instance)
+
+#         # Debugging information
+#         print('Color Image Path:', color_instance.image.url)
+
+#         # Get all colors related to the specified material
+#         colors = Color.objects.filter(material=material_instance)
+
+#         context = {
+#             'product_type': product_type,
+#             'foam_types': foam_types,
+#             'material_name': material_name,
+#             'color_name': color_name,
+#             'color': color_instance,
+#         }
+
+#         return render(request, 'customorder_prototype2/customorder_details.html', context)
+    
+#     except Color.DoesNotExist:
+#         # Handle Color.DoesNotExist exception
+#         raise Http404("Color does not exist") ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 
 # def custom_details(request, product_type, material_name, color_name): 
 #     product_type = product_type.upper()
@@ -214,3 +263,55 @@ def custom_details(request, product_type,foam_types, material_name, color_name):
 #     except Material.DoesNotExist:
 #         # Handle Material.DoesNotExist exception
 #         raise Http404("Material does not exist")
+def submit_order(request, product_type, foam_types, material_name, color_name):
+    try:
+        # Retrieve model instances
+        product_type_instance = ProductType.objects.get(name=product_type)
+        foam_type_instance = FoamType.objects.get(name=foam_types)
+        material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
+        color_instance = Color.objects.get(name=color_name, material=material_instance)
+
+        if request.method == 'POST':
+            try:
+                # Extract form data from the POST request
+                quantity = request.POST.get('quantity')
+                customer_notes = request.POST.get('customer_notes')
+
+                # Get the user's profile
+                profile = request.user.profile
+
+                # Create a new CustomizationOrder instance
+                order = CustomizationOrder.objects.create(
+                    product_type=product_type_instance,
+                    foam_type=foam_type_instance,
+                    material=material_instance,
+                    color=color_instance,
+                    qty=quantity,
+                    customer_notes=customer_notes,
+                    profile=profile,  # Set the profile associated with the order
+                    # Add other fields as needed
+                    # ...
+                )
+
+                # Additional processing or redirect to success page
+                messages.success(request, 'Order submitted successfully!')
+                return redirect('success_page')  # Replace 'success_page' with the actual URL name
+
+            except Exception as e:
+                # Handle other exceptions
+                messages.error(request, f'Error submitting order: {str(e)}')
+                return HttpResponseServerError(f'Error submitting order: {str(e)}')
+        else:
+            # Handle the case where the form is accessed via GET request
+            messages.error(request, 'Error submitting order. Please try again.')
+            return HttpResponseServerError('Error submitting order. Please try again.')
+
+    except ProductType.DoesNotExist:
+        messages.error(request, f'Error submitting order. ProductType {product_type} does not exist.')
+        return redirect('error_page')  # Replace 'error_page' with the actual URL name for an error page
+
+def success_page(request):
+    return render(request, 'customorder_prototype2/success_page.html')
+
+def error_page(request):
+    return render(request, 'customorder_prototype2/error_page.html')

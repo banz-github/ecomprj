@@ -33,7 +33,44 @@
         <p>No image available for this color.</p>
     {% endif %}
 
-    <!-- Add any additional information you want to display -->
+    <!-- READ-->
+    <!-- additional information I want to display -->
+
+    <!-- Insert a qty field here, 4 is the max -->
+
+    <!-- text box for Customer notes -->
+    <!--A radio button of Make or Repair -->
+    <!-- Image upload for receipt_img -->
+
+    <!-- Show the profile of who is making the order -->
+
+    
+    <form method="post" action="{% url 'submit_order' product_type=product_type foam_types=foam_types material_name=material_name color_name=color_name %}">
+        <!-- form contents --> 
+        {% csrf_token %}
+        
+        <!-- Quantity Field -->
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" min="1" max="4" required>
+
+        <!-- Customer Notes -->
+        <label for="customer_notes">Customer Notes:</label>
+        <textarea name="customer_notes" rows="4" cols="50"></textarea>
+
+        <!-- Make or Repair Radio Buttons -->
+        <label>Make or Repair:</label>
+        <label><input type="radio" name="make_or_repair" value="MAKE" checked> Make</label>
+        <label><input type="radio" name="make_or_repair" value="REPAIR"> Repair</label>
+
+        <!-- Image Upload for Receipt -->
+        <label for="receipt_img">Receipt Image:</label>
+        <input type="file" name="receipt_img" accept="image/*">
+
+        <!-- Profile of the Person Making the Order -->
+        <p><strong>Ordered by:</strong> {{ request.user.profile }}</p>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit Order</button>
 
 </div>
 
