@@ -67,17 +67,19 @@ class CustomizationOrder(models.Model):
     #Progress - Percentage
     percentage_progress = models.CharField(max_length=50, default="0")
 
+    order_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     #Down payment status
     with_downpayment = models.BooleanField(default=False)
 
     #downpayment receipt submission
     receipt_img = models.ImageField(upload_to='receipt/', null=True, blank=True)
+    date_approved = models.DateTimeField(auto_now_add=False, null=True, blank=True)
 
     
     #Estimation
 
-    #customer na umorder
+    #customer na umorder 
     Profile = models.ForeignKey(Profile, on_delete=models.CASCADE) #customer na umorder
     #phone = models.ForeignKey(Profile) #
     #address = models.ForeignKey(Address)
