@@ -6,6 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Order Summary</title>
     <!-- Add any additional styles or scripts here -->
+
+    <style>
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .order-details {
+            margin-bottom: 20px;
+        }
+
+        .color-image {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .order-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .order-form input,
+        .order-form textarea,
+        .order-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .radio-group {
+            margin-bottom: 10px;
+        }
+
+        .submit-btn {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -44,8 +106,24 @@
 
     <!-- Show the profile of who is making the order -->
 
+    <script>
+        function validateForm() {
+            // Get values from form fields
+            var quantity = document.getElementById("quantity").value;
+            var customerNotes = document.getElementById("customer_notes").value;
     
-    <form method="post" action="{% url 'submit_order' product_type=product_type foam_types=foam_types material_name=material_name color_name=color_name %}">
+            // Check if any field is empty
+            if (quantity === "" || customerNotes === "") {
+                // Show a pop-up warning
+                alert("Please complete all the fields.");
+                return false; // Prevent form submission
+            }
+    
+            // If all fields are filled, allow form submission
+            return true;
+        }
+    </script>
+    <form method="post" action="{% url 'submit_order' product_type=product_type foam_types=foam_types material_name=material_name color_name=color_name %}" onsubmit="return validateForm()">
         <!-- form contents --> 
         {% csrf_token %}
         
