@@ -131,6 +131,9 @@
                 // Get the selected product type
                 const productType = '{{ product_type }}';
                 console.log('Selected Product Type:', productType);
+
+                const foamType = '{{ foam_types }}';
+                console.log('Selected Foam Type:', foamType);
     
                 // Get the selected product material
                 const productMaterial = '{{ material_name }}';
@@ -145,7 +148,7 @@
                 const encodedSelectedProductColor = selectedProductColor.toLowerCase().replace(/\s/g, '_');
     
                 // Redirect to customorder_details.html with the selected parameters
-                window.location.href = `/customorder_prototype2/custom_order_details/${productType.toLowerCase()}/${encodedProductMaterial}/${encodedSelectedProductColor}/`;
+                window.location.href = `/customorder_prototype2/custom_order_details/${productType.toLowerCase()}/${foamType.toLowerCase()}/${encodedProductMaterial}/${encodedSelectedProductColor}/`;
             });
         });
     </script>

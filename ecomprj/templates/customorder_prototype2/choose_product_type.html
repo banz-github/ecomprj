@@ -1,4 +1,144 @@
+{% comment %} <!-- choose_product_type.html WORKING-->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customizer | Choose What To Customize</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{% static 'assets/slider/style.css' %}">
+    <script src="{% static 'assets/slider/script.js' %}"></script>
+
+  </head>
+
+  <body>
+    <section id="tranding">
+      <div class="container">
+        <h3 class="text-center section-heading" style="margin-top:-5rem">Choose What to Customize</h3>
+        <p class="disclaimer" style="margin-top:-2rem">*Please note that the generated image is a visual representation, and actual product colors and textures may vary due to differences in monitors and screens.</p>
+      </div>
+
+      <style>
+        .disclaimer {
+            text-align:center;
+            font-size: 5px;
+            color: gray;
+            
+        }
+      </style>
+
+      <div class="container">
+        <div class="swiper tranding-slider">
+          <div class="swiper-wrapper">
+            <!-- Slide-start -->
+            <!-- Slide-start -->
+            <!-- Slide-start -->
+            <!-- Slide-start -->
+            {% for pt in product_types %}
+            <div class="swiper-slide tranding-slide">
+              <div class="tranding-slide-img">
+                <img class="productimage" src="{{ pt.image.url }}" alt="Tranding" style="box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); background-color: #999999; padding: 10px; width: 112%;">
+              </div>
+              <div class="tranding-slide-content">
+                <h1 class="food-price">$15</h1>
+                <div class="tranding-slide-content-bottom">
+                  <h2 class="food-name">
+                    {{pt.name}}
+                  </h2>
+                  <h3 class="food-rating">
+                    <span>4.5</span>
+                    <div class="rating">
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                    </div>
+                  </h3>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <!-- Slide-end -->
+            <!-- Slide-start -->
+            <!-- Slide-end -->
+
+          </div>
+
+          <div class="tranding-slider-control">
+            <div class="swiper-button-prev slider-arrow">
+              <ion-icon name="arrow-back-outline"></ion-icon>
+            </div>
+            <div class="swiper-button-next slider-arrow">
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+          <!-- Add Next Button -->
+          
+          
+        
+
+        </div>
+
+        <div class="next-button-container">
+            <button class="next-button" id="nextButton">Next</button>
+        </div>
+
+        <style>
+            .next-button-container {
+                text-align: center;
+                margin-top: -1rem; /* Adjust as needed */
+            }
+            
+            .next-button {
+                padding: 10px 15px;
+                background-color: #3498db;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            
+        </style>
+
+      </div>
+    </section>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script src="{% static 'assets/slider/script.js' %}"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const nextButton = document.getElementById('nextButton');
+  
+          // Add click event listener to the "Next" button
+          nextButton.addEventListener('click', function() {
+            // Get the currently selected product type
+            const selectedProductType = document.querySelector('.swiper-slide-active .food-name').textContent.trim();
+  
+            // Log the selected product type to the console
+            console.log('Selected Product Type:', selectedProductType);
+  
+            // For testing purposes, you can remove the above line and use the following line
+            // to see the log in the browser's console before redirecting
+            // alert('Selected Product Type: ' + selectedProductType);
+  
+            // Redirect to the next page with the selected product type
+            // window.location.href = `/next-page/${selectedProductType.toLowerCase()}/`;
+          });
+        });
+      </script>
+
+  </body>
+
+</html> {% endcomment %}
 
 {% load static %}
 <!DOCTYPE html>
@@ -111,7 +251,7 @@
                 console.log('Selected Product Type:', selectedProductType);
 
                 // Redirect to the next page with the selected product type
-                window.location.href = `/customorder_prototype2/choose_material_${selectedProductType.toLowerCase()}/`;
+                window.location.href = `/customorder_prototype2/choose_foam_${selectedProductType.toLowerCase()}/`;
             });
         });
     </script>

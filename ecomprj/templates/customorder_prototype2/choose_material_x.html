@@ -110,12 +110,14 @@
                 // Get the product type from the URL
                 const productType = '{{ product_type }}' // Update the index to match the correct position
     
+                const foamType = '{{ foam_types }}'
+
                 // Log the selected product type to the console
                 console.log('Selected Product Type:', productType);
-    
+                console.log('Selected Foam Type:', foamType);
  
                 //works on two words
-                window.location.href = `../choose_color_x/${productType.toLowerCase()}/${selectedProductMaterial.toLowerCase().replace(/\s/g, '_')}/`;
+                window.location.href = `/customorder_prototype2/choose_color_x/${productType.toLowerCase()}/${foamType.toLowerCase()}/${selectedProductMaterial.toLowerCase().replace(/\s/g, '_')}/`;
 
             });
         });

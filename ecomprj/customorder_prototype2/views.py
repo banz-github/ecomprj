@@ -12,17 +12,18 @@ def choose_product_type(request):
 
 
 #bago
-def choose_foam_x(request):
-
+def choose_foam_x(request, product_type):
+    product_type = product_type.upper()
     foam_types = FoamType.objects.all()
 
-    return render(request, 'customorder_prototype2/choose_foam_x.html',{'foam_types': foam_types})
+    return render(request, 'customorder_prototype2/choose_foam_x.html',{'product_type': product_type, 'foam_types': foam_types})
 
 
-def choose_material(request, product_type):
+def choose_material(request, product_type, foam_types ):
+    foam_types = FoamType.objects.all()
     product_type = product_type.capitalize()  # Capitalize the product type for consistency
     materials = Material.objects.filter(product_type__name=product_type)
-    return render(request, 'choose_material.html', {'materials': materials, 'product_type': product_type})
+    return render(request, 'choose_material.html', {'materials': materials, 'product_type': product_type, 'foam_types': foam_types})
 
 ###############HARD WAY. 
 # def choose_material_bed(request, product_type):
@@ -30,19 +31,23 @@ def choose_material(request, product_type):
 #     materials = Material.objects.filter(product_type__name=product_type)
 #     return render(request, 'choose_material_bed.html', {'materials': materials, 'product_type': product_type})
 
-def choose_material_x(request, product_type):
+def choose_material_x(request, product_type, foam_types):
     product_type = product_type.upper()
+    foam_types = foam_types.upper()
     print('Product Type:', product_type)
+    print('Foam Type:', foam_types)
     # Assuming the product_type is provided as a parameter, capitalize it for consistency
     
 
     # Get the ProductType instance based on the name
     product_type_instance = ProductType.objects.get(name=product_type)
 
+    foam_type_instance = FoamType.objects.get(name=foam_types)
+
     # Get all materials related to the specified product type
     materials = Material.objects.filter(product_type=product_type_instance)
 
-    return render(request, 'customorder_prototype2/choose_material_x.html', {'materials': materials, 'product_type': product_type})
+    return render(request, 'customorder_prototype2/choose_material_x.html', {'materials': materials, 'product_type': product_type, 'foam_types': foam_types})
 
 
 ######################## CHOOSE COLOR
@@ -54,8 +59,9 @@ def choose_color(request, material_id):
 
 ######################################
 
-def choose_color_x(request, product_type, material_name):
+def choose_color_x(request, product_type, foam_types ,material_name):
     product_type = product_type.upper()
+    foam_types = foam_types.upper()
     material_name = material_name.upper()  # Convert material name to uppercase
 
 
@@ -64,10 +70,13 @@ def choose_color_x(request, product_type, material_name):
 
     print('Reached choose_color_x view')
     print('Received product_type:', product_type)
+    print('Received foam_types:', foam_types)
     print('Received material_name:', material_name)
 
     # Get the ProductType instance based on the name
     product_type_instance = ProductType.objects.get(name=product_type)
+
+    foam_type_instance = FoamType.objects.get(name=foam_types)
 
     # Get the Material instance based on the name and product type
     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
@@ -75,10 +84,11 @@ def choose_color_x(request, product_type, material_name):
     # Get all colors related to the specified material
     colors = Color.objects.filter(material=material_instance)
 
-    return render(request, 'customorder_prototype2/choose_color_x.html', {'colors': colors, 'product_type': product_type, 'material_name': material_name})
+    return render(request, 'customorder_prototype2/choose_color_x.html', {'colors': colors, 'product_type': product_type,'foam_types': foam_types, 'material_name': material_name})
 
-def custom_details(request, product_type, material_name, color_name):
+def custom_details(request, product_type,foam_types, material_name, color_name):
     product_type = product_type.upper()
+    foam_types = foam_types.upper()
     material_name = material_name.upper()  # Convert material name to uppercase
     color_name = color_name.upper()
 
@@ -90,10 +100,13 @@ def custom_details(request, product_type, material_name, color_name):
 
     print('Reached customorder_details view')
     print('Received product_type:', product_type)
+    print('Received foam_types:', foam_types)
     print('Received material_name:', material_name)
     print('Received color_name:', color_name)
 
     product_type_instance = ProductType.objects.get(name=product_type)
+
+    foam_type_instance = FoamType.objects.get(name=foam_types)
 
     # Get the Material instance based on the name and product type
     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
@@ -110,6 +123,7 @@ def custom_details(request, product_type, material_name, color_name):
 
         context = {
             'product_type': product_type,
+            'foam_types': foam_types,
             'material_name': material_name,
             'color_name': color_name,
             'color': color_instance,
