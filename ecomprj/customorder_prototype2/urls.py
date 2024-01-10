@@ -1,5 +1,5 @@
 from django.urls import path
-from customorder_prototype2.views import choose_product_type,choose_foam_x, error_page, success_page, choose_material_x, choose_color_x,custom_details, submit_order
+from customorder_prototype2.views import customization_order_analytics, choose_product_type,choose_foam_x, error_page, success_page, choose_material_x, choose_color_x,custom_details, submit_order
 
 product_types = ['bed', 'chair', 'sofa']  
 
@@ -20,4 +20,8 @@ urlpatterns = [
     #result pages
     path('success-page/', success_page, name='success_page'),
     path('error-page/', error_page, name='error_page'),
+
+    #trial analytics
+    path('trial-analytics/', customization_order_analytics, name='trial_analytics'),
+    
 ]

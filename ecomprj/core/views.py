@@ -23,7 +23,15 @@ from .decorators import allowed_users
 #from pt
 #import pdfkit
 
+#trial for customizationorder
+from django.db.models.functions import TruncMonth
+from customorder_prototype2.models import CustomizationOrder
+#trial for customizationorder
+
+
+
 ##paypal
+
 
 from django.urls import reverse
 from django.conf import settings
@@ -524,11 +532,29 @@ def customer_dashboard(request):
         )
         messages.success(request, "Address Added Successfully")
         return redirect("core:dashboard")
-
+    
     context = {
         "profile" : profile,"orders" : orders,"order_list":order_list, "address":address,"month":month,"total_orders":total_orders,
     }
     return render(request, 'core/dashboard.html',context)
+    
+    #trial muna for customization order
+
+    # Aggregate CustomizationOrder count per month
+    monthly_counts = CustomizationOrder.objects.annotate(month=TruncMonth('order_date')) \
+                          .values('month') \
+                          .annotate(count=Count('co_id'))
+
+    # Prepare data for the chart
+    chart_data = [{'month': entry['month'].strftime('%Y-%m'), 'count': entry['count']} for entry in monthly_counts]
+
+    context2 = {"monthly_counts":monthly_counts,"chart_data":chart_data, }
+
+
+    return render(request, 'core/dashboard.html',context2)
+    #trial muna for customization order 
+
+    
 
 @login_required
 def order_detail(request, id):

@@ -315,3 +315,32 @@ def success_page(request):
 
 def error_page(request):
     return render(request, 'customorder_prototype2/error_page.html')
+
+
+
+    #trial muna for customization order
+from django.shortcuts import render
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+from .models import CustomizationOrder
+from django.http import JsonResponse
+
+from django.forms.models import model_to_dict
+
+def customization_order_analytics(request):
+    custom_order_list = CustomizationOrder.objects.filter(profile=request.user.profile).order_by("-co_id")
+
+    # Convert QuerySet to a list of dictionaries
+    custom_order_data = [model_to_dict(order) for order in custom_order_list]
+
+    # Aggregate CustomizationOrder count per month
+    monthly_counts = CustomizationOrder.objects.annotate(month=TruncMonth('order_date')) \
+                          .values('month') \
+                          .annotate(count=Count('co_id'))
+
+    # Prepare data for the chart
+    chart_data = [{'month': entry['month'].strftime('%Y-%m'), 'count': entry['count']} for entry in monthly_counts]
+
+    # Return JSON response
+    return JsonResponse({'chart_data': chart_data, 'custom_order_list': custom_order_data})
+    #trial muna for customization order 

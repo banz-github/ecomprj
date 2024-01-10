@@ -30,14 +30,14 @@ class Material(models.Model):
 
 
     def __str__(self):
-        return f"{self.name} - {self.product_type.name}"
+        return f"{self.name}" #return f"{self.name} - {self.product_type.name}"
 
 class Color(models.Model):
     name = models.CharField(max_length=100)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_type/colors', null=True, blank=True)
     def __str__(self):
-        return f"{self.name} - {self.material.name} - {self.material.product_type.name}"
+        return f"{self.name}" #return f"{self.name} - {self.material.name} - {self.material.product_type.name}"
     
 
 class FoamType(models.Model):
@@ -89,6 +89,9 @@ class CustomizationOrder(models.Model):
     admin_notes = RichTextUploadingField(null=True, blank=True, default="")
     #Boolean kung archived yung order , default False
     is_hidden = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.co_id
 
 class Analytics(models.Model):
     product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE) # added
