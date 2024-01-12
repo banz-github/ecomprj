@@ -18,7 +18,7 @@ class ProductType(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return self.name 
 
 class Material(models.Model):
     name = models.CharField(max_length=100)
@@ -90,16 +90,93 @@ class CustomizationOrder(models.Model):
     #Boolean kung archived yung order , default False
     is_hidden = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        Analytics.update_analytics(self)
+
+    def delete(self, *args, **kwargs):
+        # Decrement counts in Analytics when a CustomizationOrder instance is deleted
+        Analytics.update_analytics_on_deletion(self)
+        super().delete(*args, **kwargs)    
+
     def __str__(self):
         return self.co_id
-
+    
 class Analytics(models.Model):
-    product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE) # added
-
+    product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
+    foam_type = models.ForeignKey(FoamType, on_delete=models.CASCADE)
 
-    foam_type = models.ForeignKey(FoamType, on_delete=models.CASCADE) # added
+    total_orders_per_month = models.JSONField(default=dict)
+    make_orders = models.PositiveIntegerField(default=0)
+    repair_orders = models.PositiveIntegerField(default=0)
 
-    selection_count = models.PositiveIntegerField(default=0)
+    class Meta:
+        unique_together = ['product_type', 'material', 'color', 'foam_type']
+
+    def __str__(self):
+        return f"{self.product_type} - {self.material} - {self.color} - {self.foam_type}"
+
+    @classmethod
+    def update_analytics(cls, customization_order):
+        if customization_order.pk is None:
+            raise ValueError("The CustomizationOrder instance must be saved before updating analytics.")
+        month_year = customization_order.order_date.strftime('%Y-%m')
+
+        # Get or create Analytics instance for the specific combination
+        analytics_instance, created = cls.objects.get_or_create(
+            product_type=customization_order.product_type,
+            material=customization_order.material,
+            color=customization_order.color,
+            foam_type=customization_order.foam_type,
+        )
+
+        # Initialize total_orders_per_month as an empty dict if it's not set yet
+        analytics_instance.total_orders_per_month = analytics_instance.total_orders_per_month or {}
+
+        # Update total_orders based on order date
+        if month_year not in analytics_instance.total_orders_per_month:
+            analytics_instance.total_orders_per_month[month_year] = 0
+        analytics_instance.total_orders_per_month[month_year] += 1
+
+        # Update make_orders and repair_orders based on make_or_repair field
+        if customization_order.make_or_repair == 'MAKE':
+            analytics_instance.make_orders += 1
+        elif customization_order.make_or_repair == 'REPAIR':
+            analytics_instance.repair_orders += 1
+
+        # Save the changes only if the Analytics instance is not being created
+        if not created:
+            analytics_instance.save()
+
+    @property
+    def total_orders(self):
+        return sum(self.total_orders_per_month.values()) if self.total_orders_per_month else 0
+    @classmethod
+    def update_analytics_on_deletion(cls, customization_order):
+        # Update Analytics counts when a corresponding CustomizationOrder is deleted
+        try:
+            analytics_instance = cls.objects.get(
+                product_type=customization_order.product_type,
+                material=customization_order.material,
+                color=customization_order.color,
+                foam_type=customization_order.foam_type,
+            )
+            month_year = customization_order.order_date.strftime('%Y-%m')
+            if month_year in analytics_instance.total_orders_per_month:
+                analytics_instance.total_orders_per_month[month_year] -= 1
+                if analytics_instance.total_orders_per_month[month_year] == 0:
+                    del analytics_instance.total_orders_per_month[month_year]
+            if customization_order.make_or_repair == 'MAKE':
+                analytics_instance.make_orders = max(0, analytics_instance.make_orders - 1)
+            elif customization_order.make_or_repair == 'REPAIR':
+                analytics_instance.repair_orders = max(0, analytics_instance.repair_orders - 1)
+            analytics_instance.save()
+        except cls.DoesNotExist:
+            # Handle the case where Analytics instance does not exist
+            pass
+    def __str__(self):
+        return f"{self.product_type} - {self.material} - {self.color} - {self.foam_type}"        
+
 

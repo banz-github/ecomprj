@@ -104,10 +104,13 @@ def index(request):
     products = Product.objects.filter(product_status="published", featured=True)
     latest_product = Product.objects.latest('date')  # Assuming you have a 'created_at' field
 
+    for product in products:
+        product.average_rating = ProductReview.objects.filter(product=product).aggregate(Avg('rating'))['rating__avg'] or 0.0
+    
     #top_selling_product = CartOrderItems.objects.annotate(order_count=Sum('item__qty')).order_by('-order_count').first()
     
     context = {
-        "products":products, "latest_product":latest_product,#'top_selling_product': top_selling_product,
+        "products":products, "latest_product":latest_product, #'top_selling_product': top_selling_product, 
     }
 
     return render(request, 'core/index.html', context)
@@ -538,21 +541,7 @@ def customer_dashboard(request):
     }
     return render(request, 'core/dashboard.html',context)
     
-    #trial muna for customization order
 
-    # Aggregate CustomizationOrder count per month
-    monthly_counts = CustomizationOrder.objects.annotate(month=TruncMonth('order_date')) \
-                          .values('month') \
-                          .annotate(count=Count('co_id'))
-
-    # Prepare data for the chart
-    chart_data = [{'month': entry['month'].strftime('%Y-%m'), 'count': entry['count']} for entry in monthly_counts]
-
-    context2 = {"monthly_counts":monthly_counts,"chart_data":chart_data, }
-
-
-    return render(request, 'core/dashboard.html',context2)
-    #trial muna for customization order 
 
     
 

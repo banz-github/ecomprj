@@ -346,7 +346,7 @@
                                                             <h4 class="mb-30">Customer reviews</h4>
                                                             <div class="d-flex mb-30">
                                                                 <div class="product-rate d-inline-block mr-15">
-                                                                    <div class="product-rating" style="width: 90%"></div>
+                                                                    <div class="product-rating" style="width: {{ average_rating.rating|default:0 }}/5 * 100%"></div>
                                                                 </div>
                                                                 <h6>{{ average_rating.rating|floatformat:1 }} out of 5</h6>
                                                             </div>

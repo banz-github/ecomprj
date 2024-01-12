@@ -1,114 +1,94 @@
-{% load static %}<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CustomizationOrder Analytics</title>
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-    <!-- Include Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
+
 </head>
 <body>
 
     <h1>Trial and Error</h1>
 
-    <h2></h2>
-
-    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0">Your Customed Orders</h3>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Custom Order</th>
-                                <th>Product Type</th>
-                                <th>Material</th>
-                                <th>Color</th>
-                                <th>Foam</th>
-                                <th>QTY</th>
-                                <th>Profile</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for co in custom_order_list %}
-                            <tr>
-                                <td>INVOICE_NO-{{co.co_id}} |</td>
-                                <td>{{co.product_type}} |</td>
-                                <td>{{co.material}} |</td>
-                                <td>{{co.color}} |</td>
-                                <td>{{co.foam_type}} |</td>
-                                <td>{{co.qty}} |</td>
-                                <td>{{co.profile}} |</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+    <h2>Your Customed Orders</h2>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Your Customed Orders</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Custom Order</th>
+                            <th>Product Type</th>
+                            <th>Material</th>
+                            <th>Color</th>
+                            <th>Foam</th>
+                            <th>QTY</th>
+                            <th>Profile</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for co in custom_order_list %}
+                        <tr>
+                            <td>INVOICE_NO-{{co.co_id}} |</td>
+                            <td>{{co.product_type}} |</td>
+                            <td>{{co.material}} |</td>
+                            <td>{{co.color}} |</td>
+                            <td>{{co.foam_type}} |</td>
+                            <td>{{co.qty}} |</td>
+                            <td>{{co.profile}} |</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-
-    <canvas id="customizationOrderChart" width="800" height="400"></canvas>
-
+    <!-- Add the Chart here of the analytics-->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3 class="mb-0">Orders per Month</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="ordersChart" style="height:20px;"></canvas>
+        </div>
+    </div>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            fetch('/customorder_prototype2/trial-analytics/')
-                .then(response => response.json())
-                .then(data => {
-                    const chartData = data.chart_data;
-                    const months = chartData.map(data => data.month);
-                    const counts = chartData.map(data => data.count);
-
-                    const ctx = document.getElementById('customizationOrderChart').getContext('2d');
-                    const customizationOrderChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: months,
-                            datasets: [{
-                                label: 'Customization Orders per Month',
-                                data: counts,
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                x: {
-                                    type: 'time',
-                                    time: {
-                                        unit: 'month',
-                                        displayFormats: {
-                                            month: 'MMM YYYY'
-                                        }
-                                    },
-                                    title: {
-                                        display: true,
-                                        text: 'Month'
-                                    }
-                                },
-                                y: {
-                                    beginAtZero: true,
-                                    title: {
-                                        display: true,
-                                        text: 'Number of Orders'
-                                    }
-                                }
-                            },
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching data:', error));
+        // Parse the JSON data from Django view
+        var ordersData = {{ orders_data_json|safe }};
+    
+        // Get the canvas element
+        var ctx = document.getElementById('ordersChart').getContext('2d');
+    
+        // Create a bar chart
+        var ordersChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(ordersData),
+                datasets: [{
+                    label: 'Total Orders',
+                    data: Object.values(ordersData),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
         });
     </script>
 </body>
 </html>
-

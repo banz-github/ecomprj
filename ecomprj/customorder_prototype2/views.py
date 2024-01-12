@@ -263,6 +263,7 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
 #     except Material.DoesNotExist:
 #         # Handle Material.DoesNotExist exception
 #         raise Http404("Material does not exist")
+from datetime import datetime
 def submit_order(request, product_type, foam_types, material_name, color_name):
     try:
         # Retrieve model instances
@@ -288,11 +289,12 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
                     color=color_instance,
                     qty=quantity,
                     customer_notes=customer_notes,
+                    order_date=datetime.now(),
                     profile=profile,  # Set the profile associated with the order
                     # Add other fields as needed
                     # ...
                 )
-
+                order.save()
                 # Additional processing or redirect to success page
                 messages.success(request, 'Order submitted successfully!')
                 return redirect('success_page')  # Replace 'success_page' with the actual URL name
@@ -324,23 +326,21 @@ from django.db.models import Count
 from django.db.models.functions import TruncMonth
 from .models import CustomizationOrder
 from django.http import JsonResponse
-
+import json
 from django.forms.models import model_to_dict
-
 def customization_order_analytics(request):
     custom_order_list = CustomizationOrder.objects.filter(profile=request.user.profile).order_by("-co_id")
 
-    # Convert QuerySet to a list of dictionaries
-    custom_order_data = [model_to_dict(order) for order in custom_order_list]
+    # Calculate total orders per month
+    orders_per_month = custom_order_list.annotate(month=TruncMonth('order_date')).values('month').annotate(count=Count('co_id'))
+    orders_data = {str(entry['month']): entry['count'] for entry in orders_per_month}
 
-    # Aggregate CustomizationOrder count per month
-    monthly_counts = CustomizationOrder.objects.annotate(month=TruncMonth('order_date')) \
-                          .values('month') \
-                          .annotate(count=Count('co_id'))
+    # Debug print to check calculated data
+    print("Orders Data:", orders_data)
 
-    # Prepare data for the chart
-    chart_data = [{'month': entry['month'].strftime('%Y-%m'), 'count': entry['count']} for entry in monthly_counts]
+    # Convert the data to JSON for the chart
+    orders_data_json = json.dumps(orders_data)
 
-    # Return JSON response
-    return JsonResponse({'chart_data': chart_data, 'custom_order_list': custom_order_data})
+    context = {'custom_order_list': custom_order_list, 'orders_data_json': orders_data_json}
+    return render(request, 'customorder_prototype2/trial_analytics.html', context)
     #trial muna for customization order 

@@ -84,6 +84,13 @@ class Vendor(models.Model):
         return self.title
     
 class Product(models.Model):
+    def average_rating(self):
+        reviews = self.reviews.all()
+        if reviews:
+            total_rating = sum(review.rating for review in reviews)
+            return total_rating / len(reviews)
+        return 0  # Return 0 if there are no reviews
+    
     pid = ShortUUIDField(unique=True, length=10, max_length=20, alphabet="abcdefgh12345") #
     
     profile = models.ForeignKey(Profile, on_delete=models.SET_NULL,null=True)
