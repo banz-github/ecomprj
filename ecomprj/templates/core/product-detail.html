@@ -7,13 +7,15 @@
 <script src="cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
 <script src="{% static 'assets/js/prism.js' %}"></script>
 <link rel="stylesheet" href="{% static 'assets/css/prism.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'assets/css/new.css' %}"> {% endcomment %}
+
 
     <main class="main">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
                     <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                    <span></span> <a href="shop-grid-right.html">Vegetables & tubers</a> <span></span> Seeds of Change Organic
+                    <span></span> <a href="shop-grid-right.html">{{p.category.title}}</a> <span></span> {{p.title}}
                 </div>
             </div>
         </div>
@@ -29,9 +31,9 @@
                                             <span class="zoom-icon"><i class="fi-rs-search"></i></span>
                                             <!-- MAIN SLIDES -->
                                             <div class="product-image-slider">
-                                                <figure class="border-radius-10">
+                                                {% comment %} <figure class="border-radius-10">
                                                     <img src="{{p.image.url}}" alt="product image" />
-                                                </figure>
+                                                </figure> {% endcomment %}
                                                 {% for p in p_image %}
                                                 <figure class="border-radius-10">
                                                     <img src="{{p.images.url}}" alt="product image" />
@@ -58,7 +60,7 @@
                                                     <div class="product-rate d-inline-block">
                                                         <div class="product-rating" style="width: 90%"></div>
                                                     </div>
-                                                    <span class="font-small ml-5 text-muted"> (32 reviews)</span>
+                                                    <span class="font-small ml-5 text-muted"> (TOEDIT reviews)</span>
                                                 </div>
                                             </div>
                                             <div class="clearfix product-price-cover">
@@ -93,16 +95,30 @@
                                                 </div>-->
                                                 
                                                     <input type="number" value="1" name="" id="product-quantity" class="w-25 mb-10 product-quantity-{{p.id}}">
+                                                    
+
                                                     <br>
+
                                                 <div class="product-extra-link2">
                                                         {% comment %} <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{p.id}}"> {% endcomment %}
-                                                        <input type="hidden" class="product-pid-{{p.id}}" value="{{p.pid}}">
-                                                        <input type="hidden" class="product-image-{{p.id}}" value="{{p.image.url}}">
-                                                        <input type="hidden" class="product-id-{{p.id}}" value="{{p.id}}">
-                                                        <input type="hidden" class="product-title-{{p.id}}" value="{{p.title}}">
+                                                        {% comment %} to address later {% endcomment %}
+                                                        <div class="special-container">
+                                                            <input type="hidden" class="product-pid-{{p.id}}" value="{{p.pid}}">
+                                                            <input type="hidden" class="product-image-{{p.id}}" value="{{p.image.url}}">
+                                                            <input type="hidden" class="product-id-{{p.id}}" value="{{p.id}}">
+                                                            <input type="hidden" class="product-title-{{p.id}}" value="{{p.title}}">
+                                                        </div>
 
+                                                        <div class="special-container scrollable-container">
+                                                            {% for p in p_color %}
+                                                            <figure class="color-swatches">
+                                                                <img class="color-swatches img" src="{{p.colors.url}}" alt="product image" />
+                                                            </figure>
+                                                            {% endfor %}
 
+                                                        </div>
 
+                                                        
 
                                                     <button type="submit" class="button button-add-to-cart add-to-cart-btn" data-index="{{p.id}}" id="add-to-cart-btn" ><i class="fi-rs-shopping-cart"></i>Add to cart</button>
                                                     <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
@@ -118,7 +134,7 @@
                                                 <ul class="float-start">
                                                     <li class="mb-5">SKU: <a href="#">{{p.sku}}</a></li>
                                                     <li class="mb-5">Tags: {% for tag in p.tags.all%} <a href="{% url 'core:tags' tag.slug %}" rel="tag">#{{tag.name}}</a> {% endfor %}</li>
-                                                    <li>Colors:<span class="in-stock text-brand ml-5">There are {{p.color_count}} available colors for this item.</span></li>
+                                                    <li>Colors:<span class="in-stock text-brand ml-5">There are {{p.color_count}} CHECK available colors for this item.</span></li>
                                                 </ul>
                                             </div>
                                         </div>

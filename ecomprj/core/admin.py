@@ -41,13 +41,16 @@ admin.site.register(Wishlist,WishlistReviewAdmin)
 admin.site.register(Address, AddressAdmin)
 '''
 from django.contrib import admin
-from core.models import CartOrderItems, Product, Category, Vendor, CartOrder, ProductImages, ProductReview, wishlist_model, Address
+from core.models import CartOrderItems, Product, Category, Vendor, CartOrder, ProductImages,ProductColors, ProductReview, wishlist_model, Address
 
 class ProductImagesAdmin(admin.TabularInline):
     model = ProductImages
 
+class ProductColorsAdmin(admin.TabularInline):
+    model = ProductColors
+
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductImagesAdmin]
+    inlines = [ProductImagesAdmin, ProductColorsAdmin]
     #list_editable = ['title', 'price', 'featured', 'product_status']
     list_display = ['profile', 'title', 'product_image', 'price', 'category','vendor', 'featured', 'product_status', 'pid']
 
@@ -84,3 +87,5 @@ admin.site.register(CartOrderItems, CartOrderItemsAdmin)
 admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(wishlist_model, WishlistAdmin)
 admin.site.register(Address, AddressAdmin)
+
+#Newly added

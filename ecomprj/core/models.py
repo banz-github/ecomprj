@@ -34,8 +34,12 @@ RATING = (
 
 # Create your models here.
 
+# def user_directory_path(instance, filename):
+#     return 'user_{0}/{1}'.format(instance.user.id, filename)
+
+
 def user_directory_path(instance, filename):
-    return 'user_{0}/{1}'.format(instance.user.id, filename)
+    return 'user_{0}/{1}'.format(instance.profile.user, filename)
 
 class Category(models.Model):
     cid = ShortUUIDField(unique=True, max_length=25, prefix="cat", alphabet="abcdefgh12345")
@@ -98,25 +102,26 @@ class Product(models.Model):
     
     title = models.CharField(max_length=100, default="Ataiza's") #Title, Heading #############
     image = models.ImageField(upload_to=user_directory_path, default="product.jpg")
-    ##description = models.TextField(null=True, blank=True, default="Hand-made")
+    color = models.ImageField(upload_to=user_directory_path, default="color.jpg") #initial color
+
     description = RichTextUploadingField(null=True, blank=True, default="Hand-made")
 
     price = models.DecimalField(max_digits=99999999, decimal_places=2, default="500.00") 
     old_price = models.DecimalField(max_digits=99999999, decimal_places=2, default="1000.00")
 
     specifications = RichTextUploadingField(null=True, blank=True, default=" w x d x h") #can be details
-    #tags = models.ForeignKey(Tags, on_delete=models.SET_NULL,null=True)
-    type = models.CharField(max_length=100, default="Furniture", null=True, blank=True) #Title, Heading #############
-    stock_count = models.IntegerField(default=1) #Title, Heading #############
+
+    type = models.CharField(max_length=100, default="Furniture", null=True, blank=True) #I don't think this is needed
+    stock_count = models.IntegerField(default=1) #I do not think this is needed
     color_count = models.IntegerField(default=5) #Originally Life #############
 
     tags = TaggableManager(blank=True)
     
     product_status = models.CharField(choices=STATUS, max_length=10, default="in_review")
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL,null=True, related_name="product")
-    status = models.BooleanField(default=True)
-    in_stock = models.BooleanField(default=True)
-    featured = models.BooleanField(default=False)
+    status = models.BooleanField(default=True) 
+    in_stock = models.BooleanField(default=True) #I do not think this is needed
+    featured = models.BooleanField(default=False) 
 
 
     sku = ShortUUIDField(unique=True, length=4, max_length=10, prefix="sku", alphabet="1234567890") #
@@ -142,6 +147,14 @@ class ProductImages(models.Model):
 
     class Meta:
         verbose_name_plural = "Product Images" 
+
+class ProductColors(models.Model):
+    colors = models.ImageField(upload_to="product-colors", default="color1.jpg")
+    product = models.ForeignKey(Product, related_name="p_colors", on_delete=models.SET_NULL,null=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Product Colors" 
 
 ############################### Card, Order, OrderItems, and Address    
 

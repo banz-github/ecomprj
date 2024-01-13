@@ -164,6 +164,7 @@ def vendor_detail_view(request, vid):
 def product_detail_view(request, pid):
     product = Product.objects.get(pid=pid)
     p_image = product.p_images.all()
+    p_color = product.p_colors.all()
     products = Product.objects.filter(category=product.category).exclude(pid=pid)
 
     #Getting all reviews
@@ -185,7 +186,7 @@ def product_detail_view(request, pid):
     average_rating = ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
 
     context={
-        "p":product, "p_image":p_image, "products":products, "reviews":reviews, "average_rating":average_rating,
+        "p":product, "p_image":p_image,"p_color":p_color, "products":products, "reviews":reviews, "average_rating":average_rating,
         "review_form":review_form, "make_review":make_review,
     }
 

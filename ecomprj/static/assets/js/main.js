@@ -717,6 +717,45 @@
         }
     });
 
+    /* NEWLY ADDED JS 1 */
+    $(document).ready(function() {
+        let currentSelection = null;
+    
+        $(".color-swatches").click(function() {
+            // Check if the color-swatches is already selected
+            if ($(this).hasClass("selected")) {
+                // If selected, unselect it
+                $(this).removeClass("selected");
+                currentSelection = null;
+                console.log("Something is unselected");
+            } else {
+                // If not selected, unselect all color-swatches and select the clicked one
+                $(".color-swatches").removeClass("selected");
+                $(this).addClass("selected");
+                currentSelection = this;
+                console.log("Something is selected");
+            }
+    
+            // Call elevateZoom after handling the click event
+            if ($(window).width() > 768) {
+                $(".product-image-slider .slick-active img").elevateZoom({
+                    zoomType: "inner",
+                    cursor: "crosshair",
+                    zoomWindowFadeIn: 500,
+                    zoomWindowFadeOut: 750
+                });
+            }
+        });
+    });
+    
+    
+    
+    
+    
+    /* NEWLY ADDED JS 1 */
+
+
+
     /*--- VSticker ----*/
     $("#news-flash").vTicker({
         speed: 500,
