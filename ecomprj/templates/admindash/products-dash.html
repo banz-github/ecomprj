@@ -1,0 +1,60 @@
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+        <main>
+            <!-- END OF INSIGHTS -->
+            <div class="recent-orders"> <!-- Make a new css -->
+                <h2>Profiles | Customers</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th> </th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>PID</th>
+                                {% comment %} <th>Verified</th> {% endcomment %}
+                                {% comment %} <th>Active</th> {% endcomment %}
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {% for pl in product_list %}
+                            <tr>
+                                {% if pl.image %}
+                                <td style="text-align: center;"><img src="{{ pl.image.url }}" alt="" style="height: 3.2em; width: 3.2em; margin: auto;" /></td>
+                                {% else %}
+                                    <td>No Image</td>
+                                {% endif %}
+                                <td>{{pl.title}}</td>
+                                <td>₱ {{pl.price}}</td>
+                                <td>{{pl.category}}</td>
+                                <td>{{pl.pid}}</td>
+
+                                {% comment %} {% if cp.verified == True %} {% endcomment %}
+                                {% comment %} <td><i class="fas fa-check-circle text-success">✔️</i></td> {% endcomment %}
+                                {% comment %} {% else %} {% endcomment %}
+                                {% comment %} <td class="text-danger"><strong>X</strong></td> {% endcomment %}
+                                {% comment %} {% endif %} {% endcomment %}
+                                
+                                {% comment %} {% if cp.active == True %} {% endcomment %}
+                                {% comment %} <td><i class="fas fa-check-circle text-success">✔️</i></td> {% endcomment %}
+                                {% comment %} {% else %} {% endcomment %}
+                                {% comment %} <td class="text-danger"><strong>X</strong></td> {% endcomment %}
+                                {% comment %} {% endif %} {% endcomment %}
+
+                                
+
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% comment %} <a href="#"  id="show-all-orders">Show All</a> <!-- self suggestion doblehin ung page--> {% endcomment %}
+            </div>
+        </main>
+
+        {% endblock content %}

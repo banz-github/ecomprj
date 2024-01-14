@@ -28,7 +28,7 @@
                     <span class="material-icons-sharp">grid_view</span>
                     <h3>Dashboard</h3>
                 </a>
-                <a href="#">
+                <a href="{% url 'core:customers-dash' %}">
                     <span class="material-icons-sharp">person_outline</span>
                     <h3>Customers</h3>
                     
@@ -46,7 +46,7 @@
                     <h3>Messages</h3>
                     <span class="message-count">{{message_list.count}}</span>
                 </a>
-                <a href="#">
+                <a href="{% url 'core:products-dash' %}">
                     <span class="material-icons-sharp">inventory</span>
                     <h3>Products</h3>
                 </a>

@@ -66,7 +66,7 @@ def admindash_orders(request):
 
 @allowed_users(allowed_roles=['admin'])
 def admindash_customers(request):
-    customers = Profile.objects.all()
+    customers = Profile.objects.filter(verified=True)
     
     context = {
         "customers":customers,
@@ -88,6 +88,19 @@ def admindash_messages(request):
         "message_list":message_list,
     }
     return render(request, 'admindash/messages-dash.html',context)
+
+
+@allowed_users(allowed_roles=['admin'])
+def admindash_products(request):
+    product_list = Product.objects.all()
+
+
+
+ 
+    context = {
+        "product_list":product_list,
+    }
+    return render(request, 'admindash/products-dash.html',context)
 
 
 
