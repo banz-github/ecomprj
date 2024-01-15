@@ -52,6 +52,7 @@ def admindash(request):
 
     return render(request, 'admindash/main-dash.html',context)
 
+from django.db.models import Count
 @allowed_users(allowed_roles=['admin'])
 def admindash_orders(request):
     message_list = ContactUs.objects.all()
@@ -72,6 +73,21 @@ def admindash_orders(request):
         "month": month,
         "total_orders": total_orders,
     }
+
+
+    # New code for pie chart data
+        # New code for pie chart data
+    category_orders = CartOrderItems.objects.values('category__title').annotate(count=Count('id'))
+
+    category_labels = []
+    category_data = []
+
+    for category_order in category_orders:
+        category_labels.append(category_order['category__title'])
+        category_data.append(category_order['count'])
+
+    context["category_labels"] = category_labels
+    context["category_data"] = category_data
 
     return render(request, 'admindash/orders-dash.html', context)
 

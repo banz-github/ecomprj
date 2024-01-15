@@ -73,7 +73,56 @@
                             );
                         </script>
                     </table>
+                    
                 </div>
+
+                <div class="table-container">
+                    <table>
+                        <canvas style="height:50px;" id="adminCategoryChart"></canvas>
+                        <script>
+                            const categoryLabels = {{ category_labels|safe }};
+                            
+                            const categoryData = {
+                                labels: categoryLabels,
+                                datasets: [{
+                                    label: 'Orders by Category',
+                                    backgroundColor: [
+                                        'rgb(255, 99, 132)',
+                                        'rgb(255, 205, 86)',
+                                        'rgb(54, 162, 235)',
+                                        // Add more colors as needed
+                                    ],
+                                    borderColor: 'white',
+                                    borderWidth: 2,
+                                    data: {{ category_data|safe }}
+                                }]
+                            };
+
+                            const categoryConfig = {
+                                type: 'pie',
+                                data: categoryData,
+                                label: 'Orders by Category',
+                                options: {
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function (tooltipItem, data) {
+                                                return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                            }
+                                        }
+                                    },
+                                    hover: { mode: null },
+                                }
+                            };
+
+                            const categoryChart = new Chart(
+                                document.getElementById('adminCategoryChart'),
+                                categoryConfig
+                            );
+                        </script>
+
+                    </table>
+                </div>
+
             </div>
         </main>
 
