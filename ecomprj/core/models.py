@@ -173,6 +173,10 @@ class CartOrderItems(models.Model):
     invoice_no = models.CharField(max_length=200)
     product_status = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
+
+    #newly added
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)  # Add this line
+
     image = models.CharField(max_length=200)
     qty = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=99999999, decimal_places=2, default="500.00")

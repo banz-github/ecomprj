@@ -1,6 +1,6 @@
 from django.urls import path, include
 from core.views import index
-from core.views import admindash_products,admindash_customers,admindash_messages,admindash_orders,admindash,get_product_type_image,custom_order,ajax_contact_form,product_list_view, category_list_view, category_product_list__view,vendor_list_view,vendor_detail_view,product_detail_view,tag_list,ajax_add_review,search_view,filter_product,add_to_cart,cart_view,delete_item_from_cart,update_cart,checkout_view,payment_failed_view,payment_completed_view,customer_dashboard,order_detail,make_address_default,wishlist_view,add_to_wishlist,remove_wishlist,contact
+from core.views import admindash_products,admindash_customers,admindash_messages,admindash_orders,admindash,get_product_type_image,custom_order,ajax_contact_form,product_list_view, category_list_view, category_product_list__view,vendor_list_view,vendor_detail_view,product_detail_view,tag_list,ajax_add_review,search_view,filter_product,clear_cart,add_to_cart,cart_view,delete_item_from_cart,update_cart,checkout_view,payment_failed_view,payment_completed_view,customer_dashboard,order_detail,make_address_default,wishlist_view,add_to_wishlist,remove_wishlist,contact
 app_name = "core"
 
 urlpatterns = [
@@ -44,6 +44,8 @@ urlpatterns = [
     path("add-to-cart/", add_to_cart, name="add-to-cart"),
     #cart page url
     path("cart/", cart_view, name="cart"),
+    #lear cart page url
+    path('clear-cart/', clear_cart, name='clear-cart'),
     #delete
     path("delete-from-cart/", delete_item_from_cart, name="delete-from-cart"),
     #update

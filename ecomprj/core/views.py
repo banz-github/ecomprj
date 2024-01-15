@@ -351,32 +351,32 @@ def filter_product(request):
 #     else:
 #         request.session['cart_data_obj'] = cart_product
 #     return JsonResponse({"data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj'])})
-
 def add_to_cart(request):
-    cart_product = {}
-    cart_product[str(request.GET['id'])] = {
-        'title': request.GET['title'],
-        'qty': request.GET['qty'],
-        'price': request.GET['price'],
-        'image': request.GET['image'],
-        'pid': request.GET['pid'],
+    cart_product = {
+        'title': request.GET.get('title', ''),
+        'qty': int(request.GET.get('qty', 0)),
+        'price': float(request.GET.get('price', 0.0)),
+        'image': request.GET.get('image', ''),
+        'pid': str(request.GET['pid']),
+        'category': request.GET.get('category', ''),  # newly added
     }
+
+    product_id = str(request.GET.get('id', ''))
+
     if 'cart_data_obj' in request.session:
-        if str(request.GET['id']) in request.session['cart_data_obj']:
+        cart_data = request.session['cart_data_obj']
 
-            cart_data = request.session['cart_data_obj']
-            cart_data[str(request.GET['id'])]['qty'] = int(cart_product[str(request.GET['id'])]['qty'])
-            cart_data.update(cart_data)
-            request.session['cart_data_obj'] = cart_data
+        if product_id in cart_data:
+            cart_data[product_id]['qty'] = cart_product['qty']
         else:
-            cart_data = request.session['cart_data_obj']
-            cart_data.update(cart_product)
-            request.session['cart_data_obj'] = cart_data
+            cart_data[product_id] = cart_product
 
+        request.session['cart_data_obj'] = cart_data
     else:
-        request.session['cart_data_obj'] = cart_product
-    return JsonResponse({"data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj'])})
+        request.session['cart_data_obj'] = {product_id: cart_product}
 
+    total_cart_items = len(request.session['cart_data_obj'])
+    return JsonResponse({"data": request.session['cart_data_obj'], 'totalcartitems': total_cart_items})
 
 
 def cart_view(request):
@@ -384,10 +384,18 @@ def cart_view(request):
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['qty']) * float(item['price'])
+            item['category'] = Product.objects.get(pid=item['pid']).category.title # newly added code
         return render(request, "core/cart.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount})
     else:
         messages.warning(request, "Your cart is empty")
         return redirect("core:index")
+    
+def clear_cart(request):
+    if 'cart_data_obj' in request.session:
+        del request.session['cart_data_obj']
+        request.session.modified = True  # Mark the session as modified after changes
+
+    return JsonResponse({'success': True, 'message': 'Your cart is now empty'})
 
 #//path("add-to-cart", views.add_to_cart, name="add-to-cart"),
 
@@ -428,40 +436,80 @@ def cart_view(request):
 #     else:
 #         messages.warning(request, "Your cart is empty")
 #         return redirect("core:index")
-    
+from django.template.loader import render_to_string
+from django.core.exceptions import ObjectDoesNotExist   
 def delete_item_from_cart(request):
     product_id = str(request.GET['id'])
     if 'cart_data_obj' in request.session:
         if product_id in request.session['cart_data_obj']:
             cart_data = request.session['cart_data_obj']
-            del request.session['cart_data_obj'][product_id]
+            del cart_data[product_id]
             request.session['cart_data_obj'] = cart_data
+            request.session.modified = True  # Mark the session as modified after changes
+    
     
     cart_total_amount = 0
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
-            cart_total_amount += int(item['qty']) * float(item['price'])
+            try:
+                item['category'] = Product.objects.get(pk=int(item['pid'])).category.title
+            except (ValueError, Product.DoesNotExist, ObjectDoesNotExist):
+                item['category'] = "Unknown Category"
 
+            cart_total_amount += int(item['qty']) * float(item['price']) # newly added code
     context = render_to_string("core/async/cart-list.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount})
     return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
 
 
+# def update_cart(request):
+#     product_id = str(request.GET['id'])
+#     product_qty = request.GET['qty']
+
+#     if 'cart_data_obj' in request.session:
+#         if product_id in request.session['cart_data_obj']:
+#             cart_data = request.session['cart_data_obj']
+#             cart_data[product_id]['qty'] = product_qty
+#             request.session['cart_data_obj'] = cart_data
+#             request.session.modified = True  # Mark the session as modified after changes
+    
+#     cart_total_amount = 0
+#     if 'cart_data_obj' in request.session:
+#         for p_id, item in request.session['cart_data_obj'].items():
+#             cart_total_amount += int(item['qty']) * float(item['price'])
+#             item['category'] = Product.objects.get(pk=item['pid']).category.title  # Add this line
+
+#     context = render_to_string("core/async/cart-list.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount})
+#     return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
+
 def update_cart(request):
-    product_id = str(request.GET['id'])
-    product_qty = request.GET['qty']
+    product_id = str(request.GET.get('id', ''))
+    product_qty = request.GET.get('qty', '')
 
     if 'cart_data_obj' in request.session:
-        if product_id in request.session['cart_data_obj']:
-            cart_data = request.session['cart_data_obj']
-            cart_data[str(request.GET['id'])]['qty'] = product_qty
+        cart_data = request.session['cart_data_obj']
+
+        if product_id in cart_data:
+            cart_data[product_id]['qty'] = product_qty
             request.session['cart_data_obj'] = cart_data
-    
+            request.session.modified = True  # Mark the session as modified after changes
+
     cart_total_amount = 0
+
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
+            try:
+                item['category'] = Product.objects.get(pk=int(item['pid'])).category.title
+            except (ValueError, Product.DoesNotExist, ObjectDoesNotExist):
+                item['category'] = "Unknown Category"
+
             cart_total_amount += int(item['qty']) * float(item['price'])
 
-    context = render_to_string("core/async/cart-list.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount})
+    context = render_to_string("core/async/cart-list.html", {
+        "cart_data": request.session['cart_data_obj'],
+        'totalcartitems': len(request.session['cart_data_obj']),
+        'cart_total_amount': cart_total_amount
+    })
+
     return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
 
 @login_required
@@ -472,6 +520,7 @@ def checkout_view(request):
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
             total_amount += int(item['qty']) * float(item['price'])
+            item['category'] = Product.objects.get(pid=item['pid']).category.title  # Add this line
 
         order = CartOrder.objects.create(
             profile=request.user.profile, #mark
@@ -487,7 +536,9 @@ def checkout_view(request):
                 image=item['image'],
                 qty=item['qty'],
                 price=item['price'],
-                total=float(item['qty']) * float(item['price'])
+                total=float(item['qty']) * float(item['price']),
+                category=Product.objects.get(pid=item['pid']).category  # newly added code
+
 
             )
 
@@ -696,3 +747,4 @@ def get_product_type_image(request):
         return JsonResponse({'image_url': image_url})
     except ProductType.DoesNotExist:
         return JsonResponse({'error': 'Product Type not found'}, status=400)
+    

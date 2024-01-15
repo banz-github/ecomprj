@@ -183,6 +183,32 @@ $(document).ready(function (){
             }
         })
     })
+
+    $("#clearCart").on("click", function() {
+        $.ajax({
+            url: "/clear-cart/",
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    // Cart cleared successfully, update UI
+                    $(".cart-items-count").text(0); // Update the cart items count to 0
+                    $("#cart-list").html(""); // Clear the cart items list
+                    console.log("Cart cleared!");
+    
+                    // Display the success message
+                    // Assuming you have an element with id "messages" to display messages
+                    $("#messages").html('<div class="alert alert-warning">' + response.message + '</div>');
+    
+                    // Redirect to the home page after a short delay
+                    setTimeout(function() {
+                        window.location.href = "/";
+                    }, 1); // 2000 milliseconds (2 seconds) delay, adjust as needed
+                }
+            }
+        });
+    });
+    
+    
     
     
     $(".delete-product").on("click", function(){
@@ -199,13 +225,16 @@ $(document).ready(function (){
             },
             dataType: "json",
             beforeSend: function(){
-                this_val.hide()
+                console.log("Before Send");
+                this_val.hide();
             },
             success: function(response){
-                this_val.show()
-                $(".cart-items-count").text(response.totalcartitems)
-                $("#cart-list").html(response.data)
+                console.log("Success");
+                this_val.show();
+                $(".cart-items-count").text(response.totalcartitems);
+                $("#cart-list").html(response.data);
             }
+            
         })
     
     })
