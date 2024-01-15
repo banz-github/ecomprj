@@ -40,7 +40,40 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="#"  id="show-all-orders">Show All</a> <!-- self suggestion doblehin ung page-->
+                {% comment %} <a href="#"  id="show-all-orders">Show All</a> <!-- self suggestion doblehin ung page--> {% endcomment %}
+                <div class="table-container">
+                    <table>
+                    <!-- here is where we will put the canvas, also include JS code to your response --> 
+                        <canvas style="height:50px;" id="adminChart"></canvas>
+                        <script>
+                            const adminLabels = {{ month|safe }};
+                            
+                            const adminData = {
+                                labels: adminLabels,
+                                datasets: [{
+                                    label: 'Total orders in each month',
+                                    backgroundColor: 'rgb(59, 183, 126)',
+                                    borderColor: 'rgb(59, 183, 126)',
+                                    data: {{ total_orders|safe }}
+                                }],
+                            };
+                        
+                            const adminConfig = {
+                                type: 'bar',
+                                data: adminData,
+                                options: {
+                                    tooltips: { enabled: false },
+                                    hover: { mode: null },
+                                }
+                            };
+                        
+                            const adminChart = new Chart(
+                                document.getElementById('adminChart'),
+                                adminConfig
+                            );
+                        </script>
+                    </table>
+                </div>
             </div>
         </main>
 

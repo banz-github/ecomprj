@@ -57,11 +57,23 @@ def admindash_orders(request):
     message_list = ContactUs.objects.all()
     order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #mark, do not change if it works tho
     
+    # Similar analytics as in customer_dashboard
+    orders = CartOrder.objects.filter(profile=request.user.profile).annotate(month=ExtractMonth("order_date")).values("month").annotate(count=Count("id")).values("month", "count")
+    month = []
+    total_orders = []
+
+    for i in orders:
+        month.append(calendar.month_name[i["month"]])
+        total_orders.append(i["count"])
+
     context = {
-        "order_list":order_list,"message_list":message_list,
+        "order_list": order_list,
+        "message_list": message_list,
+        "month": month,
+        "total_orders": total_orders,
     }
 
-    return render(request, 'admindash/orders-dash.html',context)
+    return render(request, 'admindash/orders-dash.html', context)
 
 
 @allowed_users(allowed_roles=['admin'])
