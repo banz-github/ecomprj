@@ -5,27 +5,31 @@
         <main>
             
             
-
-            <div class="recent-messagess">
-            
-                <h1>Messages</h1>
-                {% for m in message_list %}
-                <div class="messagess">
-                    <div class="messages">
-                        <div class="profile-photo">
-                            <img src="{% static 'assets/images/profile-2.jpg' %}" alt="">
-                        </div>
-                        <div class="message">
-                            <h3>(SENDER) {{m.full_name}}:</h3>
-                            <p>[{{m.email}} | {{m.phone}}]</p> 
-                            <h1> {{m.message}}. </h1>
-                            <small class="text-muted">N minutes ago</small>
-                        </div>
-                    </div>
+            <div class="table-container">
+                <div class="recent-messagess">
+                    <table>
+                        <thead>
+                            <h1>Messages</h1>
+                            {% for m in message_list %}
+                            <div class="messagess">
+                                <div class="messages">
+                                    <div class="profile-photo">
+                                        <img src="{% static 'assets/images/profile-2.jpg' %}" alt="">
+                                    </div>
+                                    <div class="message">
+                                        <h3>(SENDER) {{m.full_name}}:</h3>
+                                        <p>[{{m.email}} | {{m.phone}}]</p> 
+                                        <h1> {{m.message}}. </h1>
+                                        <small class="text-muted">N minutes ago</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </thead>
+                    </table>
                 </div>
-                {% endfor %}
-            </div>
             <!-- END OF INSIGHTS -->
+            </div>
             
         </main>
 
