@@ -130,7 +130,22 @@ def admindash_products(request):
     }
     return render(request, 'admindash/products-dash.html',context)
 
+@allowed_users(allowed_roles=['admin'])
+def admindash_analytics(request):
 
+
+    category_orders = CartOrderItems.objects.values('category__title').annotate(count=Count('id'))
+
+    category_labels = []
+    category_data = []
+
+    for category_order in category_orders:
+        category_labels.append(category_order['category__title'])
+        category_data.append(category_order['count'])
+
+
+    context = {"category_labels":category_labels,"category_data":category_data,}
+    return render(request, 'admindash/analytics-dash.html', context )
 
 
 # Create your views here.

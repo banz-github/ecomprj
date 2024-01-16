@@ -1,0 +1,155 @@
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+        <main>
+            <h1>Analytics</h1>
+            <div class="date">
+                <input type="date">
+            </div>
+
+            <div class="insights">
+                <div class="sales">
+                    
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Orders per Category</h3>
+                            <canvas style="height:100px;" id="adminCategoryChart"></canvas>
+                                <script>
+                                    const categoryLabels = {{ category_labels|safe }};
+                                    
+                                    const categoryData = {
+                                        labels: categoryLabels,
+                                        datasets: [{
+                                            label: 'Orders by Category',
+                                            backgroundColor: [
+                                                'rgb(255, 99, 132)',
+                                                'rgb(255, 205, 86)',
+                                                'rgb(54, 162, 235)',
+                                                // Add more colors as needed
+                                            ],
+                                            borderColor: 'white',
+                                            borderWidth: 2,
+                                            data: {{ category_data|safe }}
+                                        }]
+                                    };
+                                
+                                    const categoryConfig = {
+                                        type: 'pie',
+                                        data: categoryData,
+                                        label: 'Orders by Category',
+                                        options: {
+                                            tooltips: {
+                                                callbacks: {
+                                                    label: function (tooltipItem, data) {
+                                                        return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                                    }
+                                                }
+                                            },
+                                            hover: { mode: null },
+                                            legend: {
+                                                display: false  // Set display property to false to hide the legend
+                                            }
+                                        }
+                                    };
+                                
+                                    const categoryChart = new Chart(
+                                        document.getElementById('adminCategoryChart'),
+                                        categoryConfig
+                                    );
+                                </script>
+                            {% comment %} <h1>₱1,503,200</h1> {% endcomment %}
+                        </div>
+                        <div class="progress">
+
+                                {% comment %} <circle cx='38' cy='38' r='36'></circle> {% endcomment %}
+                                
+                                
+
+                            {% comment %} <div class="number">
+                                <p>81%</p>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                    {% comment %} <small class="text-muted">Last 24 hours</small> {% endcomment %}
+                </div>
+                <!--END OF SALES-->
+                <div class="expenses">
+                    <span class="material-icons-sharp">bar_chart</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total Expense</h3>
+                            <h1>₱503,200</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx='38' cy='38' r='36'></circle>
+                            </svg>
+                            <div class="number">
+                                <p>61%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Last 24 hours</small>
+                </div>
+                <!--END OF EXPENSES-->
+                <div class="income">
+                    <span class="material-icons-sharp">stacked_line_chart</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total Sales</h3>
+                            <h1>₱1,000,203</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx='38' cy='38' r='36'></circle>
+                            </svg>
+                            <div class="number">
+                                <p>44%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Last 24 hours</small>
+                </div>
+                <!--END OF INCOME-->
+            </div>
+            <!-- END OF INSIGHTS -->
+            <div class="recent-orders">
+                <h2>Recent Orders</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Orders</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Payment Status</th>
+                            <th>Total</th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        {% for o in order_list %}
+                        <tr>
+                            <td>INVOICE_NO-{{o.id}}</td>
+                            <td>{{o.order_date}}</td>
+                            <td>{{o.product_status|title}}</td>
+                            {% if o.paid_status == True %}
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            {% else %}
+                            <td class="text-danger"><strong>X</strong></td>
+                            {% endif %}
+                            <td>{{o.price|floatformat:2|intcomma}}</td>
+                            <td><a href="{% url 'core:order-detail' o.id %}" class="primary">View</a></td>
+                            {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
+
+                            <td class="warning">Pending</td>
+                            <td class="primary">Details</td> {% endcomment %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% comment %} <a href="{% url 'core:order-dash' %}"  id="show-all-orders">Show All</a> <!-- self suggestion doblehin ung page--> {% endcomment %}
+            </div>
+        </main>
+
+        {% endblock content %}
