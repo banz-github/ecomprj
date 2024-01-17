@@ -20,7 +20,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+
+
 class Profile(models.Model): #customer kay dennis ivy
     user = models.OneToOneField(User, on_delete=models.CASCADE)  #desphinx , meron din kay dennis
     image = models.ImageField(upload_to="image")
