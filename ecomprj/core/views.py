@@ -842,11 +842,30 @@ def order_detail(request, id):
 #     response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
 #     return response
 
+
+#This one make other Profile's Address FALSE
+# def make_address_default(request):
+#     id = request.GET['id']
+#     Address.objects.update(status=False)
+#     Address.objects.filter(id=id).update(status=True)
+#     return JsonResponse({"boolean": True})
+
+
+
 def make_address_default(request):
-    id = request.GET['id']
-    Address.objects.update(status=False)
-    Address.objects.filter(id=id).update(status=True)
-    return JsonResponse({"boolean": True})
+    address_id = request.GET.get('id')
+
+    try:
+        address_to_make_default = Address.objects.get(id=address_id, profile=request.user.profile)
+        Address.objects.filter(profile=request.user.profile).exclude(id=address_id).update(status=False)
+        address_to_make_default.status = True
+        address_to_make_default.save()
+
+        return JsonResponse({"boolean": True})
+    except Address.DoesNotExist:
+        return JsonResponse({"boolean": False, "error": "Address not found or doesn't belong to the current user's profile"})
+
+
 
 @login_required
 def wishlist_view(request):
