@@ -21,7 +21,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-
+import random
 class Profile(models.Model): #customer kay dennis ivy
     user = models.OneToOneField(User, on_delete=models.CASCADE)  #desphinx , meron din kay dennis
     image = models.ImageField(upload_to="image")
@@ -33,6 +33,9 @@ class Profile(models.Model): #customer kay dennis ivy
     verified = models.BooleanField(default=False) #OTP
     active = models.BooleanField(default=True)
     #can add CustomerType - Business, Private, Government
+    otp = models.CharField(max_length=6, null=True, blank=True)
+    def generate_otp(self):
+        return str(random.randint(100000, 999999))
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

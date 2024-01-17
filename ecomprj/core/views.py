@@ -56,10 +56,13 @@ from django.db.models import Count
 @allowed_users(allowed_roles=['admin'])
 def admindash_orders(request):
     message_list = ContactUs.objects.all()
-    order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #mark, do not change if it works tho
+    # order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #mark, do not change if it works tho
     
+    order_list = CartOrder.objects.all()
+
     # Similar analytics as in customer_dashboard
-    orders = CartOrder.objects.filter(profile=request.user.profile).annotate(month=ExtractMonth("order_date")).values("month").annotate(count=Count("id")).values("month", "count")
+    # orders = CartOrder.objects.filter(profile=request.user.profile).annotate(month=ExtractMonth("order_date")).values("month").annotate(count=Count("id")).values("month", "count")
+    orders = CartOrder.objects.all().annotate(month=ExtractMonth("order_date")).values("month").annotate(count=Count("id")).values("month", "count")
     month = []
     total_orders = []
 
@@ -90,6 +93,21 @@ def admindash_orders(request):
     context["category_data"] = category_data
 
     return render(request, 'admindash/orders-dash.html', context)
+
+
+@allowed_users(allowed_roles=['admin'])
+def admindash_custom_orders(request):
+
+    custom_order_list = CustomizationOrder.objects.all()
+
+    
+    context = {"custom_order_list":custom_order_list,
+
+    }
+
+    return render(request, 'admindash/custom-orders-dash.html',context)
+
+
 
 
 @allowed_users(allowed_roles=['admin'])

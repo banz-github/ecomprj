@@ -1,0 +1,139 @@
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+        <main>
+            <!-- END OF INSIGHTS -->
+            <div class="recent-orders">
+                <h2>Custom Orders</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Custom Order ID</th>
+                                <th>Product Type</th>
+                                <th>Material</th>
+                                <th>Color</th>
+                                <th>Foam Type</th>
+                                <th>M/R</th>
+                                <th>Quantity</th>
+                                <th>Payment Approved</th>
+                                <th>Percentage</th>
+
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {% for col in custom_order_list %}
+                            <tr>
+                                <td>{{col.co_id}}</td>
+                                <td>{{col.product_type}}</td>
+                                <td>{{col.material|title}}</td>
+                                <td>{{col.color|title}}</td>
+                                <td>{{col.foam_type|title}}</td>
+                                <td>{{col.make_or_repair|title}}</td>
+                                <td>{{col.qty|title}}</td>
+                                {% if col.with_downpayment == True %}
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+                                <td>{{col.percentage_progress}}%</td>
+                                <td><a href="#" class="primary">View</a></td>
+                                {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
+
+                                <td class="warning">Pending</td>
+                                <td class="primary">Details</td> {% endcomment %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% comment %} <a href="#"  id="show-all-orders">Show All</a> <!-- self suggestion doblehin ung page--> {% endcomment %}
+
+                {% comment %} <div class="table-container">
+                    <table>
+                    <!-- here is where we will put the canvas, also include JS code to your response --> 
+                        <canvas style="height:50px;" id="adminChart"></canvas>
+                        <script>
+                            const adminLabels = {{ month|safe }};
+                            
+                            const adminData = {
+                                labels: adminLabels,
+                                datasets: [{
+                                    label: 'Total orders in each month',
+                                    backgroundColor: 'rgb(59, 183, 126)',
+                                    borderColor: 'rgb(59, 183, 126)',
+                                    data: {{ total_orders|safe }}
+                                }],
+                            };
+                        
+                            const adminConfig = {
+                                type: 'bar',
+                                data: adminData,
+                                options: {
+                                    tooltips: { enabled: false },
+                                    hover: { mode: null },
+                                }
+                            };
+                        
+                            const adminChart = new Chart(
+                                document.getElementById('adminChart'),
+                                adminConfig
+                            );
+                        </script>
+                    </table>
+                    
+                </div> {% endcomment %}
+
+                {% comment %} <div class="table-container">
+                    <table>
+                        <canvas style="height:50px;" id="adminCategoryChart"></canvas>
+                        <script>
+                            const categoryLabels = {{ category_labels|safe }};
+                            
+                            const categoryData = {
+                                labels: categoryLabels,
+                                datasets: [{
+                                    label: 'Orders by Category',
+                                    backgroundColor: [
+                                        'rgb(255, 99, 132)',
+                                        'rgb(255, 205, 86)',
+                                        'rgb(54, 162, 235)',
+                                        // Add more colors as needed
+                                    ],
+                                    borderColor: 'white',
+                                    borderWidth: 2,
+                                    data: {{ category_data|safe }}
+                                }]
+                            };
+
+                            const categoryConfig = {
+                                type: 'pie',
+                                data: categoryData,
+                                label: 'Orders by Category',
+                                options: {
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function (tooltipItem, data) {
+                                                return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                            }
+                                        }
+                                    },
+                                    hover: { mode: null },
+                                }
+                            };
+
+                            const categoryChart = new Chart(
+                                document.getElementById('adminCategoryChart'),
+                                categoryConfig
+                            );
+                        </script>
+
+                    </table>
+                </div> {% endcomment %}
+
+            </div>
+        </main>
+
+        {% endblock content %}
