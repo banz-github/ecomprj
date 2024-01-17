@@ -165,6 +165,7 @@ class CartOrder(models.Model):
     paid_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now_add=True)
     product_status = models.CharField(choices=STATUS_CHOICE, max_length=30, default="processing")
+    receipt_img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Cart Order"

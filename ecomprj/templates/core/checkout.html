@@ -93,29 +93,34 @@
                     <div class="payment ml-30">
                         <h4 class="mb-30">Payment</h4>
                         <div class="payment_option">
-                            <div class="custome-radio">
+                            {% comment %} <div class="custome-radio">
                                 <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" checked="">
                                 <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">Direct Bank Transfer</label>
                             </div>
                             <div class="custome-radio">
                                 <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" checked="">
                                 <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">Cash on delivery</label>
-                            </div>
+                            </div> {% endcomment %}
                             <div class="custome-radio">
+                                <img class="mr-15" style="width:5rem;" src="{% static 'assets/imgs/theme/icons/gcash.png' %}" alt="GCash logo">
                                 <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" checked="">
-                                <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Online Getway</label>
+                                
+                                <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">GCash </label>
+                                
                             </div>
+                            
                         </div>
-                        <div class="payment-logo d-flex">
+                        {% comment %} <div class="payment-logo d-flex">
                             <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-paypal.svg' %}" alt="">
                             <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-visa.svg' %}" alt="">
                             <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-master.svg' %}" alt="">
                             <img src="{% static 'assets/imgs/theme/icons/payment-zapper.svg' %}" alt="">
-                        </div>
+                        </div> 
                         <div class="w-50">
                             {{paypal_payment_button.render}}
-                        </div>
-                        {% comment %} <a href="#" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a> {% endcomment %}
+                        </div> {% endcomment %}
+                        <a href="#" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a> 
+                        
                     </div>
                 </div>
             </div>

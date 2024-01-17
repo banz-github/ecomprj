@@ -543,61 +543,227 @@ def update_cart(request):
 
     return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
 
+# @login_required
+# def checkout_view(request):
+
+#     cart_total_amount = 0
+#     total_amount = 0 
+#     if 'cart_data_obj' in request.session:
+#         for p_id, item in request.session['cart_data_obj'].items():
+#             total_amount += int(item['qty']) * float(item['price'])
+#             item['category'] = Product.objects.get(pid=item['pid']).category.title  # Add this line
+
+#         order = CartOrder.objects.create(
+#             profile=request.user.profile, #mark
+#             price = total_amount
+#         )
+#         for p_id, item in request.session['cart_data_obj'].items():
+#             cart_total_amount += int(item['qty']) * float(item['price'])
+#             #CartOrderProducts kay Desphinx
+#             cart_order_products = CartOrderItems.objects.create(
+#                 order=order,
+#                 invoice_no="INVOICE_NO-" + str(order.id),
+#                 item=item['title'],
+#                 image=item['image'],
+#                 qty=item['qty'],
+#                 price=item['price'],
+#                 total=float(item['qty']) * float(item['price']),
+#                 category=Product.objects.get(pid=item['pid']).category  # newly added code
+
+
+#             )
+
+#     host = request.get_host()
+#     paypal_dict = {
+#         'business':settings.PAYPAL_RECEIVER_EMAIL,
+#         'amount': cart_total_amount,
+#         'item_name': "Order-Item-No-" + str(order.id),
+#         'invoice': "INVOICE_NO-" + str(order.id), 
+#         'currency_code': "PHP",
+#         'notify_url': 'http://{}{}'.format(host,reverse("core:paypal-ipn")),
+#         'return_url': 'http://{}{}'.format(host,reverse("core:payment-completed")),
+#         'cancel_url': 'http://{}{}'.format(host,reverse("core:payment-failed")),
+#     }
+#     paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
+
+#     # cart_total_amount = 0
+#     # if 'cart_data_obj' in request.session:
+#     #     for p_id, item in request.session['cart_data_obj'].items():
+#     #         cart_total_amount += int(item['qty']) * float(item['price'])
+
+#     try:
+#         active_address = Address.objects.get(profile=request.user.profile, status=True) #Mark one
+#     except:
+#         messages.warning(request,"There are multiple default addresses, please choose only one default address.")
+#         active_address = None
+
+#     return render(request, "core/checkout.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount, 'paypal_payment_button':paypal_payment_button, "active_address":active_address })
+
 @login_required
-def checkout_view(request):
+def checkout_gcash_view(request):
+    # 
 
     cart_total_amount = 0
-    total_amount = 0 
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
-            total_amount += int(item['qty']) * float(item['price'])
-            item['category'] = Product.objects.get(pid=item['pid']).category.title  # Add this line
-
-        order = CartOrder.objects.create(
-            profile=request.user.profile, #mark
-            price = total_amount
-        )
-        for p_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['qty']) * float(item['price'])
-            #CartOrderProducts kay Desphinx
-            cart_order_products = CartOrderItems.objects.create(
-                order=order,
-                invoice_no="INVOICE_NO-" + str(order.id),
-                item=item['title'],
-                image=item['image'],
-                qty=item['qty'],
-                price=item['price'],
-                total=float(item['qty']) * float(item['price']),
-                category=Product.objects.get(pid=item['pid']).category  # newly added code
+
+    context = {'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount}
+    return render(request, "core/gcash-receipt-submission-portal.html",context)
 
 
-            )
 
-    host = request.get_host()
-    paypal_dict = {
-        'business':settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': cart_total_amount,
-        'item_name': "Order-Item-No-" + str(order.id),
-        'invoice': "INVOICE_NO-" + str(order.id), 
-        'currency_code': "PHP",
-        'notify_url': 'http://{}{}'.format(host,reverse("core:paypal-ipn")),
-        'return_url': 'http://{}{}'.format(host,reverse("core:payment-completed")),
-        'cancel_url': 'http://{}{}'.format(host,reverse("core:payment-failed")),
-    }
-    paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
+#Before chat
+# @login_required
+# def checkout_view(request):
 
-    # cart_total_amount = 0
-    # if 'cart_data_obj' in request.session:
-    #     for p_id, item in request.session['cart_data_obj'].items():
-    #         cart_total_amount += int(item['qty']) * float(item['price'])
+#     cart_total_amount = 0
+#     total_amount = 0 
+#     if 'cart_data_obj' in request.session:
+#         for p_id, item in request.session['cart_data_obj'].items():
+#             total_amount += int(item['qty']) * float(item['price'])
+#             item['category'] = Product.objects.get(pid=item['pid']).category.title  # Add this line
+
+#         order = CartOrder.objects.create(
+#             profile=request.user.profile, #mark
+#             price = total_amount
+#         )
+#         for p_id, item in request.session['cart_data_obj'].items():
+#             cart_total_amount += int(item['qty']) * float(item['price'])
+#             #CartOrderProducts kay Desphinx
+#             cart_order_products = CartOrderItems.objects.create(
+#                 order=order,
+#                 invoice_no="INVOICE_NO-" + str(order.id),
+#                 item=item['title'],
+#                 image=item['image'],
+#                 qty=item['qty'],
+#                 price=item['price'],
+#                 total=float(item['qty']) * float(item['price']),
+#                 category=Product.objects.get(pid=item['pid']).category  # newly added code
+
+
+#             )
+
+
+
+#     try:
+#         active_address = Address.objects.get(profile=request.user.profile, status=True) #Mark one
+#     except:
+#         messages.warning(request,"There are multiple default addresses, please choose only one default address.")
+#         active_address = None
+
+#     return render(request, "core/checkout.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount, "active_address":active_address })
+
+from django.db import transaction
+from decimal import Decimal
+@login_required
+def checkout_view(request):
+    cart_total_amount = 0
+    total_amount = 0 
+
+    if 'cart_data_obj' in request.session:
+        # Use transaction.atomic to ensure atomicity of the database operations
+        with transaction.atomic():
+            # Check if an order already exists for the user
+            existing_order = CartOrder.objects.filter(profile=request.user.profile, paid_status=False).first()
+
+            if existing_order:
+                order = existing_order
+            else:
+                # Create a new order if one doesn't exist
+                order = CartOrder.objects.create(
+                    profile=request.user.profile,
+                    price=Decimal('0'),  # Use Decimal for money values
+                )
+
+            for p_id, item in request.session['cart_data_obj'].items():
+                total_amount += int(item['qty']) * float(item['price'])
+                item['category'] = Product.objects.get(pid=item['pid']).category.title
+
+                # Update the order's price as you go through the items
+                order.price += Decimal(item['qty']) * Decimal(item['price'])
+                order.save()
+
+                # Check if a CartOrderItems instance already exists for this order and item
+                existing_item = CartOrderItems.objects.filter(order=order, item=item['title']).first()
+
+                if existing_item:
+                    # Update the existing item if it already exists
+                    existing_item.qty += int(item['qty'])
+                    existing_item.total += Decimal(item['qty']) * Decimal(item['price'])
+                    existing_item.save()
+                else:
+                    # Create a new CartOrderItems instance if it doesn't exist
+                    cart_order_products = CartOrderItems.objects.create(
+                        order=order,
+                        invoice_no="INVOICE_NO-" + str(order.id),
+                        item=item['title'],
+                        image=item['image'],
+                        qty=int(item['qty']),
+                        price=Decimal(item['price']),
+                        total=Decimal(item['qty']) * Decimal(item['price']),
+                        category=Product.objects.get(pid=item['pid']).category
+                    )
+
+            # Update the total price of the order after processing all items
+            order.price = total_amount
+            order.save()
 
     try:
-        active_address = Address.objects.get(profile=request.user.profile, status=True) #Mark one
-    except:
-        messages.warning(request,"There are multiple default addresses, please choose only one default address.")
+        active_address = Address.objects.get(profile=request.user.profile, status=True)
+    except Address.DoesNotExist:
+        messages.warning(request, "There are multiple default addresses, please choose only one default address.")
         active_address = None
 
-    return render(request, "core/checkout.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount, 'paypal_payment_button':paypal_payment_button, "active_address":active_address })
+    return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
+    cart_total_amount = 0
+    total_amount = 0 
+
+    if 'cart_data_obj' in request.session:
+        # Use transaction.atomic to ensure atomicity of the database operations
+        with transaction.atomic():
+            # Check if an order already exists for the user
+            existing_order = CartOrder.objects.filter(profile=request.user.profile, paid_status=False).first()
+
+            if existing_order:
+                order = existing_order
+            else:
+                # Create a new order if one doesn't exist
+                order = CartOrder.objects.create(
+                    profile=request.user.profile,
+                    price=0,  # You can update this later when you calculate the total amount
+                )
+
+            for p_id, item in request.session['cart_data_obj'].items():
+                total_amount += int(item['qty']) * float(item['price'])
+                item['category'] = Product.objects.get(pid=item['pid']).category.title
+
+                # Update the order's price as you go through the items
+                order.price += Decimal(item['qty']) * Decimal(item['price'])
+                order.save()
+
+                cart_order_products = CartOrderItems.objects.create(
+                    order=order,
+                    invoice_no="INVOICE_NO-" + str(order.id),
+                    item=item['title'],
+                    image=item['image'],
+                    qty=item['qty'],
+                    price=item['price'],
+                    total=float(item['qty']) * float(item['price']),
+                    category=Product.objects.get(pid=item['pid']).category
+                )
+
+            # Update the total price of the order after processing all items
+            order.price = total_amount
+            order.save()
+
+    try:
+        active_address = Address.objects.get(profile=request.user.profile, status=True)
+    except Address.DoesNotExist:
+        messages.warning(request, "There are multiple default addresses, please choose only one default address.")
+        active_address = None
+
+    return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
 
 @login_required
 def payment_completed_view(request):
