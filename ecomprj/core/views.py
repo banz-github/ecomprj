@@ -131,7 +131,24 @@ def get_most_ordered_product_types():
         total_quantity=Sum('qty')
     ).order_by('-total_orders')[:5]
 
+###############MOST ORDERED MATERIALS
+def most_ordered_materials(request, product_type):
+    materials = get_most_ordered_materials(product_type)
 
+    
+
+    context = {
+        'product_type': product_type,
+        'most_ordered_materials': materials,
+    }
+    return render(request, 'admindash/most-ordered-materials.html', context)
+
+def get_most_ordered_materials(product_type):
+    # Returns a queryset of materials for a specific product type with the total quantity
+    return CustomizationOrder.objects.filter(product_type__name=product_type).values('material__name').annotate(
+        total_quantity=Sum('qty')
+    ).order_by('-total_quantity')[:5]
+###############MOST ORDERED MATERIALS
 
 @allowed_users(allowed_roles=['admin'])
 def admindash_customers(request):

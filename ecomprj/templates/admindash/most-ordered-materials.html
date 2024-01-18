@@ -1,0 +1,30 @@
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+{% load custom_filters %}
+<!-- admindash/most-ordered-materials.html -->
+
+<div class="analytics-section">
+    <h2>Most Ordered Materials for {{ product_type }}</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Total Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for material in most_ordered_materials %}
+                <tr>
+                    <td>{{ material.material__name }}</td>
+                    <td>{{ material.total_quantity }} QTY</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

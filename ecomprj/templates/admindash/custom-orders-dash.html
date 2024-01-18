@@ -28,7 +28,7 @@
                             {% for col in custom_order_list %}
                             <tr>
                                 <td>{{col.co_id}}</td>
-                                <td>{{col.product_type}}</td>
+                                <td><a href="{% url 'core:most_ordered_materials' product_type=col.product_type %}" class="primary">{{col.product_type}}</a></td>
                                 <td>{{col.material|title}}</td>
                                 <td>{{col.color|title}}</td>
                                 <td>{{col.foam_type|title}}</td>
