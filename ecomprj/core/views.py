@@ -95,18 +95,41 @@ def admindash_orders(request):
     return render(request, 'admindash/orders-dash.html', context)
 
 
+# views.py
+
+
+from django.db.models import Sum
+
 @allowed_users(allowed_roles=['admin'])
 def admindash_custom_orders(request):
-
     custom_order_list = CustomizationOrder.objects.all()
-
     
-    context = {"custom_order_list":custom_order_list,
+    # Fetch most ordered product types with total quantity
+    most_ordered_product_types = get_most_ordered_product_types()
 
+    context = {
+        "custom_order_list": custom_order_list,
+        "most_ordered_product_types": most_ordered_product_types,
     }
 
-    return render(request, 'admindash/custom-orders-dash.html',context)
+    return render(request, 'admindash/custom-orders-dash.html', context)
 
+def get_most_ordered_product_types():
+    # Returns a queryset of product types with the total quantity
+    return CustomizationOrder.objects.values('product_type__name').annotate(
+        total_quantity=Sum('qty')
+    ).order_by('-total_quantity')[:5]
+def get_most_ordered_product_types():
+    # Returns a queryset of product types with the most orders multiplied by quantity
+    return CustomizationOrder.objects.values('product_type__name').annotate(
+        total_orders=F('qty') * Count('id')
+    ).order_by('-total_orders')[:5]
+def get_most_ordered_product_types():
+    # Returns a queryset of product types with the most orders and total quantity
+    return CustomizationOrder.objects.values('product_type__name').annotate(
+        total_orders=Count('id'),
+        total_quantity=Sum('qty')
+    ).order_by('-total_orders')[:5]
 
 
 

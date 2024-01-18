@@ -134,6 +134,33 @@
                 </div> {% endcomment %}
 
             </div>
+
+            <br>
+            <!-- ... (existing code) -->
+            <div class="analytics-section">
+                <h2>Most Ordered Product Types</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Type</th>
+                                <th>Total Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product_type in most_ordered_product_types %}
+                            <tr>
+                                <td>{{ product_type.product_type__name }}</td>
+                                <td>{{ product_type.total_quantity }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+<!-- ... (existing code) -->
+
         </main>
 
         {% endblock content %}
