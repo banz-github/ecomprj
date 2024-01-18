@@ -103,10 +103,10 @@ from django.db.models import Sum
 @allowed_users(allowed_roles=['admin'])
 def admindash_custom_orders(request):
     custom_order_list = CustomizationOrder.objects.all()
-    
+    custom_order_list2 = list(CustomizationOrder.objects.all())
     # Fetch most ordered product types with total quantity
     most_ordered_product_types = get_most_ordered_product_types()
-
+    most_ordered_product_types2 = list(get_most_ordered_product_types())
     context = {
         "custom_order_list": custom_order_list,
         "most_ordered_product_types": most_ordered_product_types,

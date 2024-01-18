@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}       
 {% load humanize %}
+{% load custom_filters %}
         <main>
             <!-- END OF INSIGHTS -->
             <div class="recent-orders">
@@ -150,8 +151,8 @@
                         <tbody>
                             {% for product_type in most_ordered_product_types %}
                             <tr>
-                                <td>{{ product_type.product_type__name }}</td>
-                                <td>{{ product_type.total_quantity }}</td>
+                                <td>{{ product_type.product_type__name }} PT</td>
+                                <td>{{ product_type.total_quantity }} QTY</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -159,7 +160,67 @@
                 </div>
             </div>
             
+
+        <!-- ... (existing code) -->    
+        <!-- ... (existing code) -->
 <!-- ... (existing code) -->
+
+<div class="bar-graph-container">
+    <canvas style="height:300px;" id="productTypeBarGraph"></canvas>
+</div>
+<!-- ... (existing code) -->
+<div class="bar-graph-container">
+    <canvas style="height:300px;" id="productTypeBarGraph"></canvas>
+    <script>
+        const productTypeData = {
+            labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
+            datasets: [{
+                label: 'Total Quantity for Each Product Type',
+                backgroundColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
+                borderColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
+                borderWidth: 1,
+                data: [{% for product_type in most_ordered_product_types %}{{ product_type.total_quantity }},{% endfor %}]
+            }]
+        };
+
+        const productTypeConfig = {
+            type: 'bar',
+            data: productTypeData,
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Product Type'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total Quantity'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false, // Set to false to hide the legend
+                    }
+                }
+            }
+        };
+
+        const productTypeBarGraph = new Chart(
+            document.getElementById('productTypeBarGraph'),
+            productTypeConfig
+        );
+    </script>
+</div>
+
+
+
+
+
+
 
         </main>
 
