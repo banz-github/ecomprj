@@ -4,27 +4,124 @@
 {% load humanize %}
 {% load custom_filters %}
 <!-- admindash/most-ordered-materials.html -->
+<main>
 
-<div class="analytics-section">
-    <h2>Most Ordered Materials for {{ product_type }}</h2>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Material</th>
-                    <th>Total Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for material in most_ordered_materials %}
-                <tr>
-                    <td>{{ material.material__name }}</td>
-                    <td>{{ material.total_quantity }} QTY</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="recent-orders">
+        <h2>{{ product_type }}'s Most Requested Materials </h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Quantity</th>
+                        
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for m in most_ordered_materials %}
+                    <tr>
+                        <td>{{m.material__name}}</td>
+                        <td>{{m.total_quantity}}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
     </div>
-</div>
+
+
+    <div class="analytics-section">
+        <h2>Most Ordered Materials for {{ product_type }}</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Total Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material in most_ordered_materials %}
+                    <tr>
+                        <td>{{ material.material__name }}</td>
+                        <td>{{ material.total_quantity }} QTY</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="donut-chart-container">
+        <div class="donut-chart-text">
+            <p>Most Ordered Materials for {{ product_type }}</p>
+        </div>
+        <canvas style="height:300px;" id="materialsDonutChart"></canvas>
+        <script>
+            const materialsDonutData = {
+                labels: [{% for material in most_ordered_materials %}"{{ material.material__name }}",{% endfor %}],
+                datasets: [{
+                    label: 'Total Quantity for Each Material',
+                    backgroundColor: [{% for material in most_ordered_materials %}'{{ material|random_color }}',{% endfor %}],
+                    borderColor: 'rgba(255, 255, 255, 1)', // You can customize the border color
+                    borderWidth: 1,
+                    data: [{% for material in most_ordered_materials %}{{ material.total_quantity }},{% endfor %}]
+                }]
+            };
+    
+            const materialsDonutConfig = {
+                type: 'doughnut',
+                data: materialsDonutData,
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false, // Set to false to hide the legend
+                        },
+                        outlabels: {
+                            text: '{{ product_type }}', // Text to be displayed inside the doughnut
+                            color: 'black', // Text color
+                            stretch: 30, // Adjust the distance of the text from the center
+                            font: {
+                                resizable: true,
+                                minSize: 12,
+                                maxSize: 16
+                            }
+                        },
+                    }
+                }
+            };
+    
+            const materialsDonutChart = new Chart(
+                document.getElementById('materialsDonutChart'),
+                materialsDonutConfig
+            );
+        </script>
+
+        <style>
+            .donut-chart-container {
+                position: relative;
+            }
+            
+            .donut-chart-text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                color: #333; /* Adjust the text color */
+            }
+        </style>
+
+    </div>
+    
+    
+    
+        
+</main>
+
 
 {% endblock content %}
