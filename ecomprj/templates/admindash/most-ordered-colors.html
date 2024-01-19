@@ -1,0 +1,59 @@
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+{% load custom_filters %}
+
+<main>
+    <h1>Most Ordered Colors for {{ product_type }} - {{ material_name }}</h1>
+
+    <div class="bar-chart-container">
+        <canvas style="height:300px;" id="colorsBarChart"></canvas>
+        <script>
+            const colorsData = {
+                labels: [{% for color in most_ordered_colors %}"{{ color.color__name }}",{% endfor %}],
+                datasets: [{
+                    label: 'Total Quantity for Each Color',
+                    backgroundColor: [{% for color in most_ordered_colors %}'{{ color|random_color }}',{% endfor %}],
+                    borderColor: [{% for color in most_ordered_colors %}'{{ color|random_color }}',{% endfor %}],
+                    borderWidth: 1,
+                    data: [{% for color in most_ordered_colors %}{{ color.total_quantity }},{% endfor %}]
+                }]
+            };
+
+            const colorsConfig = {
+                type: 'bar',
+                data: colorsData,
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Color'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Total Quantity'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        }
+                    }
+                }
+            };
+
+            const colorsBarChart = new Chart(
+                document.getElementById('colorsBarChart'),
+                colorsConfig
+            );
+        </script>
+    </div>
+</main>
+    
+
+{% endblock %}

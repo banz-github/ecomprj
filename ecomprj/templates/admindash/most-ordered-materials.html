@@ -21,7 +21,7 @@
                 <tbody>
                     {% for m in most_ordered_materials %}
                     <tr>
-                        <td>{{m.material__name}}</td>
+                        <td><a class="primary" href="{% url 'core:most_ordered_colors' product_type=product_type material_name=m.material__name %}">{{m.material__name}}</a></td>
                         <td>{{m.total_quantity}}</td>
                         
                     </tr>

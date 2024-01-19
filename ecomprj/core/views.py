@@ -150,6 +150,32 @@ def get_most_ordered_materials(product_type):
     ).order_by('-total_quantity')[:5]
 ###############MOST ORDERED MATERIALS
 
+
+##### MOST ORDERED COLORS IN THE MATERIAL
+def most_ordered_colors(request, product_type, material_name):
+    colors = get_most_ordered_colors(product_type, material_name)
+
+    context = {
+        'product_type': product_type,
+        'material_name': material_name,
+        'most_ordered_colors': colors,
+    }
+    return render(request, 'admindash/most-ordered-colors.html', context)
+
+def get_most_ordered_colors(product_type, material_name):
+    # Returns a queryset of colors for a specific material with the total quantity
+    return CustomizationOrder.objects.filter(
+        product_type__name=product_type,
+        material__name=material_name
+    ).values('color__name').annotate(
+        total_quantity=Sum('qty')
+    ).order_by('-total_quantity')[:5]
+##### MOST ORDERED COLORS IN THE MATERIAL
+
+
+
+
+
 @allowed_users(allowed_roles=['admin'])
 def admindash_customers(request):
     customers = Profile.objects.filter(verified=True)
