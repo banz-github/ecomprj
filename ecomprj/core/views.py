@@ -805,54 +805,7 @@ def checkout_view(request):
         active_address = None
 
     return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
-    cart_total_amount = 0
-    total_amount = 0 
 
-    if 'cart_data_obj' in request.session:
-        # Use transaction.atomic to ensure atomicity of the database operations
-        with transaction.atomic():
-            # Check if an order already exists for the user
-            existing_order = CartOrder.objects.filter(profile=request.user.profile, paid_status=False).first()
-
-            if existing_order:
-                order = existing_order
-            else:
-                # Create a new order if one doesn't exist
-                order = CartOrder.objects.create(
-                    profile=request.user.profile,
-                    price=0,  # You can update this later when you calculate the total amount
-                )
-
-            for p_id, item in request.session['cart_data_obj'].items():
-                total_amount += int(item['qty']) * float(item['price'])
-                item['category'] = Product.objects.get(pid=item['pid']).category.title
-
-                # Update the order's price as you go through the items
-                order.price += Decimal(item['qty']) * Decimal(item['price'])
-                order.save()
-
-                cart_order_products = CartOrderItems.objects.create(
-                    order=order,
-                    invoice_no="INVOICE_NO-" + str(order.id),
-                    item=item['title'],
-                    image=item['image'],
-                    qty=item['qty'],
-                    price=item['price'],
-                    total=float(item['qty']) * float(item['price']),
-                    category=Product.objects.get(pid=item['pid']).category
-                )
-
-            # Update the total price of the order after processing all items
-            order.price = total_amount
-            order.save()
-
-    try:
-        active_address = Address.objects.get(profile=request.user.profile, status=True)
-    except Address.DoesNotExist:
-        messages.warning(request, "There are multiple default addresses, please choose only one default address.")
-        active_address = None
-
-    return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
 
 @login_required
 def payment_completed_view(request):

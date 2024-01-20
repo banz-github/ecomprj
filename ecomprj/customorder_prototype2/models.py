@@ -101,6 +101,7 @@ class CustomizationOrder(models.Model):
 
     def __str__(self):
         return self.co_id
+
     
 class Analytics(models.Model):
     product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
