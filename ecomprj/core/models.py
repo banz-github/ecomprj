@@ -167,6 +167,10 @@ class CartOrder(models.Model):
     product_status = models.CharField(choices=STATUS_CHOICE, max_length=30, default="processing")
     receipt_img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
 
+    #newly added 
+    is_completed = models.BooleanField(default=False)  # New field to track order completion status
+
+
     class Meta:
         verbose_name_plural = "Cart Order"
 
@@ -183,6 +187,8 @@ class CartOrderItems(models.Model):
     qty = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=99999999, decimal_places=2, default="500.00")
     total = models.DecimalField(max_digits=99999999, decimal_places=2, default="500.00")
+
+    order_completed = models.BooleanField(default=False)  # New field to track order item completion status
 
     class Meta:
         verbose_name_plural = "Cart Order Items"

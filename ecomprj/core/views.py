@@ -754,7 +754,7 @@ def checkout_view(request):
         # Use transaction.atomic to ensure atomicity of the database operations
         with transaction.atomic():
             # Check if an order already exists for the user
-            existing_order = CartOrder.objects.filter(profile=request.user.profile, paid_status=False).first()
+            existing_order = CartOrder.objects.filter(profile=request.user.profile, paid_status=False, is_completed=False).first()
 
             if existing_order:
                 order = existing_order
@@ -796,6 +796,7 @@ def checkout_view(request):
 
             # Update the total price of the order after processing all items
             order.price = total_amount
+            order.is_completed = True  # Mark the order as completed
             order.save()
 
     try:
@@ -805,6 +806,7 @@ def checkout_view(request):
         active_address = None
 
     return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
+
 
 
 @login_required
