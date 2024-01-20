@@ -167,6 +167,8 @@ class CartOrder(models.Model):
     product_status = models.CharField(choices=STATUS_CHOICE, max_length=30, default="processing")
     receipt_img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
 
+    receipt_submitted = models.BooleanField(default=False) #newly added
+
     #newly added 
     is_completed = models.BooleanField(default=False)  # New field to track order completion status
 

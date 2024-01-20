@@ -742,6 +742,27 @@ def checkout_gcash_view(request):
 #         active_address = None
 
 #     return render(request, "core/checkout.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount, "active_address":active_address })
+@login_required
+def checkout_check(request):
+    
+
+     # Fetch and display order details without creating a new order
+    if 'cart_data_obj' in request.session:
+        cart_total_amount = sum(int(item['qty']) * float(item['price']) for item in request.session['cart_data_obj'].values())
+
+        try:
+            active_address = Address.objects.get(profile=request.user.profile, status=True)
+        except Address.DoesNotExist:
+            messages.warning(request, "There are multiple default addresses, please choose only one default address.")
+            active_address = None
+
+        return render(request, "core/checkout_check.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount,'active_address': active_address,})
+    else:
+        messages.warning(request, "Your cart is empty")
+        return redirect("core:index")
+    
+    
+
 
 from django.db import transaction
 from decimal import Decimal
