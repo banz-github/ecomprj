@@ -704,9 +704,33 @@ def update_cart(request):
 
 
 @login_required
-def checkout_gcash_view(request):
-    # 
-    pass
+def checkout_gcash_view(request,id):
+    # Ang kailangan nito iretrieve lang yung Specific order then VIEW the details
+    order = CartOrder.objects.get(profile=request.user.profile, id=id) #mark
+    order_items = CartOrderItems.objects.filter(order=order)
+
+    for o in order_items:
+        o.amount = o.price * o.qty
+
+    
+    # for item in order_items:
+    #     item.subtotal = item.price * item.qty
+
+
+# @login_required
+# def order_detail(request, id):
+#     order = CartOrder.objects.get(profile=request.user.profile, id=id) #mark
+#     order_items = CartOrderItems.objects.filter(order=order)
+#     context = {
+#         "order_items":order_items,
+#     }
+#     return render(request, 'core/order-detail.html',context)
+    
+    #{% url 'core:order-detail' o.id %}
+
+
+    context = {"order":order,"order_items":order_items,}
+    return render(request, "core/gcash-receipt-submission-portal.html",context)
 
 
 

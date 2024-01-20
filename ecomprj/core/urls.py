@@ -64,7 +64,7 @@ urlpatterns = [
     #checkout
     path("checkout/", checkout_view, name="checkout"),
     #gcash
-     path("checkout-gcash-receipt-submission-portal/", checkout_gcash_view, name="checkout-gcash"),
+    path("checkout-gcash-receipt-submission-portal/<id>/", checkout_gcash_view, name="checkout-gcash"),
     
     #paypal
     path('paypal/', include('paypal.standard.ipn.urls')),
