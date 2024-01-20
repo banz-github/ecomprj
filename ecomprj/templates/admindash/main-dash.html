@@ -73,9 +73,12 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Profile</th>
+                            <th>Order ID</th>
                             <th>Orders</th>
                             <th>Date</th>
                             <th>Status</th>
+                            <th>Receipt Submitted</th>
                             <th>Payment Status</th>
                             <th>Total</th>
                         </tr>
@@ -84,11 +87,20 @@
                     <tbody>
                         {% for o in order_list %}
                         <tr>
+                            <td>{{o.profile}}</td>
+                            <td>{{o.cartorder_id}}</td>
                             <td>INVOICE_NO-{{o.id}}</td>
                             <td>{{o.order_date}}</td>
                             <td>{{o.product_status|title}}</td>
+
+                            {% if o.receipt_submitted == True %}
+                            <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                            {% else %}
+                            <td class="text-danger"><strong>X</strong></td>
+                            {% endif %}
+
                             {% if o.paid_status == True %}
-                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success">✔️</i></td>
                             {% else %}
                             <td class="text-danger"><strong>X</strong></td>
                             {% endif %}
