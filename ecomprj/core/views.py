@@ -959,7 +959,14 @@ def payment_failed_view(request):
 def customer_dashboard(request):
     #orders = request.user.customer.order_set.all() #profile?
 
-    order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #mark
+    order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #raw
+
+    order_list_rfalse = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=False).order_by("-id")
+
+    order_list_rtrue = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=True).order_by("-id")
+    
+    order_list_paid = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=True, paid_status=True).order_by("-id")
+
     address = Address.objects.filter(profile=request.user.profile) #mark 2
     
     profile = Profile.objects.get(user=request.user) #mark
@@ -989,7 +996,8 @@ def customer_dashboard(request):
         return redirect("core:dashboard")
     
     context = {
-        "profile" : profile,"orders" : orders,"order_list":order_list, "address":address,"month":month,"total_orders":total_orders,
+        "profile" : profile,"orders" : orders,"order_list":order_list, "address":address,"month":month,"total_orders":total_orders, "order_list_rfalse":order_list_rfalse,
+        "order_list_rtrue":order_list_rtrue,
     }
     return render(request, 'core/dashboard.html',context)
     
