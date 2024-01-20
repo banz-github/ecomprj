@@ -146,6 +146,8 @@
                                                                 {% endif %}
                                                                 <td>{{o.price|floatformat:2|intcomma}}</td>
                                                                 <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
+                                                                <td><a href="{% url 'core:checkout-gcash' o.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td>
+
                                                             </tr>
                                                             {% endfor %}
                                                         </tbody>

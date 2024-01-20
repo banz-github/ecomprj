@@ -713,20 +713,11 @@ def checkout_gcash_view(request,id):
         o.amount = o.price * o.qty
 
     
-    # for item in order_items:
-    #     item.subtotal = item.price * item.qty
-
-
-# @login_required
-# def order_detail(request, id):
-#     order = CartOrder.objects.get(profile=request.user.profile, id=id) #mark
-#     order_items = CartOrderItems.objects.filter(order=order)
-#     context = {
-#         "order_items":order_items,
-#     }
-#     return render(request, 'core/order-detail.html',context)
+    #################EVERYTHING VIEW RELATED ^^^^^^^^^^^^^^^^
     
     #{% url 'core:order-detail' o.id %}
+        
+    #BELOW IS EVERYTHING RECEIPT SUBMISSION
 
 
     context = {"order":order,"order_items":order_items,}
