@@ -789,7 +789,7 @@ def checkout_check(request):
 
 from django.db import transaction
 from decimal import Decimal
-@login_required
+@login_required #MUST BE SYNCHRONIZED WITH GCASH VIEW
 def checkout_view(request):
     cart_total_amount = 0
     total_amount = 0 
@@ -862,6 +862,85 @@ def checkout_view(request):
 
     #return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
     return redirect("core:index")
+
+
+@login_required #MUST BE SYNCHRONIZED WITH GCASH VIEW
+def if_checkout_to_gcash(request):
+    cart_total_amount = 0
+    total_amount = 0 
+
+    if 'cart_data_obj' in request.session:
+        # Use transaction.atomic to ensure atomicity of the database operations
+        with transaction.atomic():
+            # Check if an order already exists for the user
+            existing_order = CartOrder.objects.filter(profile=request.user.profile, paid_status=False, is_completed=False).first()
+
+            if existing_order:
+                order = existing_order
+            else:
+                # Create a new order if one doesn't exist
+                order = CartOrder.objects.create(
+                    profile=request.user.profile,
+                    price=Decimal('0'),  # Use Decimal for money values
+                )
+
+            for p_id, item in request.session['cart_data_obj'].items():
+                total_amount += int(item['qty']) * float(item['price'])
+                item['category'] = Product.objects.get(pid=item['pid']).category.title
+
+                # Update the order's price as you go through the items
+                order.price += Decimal(item['qty']) * Decimal(item['price'])
+                order.save()
+
+                # Check if a CartOrderItems instance already exists for this order and item
+                existing_item = CartOrderItems.objects.filter(order=order, item=item['title']).first()
+
+                if existing_item:
+                    # Update the existing item if it already exists
+                    existing_item.qty += int(item['qty'])
+                    existing_item.total += Decimal(item['qty']) * Decimal(item['price'])
+                    existing_item.save()
+                else:
+                    # Create a new CartOrderItems instance if it doesn't exist
+                    cart_order_products = CartOrderItems.objects.create(
+                        order=order,
+                        invoice_no="INVOICE_NO-" + str(order.id),
+                        item=item['title'],
+                        image=item['image'],
+                        qty=int(item['qty']),
+                        price=Decimal(item['price']),
+                        total=Decimal(item['qty']) * Decimal(item['price']),
+                        category=Product.objects.get(pid=item['pid']).category
+                    )
+
+            # Update the total price of the order after processing all items
+            order.price = total_amount
+            order.is_completed = True  # Mark the order as completed
+            order.save()
+
+            
+            
+            # Clear the cart
+            del request.session['cart_data_obj']
+            request.session.modified = True 
+            
+            order_id = order.id # the only diff
+
+            messages.success(request, 'An Order is created.')
+
+    try:
+        active_address = Address.objects.get(profile=request.user.profile, status=True)
+    except Address.DoesNotExist:
+        messages.warning(request, "There are multiple default addresses, please choose only one default address.")
+        active_address = None
+
+    #if gcash, go to gcash - 
+    #if pay later , go to home
+
+
+    #return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
+    return redirect("core:checkout-gcash", id=order_id)
+
 
 
 @login_required
