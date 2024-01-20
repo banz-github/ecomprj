@@ -119,7 +119,7 @@
                         <div class="w-50">
                             {{paypal_payment_button.render}}
                         </div> {% endcomment %}
-                        <a href="#" class="btn btn-fill-out btn-block mt-30">Place Order - Pay later<i class="fi-rs-sign-out ml-15"></i></a>
+                        <a href="{% url 'core:checkout' %}" class="btn btn-fill-out btn-block mt-30">Place Order - Pay later<i class="fi-rs-sign-out ml-15"></i></a>
                         <a href="#" class="btn btn-fill-out btn-block mt-30" style="background-color:blue;">Place Order - Pay Now<i class="fi-rs-sign-out ml-15"></i></a>
                         <br>
                         <h6 class="text-muted">Take note that if you pay later, the order will be completed but the production will not start.</h6> 

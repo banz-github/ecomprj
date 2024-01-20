@@ -123,6 +123,7 @@
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
+                                                                <th>Order ID</th>
                                                                 <th>Order</th>
                                                                 <th>Date</th>
                                                                 <th>Status</th>
@@ -134,6 +135,7 @@
                                                         <tbody>
                                                             {% for o in order_list %}
                                                             <tr>
+                                                                <td>{{o.cartorder_id}}</td>
                                                                 <td>INVOICE_NO-{{o.id}}</td>
                                                                 <td>{{o.order_date}}</td>
                                                                 <td>{{o.product_status|title}}</td>

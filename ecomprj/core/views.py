@@ -827,6 +827,13 @@ def checkout_view(request):
             order.price = total_amount
             order.is_completed = True  # Mark the order as completed
             order.save()
+            
+            # Clear the cart
+            del request.session['cart_data_obj']
+            request.session.modified = True 
+            
+
+            messages.success(request, 'An Order is created.')
 
     try:
         active_address = Address.objects.get(profile=request.user.profile, status=True)
@@ -838,8 +845,8 @@ def checkout_view(request):
     #if pay later , go to home
 
 
-    return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
-
+    #return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
+    return redirect("core:index")
 
 
 @login_required
