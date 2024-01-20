@@ -963,7 +963,7 @@ def customer_dashboard(request):
 
     order_list_rfalse = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=False).order_by("-id")
 
-    order_list_rtrue = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=True).order_by("-id")
+    order_list_rtrue = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=True, paid_status=False).order_by("-id")
     
     order_list_paid = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=True, paid_status=True).order_by("-id")
 
@@ -997,7 +997,7 @@ def customer_dashboard(request):
     
     context = {
         "profile" : profile,"orders" : orders,"order_list":order_list, "address":address,"month":month,"total_orders":total_orders, "order_list_rfalse":order_list_rfalse,
-        "order_list_rtrue":order_list_rtrue,
+        "order_list_rtrue":order_list_rtrue, "order_list_paid":order_list_paid, 
     }
     return render(request, 'core/dashboard.html',context)
     

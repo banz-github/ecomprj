@@ -203,6 +203,50 @@
                                                         </tbody>
                                                     </table>
 
+                                                    <!-- SEPARATION -->
+                                                    <h3 class="mb-0">Paid = True</h3>
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Order ID</th>
+                                                                <th>Order</th>
+                                                                <th>Date</th>
+                                                                <th>Status</th>
+                                                                <th>Receipt Submitted</th>
+                                                                <th>Payment Status</th>
+                                                                <th>Total</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for orpaid in order_list_paid %}
+                                                            <tr>
+                                                                <td>{{orpaid.cartorder_id}}</td>
+                                                                <td>INVOICE_NO-{{orpaid.id}}</td>
+                                                                <td>{{orpaid.order_date}}</td>
+                                                                <td>{{orpaid.product_status|title}}</td>
+
+                                                                {% if orpaid.receipt_submitted == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+
+                                                                {% if orpaid.paid_status == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+                                                                <td>{{orpaid.price|floatformat:2|intcomma}}</td>
+                                                                <td><a href="{% url 'core:order-detail' orpaid.id %}" class="btn-small d-block">View</a></td>
+                                                                {% comment %} <td><a href="{% url 'core:checkout-gcash' o.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
+
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+
+
                                                 </div>
                                             </div>
                                         </div>
