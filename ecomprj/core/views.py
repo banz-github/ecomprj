@@ -826,6 +826,10 @@ def checkout_view(request):
         messages.warning(request, "There are multiple default addresses, please choose only one default address.")
         active_address = None
 
+    #if gcash, go to gcash - 
+    #if pay later , go to home
+
+
     return render(request, "core/checkout.html", {"cart_data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "active_address": active_address })
 
 
