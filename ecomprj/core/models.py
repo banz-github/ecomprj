@@ -160,6 +160,7 @@ class ProductColors(models.Model):
 ############################### Card, Order, OrderItems, and Address    
 
 class CartOrder(models.Model):
+    cartorder_id = ShortUUIDField(unique=True, length=5, max_length=10, prefix="cart_order_", alphabet="abcdefgh12345")
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     price = models.DecimalField(max_digits=99999999, decimal_places=2, default="500.00")
     paid_status = models.BooleanField(default=False)
