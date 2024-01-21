@@ -77,11 +77,22 @@
                                                                 <td>₱ {{o.price|floatformat:2|intcomma}}</td>
                                                                 <td> <strong>x</strong> {{o.qty}}</td>
                                                                 <td>₱ {{o.total|floatformat:2|intcomma}}</td>
-                                                                
                                                             </tr>
+
+                                                            
+
+
                                                             {% endfor %}
+
+                                                            
                                                         </tbody>
                                                     </table>
+                                                    {% if order.receipt_submitted == True %}
+                                                                <h6>Submitted Receipt</h6>
+                                                                <p><img src="{{ order.receipt_img.url }}" style="width: 200px; height:400px; object-fit:cover;"></p>
+                                                            {% else %}
+                                                                <h6>Please pay for the production to start. <a href="{% url 'core:checkout-gcash' order.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></h6>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>

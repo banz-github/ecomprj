@@ -1023,7 +1023,7 @@ def order_detail(request, id):
     order = CartOrder.objects.get(profile=request.user.profile, id=id) #mark
     order_items = CartOrderItems.objects.filter(order=order)
     context = {
-        "order_items":order_items,
+        "order":order,"order_items":order_items,
     }
     return render(request, 'core/order-detail.html',context)
 ### TRY LANG FROM pt 

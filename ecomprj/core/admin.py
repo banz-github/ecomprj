@@ -61,9 +61,9 @@ class VendorAdmin(admin.ModelAdmin):
     list_display = ['title', 'vendor_image']
 
 class CartOrderAdmin(admin.ModelAdmin):
-    list_editable = ['paid_status', 'product_status']
+    list_editable = ['paid_status', 'product_status', 'receipt_submitted']
     #list_editable = ['paid_status', 'product_status']
-    list_display = ['cartorder_id','profile', 'price', 'paid_status', 'order_date', 'product_status']
+    list_display = ['cartorder_id','profile', 'price', 'paid_status','receipt_submitted', 'order_date', 'product_status']
 
 
 class CartOrderItemsAdmin(admin.ModelAdmin):
