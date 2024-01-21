@@ -82,11 +82,15 @@
                                                     <tbody>
                                                         {% for o in order_items %}
                                                         <tr>
-                                                            <td>INV-{{o.id}}</td>
+                                                            {% comment %} <td>INV-{{o.id}}</td> {% endcomment %}
                                                             <td>
                                                                 <p><img src="{{ o.image }}" style="width: 60px; height:60px; object-fit:cover;"></p>
                                                             </td>
+                                                            
                                                             <td>{{o.item}}</td>
+                                                            <td>{{order.order_date}}</td>
+                                                            <td>To work on</td>
+                                                            <td>Processing WIP</td>
                                                             <td>₱ {{o.price|floatformat:2|intcomma}}</td>
                                                             <td> <strong>x</strong> {{o.qty}}</td>
                                                             <td>₱ {{o.total|floatformat:2|intcomma}}</td>
@@ -100,13 +104,13 @@
                                                         
                                                     </tbody>
                                                 </table>
-                                                <h6>Submitted Receipt</h6>
-                                                {% comment %} {% if order.receipt_submitted == True %}
+                                                
+                                                {% if order.receipt_submitted == True %}
                                                             <h6>Submitted Receipt</h6>
                                                             <p><img src="{{ order.receipt_img.url }}" style="width: 200px; height:400px; object-fit:cover;"></p>
                                                         {% else %}
-                                                            <h6>Please pay for the production to start. <a href="{% url 'core:checkout-gcash' order.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></h6>
-                                                {% endif %} {% endcomment %}
+                                                            <h6>No submitted receipts. <a href="{% url 'core:checkout-gcash' order.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></h6>
+                                                {% endif %} 
                                             </div>
                                         </div>
                                     </div>

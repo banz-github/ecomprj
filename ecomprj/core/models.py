@@ -180,7 +180,7 @@ class CartOrder(models.Model):
 class CartOrderItems(models.Model):
     order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)
     invoice_no = models.CharField(max_length=200)
-    product_status = models.CharField(max_length=200)
+    product_status = models.CharField(max_length=200, null=True, blank=True)
     item = models.CharField(max_length=200)
 
     #newly added
