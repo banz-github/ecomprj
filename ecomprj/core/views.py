@@ -95,6 +95,19 @@ def admindash_orders(request):
     return render(request, 'admindash/orders-dash.html', context)
 
 
+from django.shortcuts import render, get_object_or_404
+@allowed_users(allowed_roles=['admin'])
+def order_detail_maindash(request, id):
+    order = get_object_or_404(CartOrder, profile__user__id=request.user.id, id=id)
+
+    context = {
+        'order': order,
+    }
+
+    return render(request, 'admindash/order-detail-maindash.html', context)
+
+
+
 # views.py
 
 
