@@ -44,7 +44,9 @@ from paypal.standard.forms import PayPalPaymentsForm
 @allowed_users(allowed_roles=['admin'])
 def admindash(request):
     message_list = ContactUs.objects.all()
-    order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id")[:5] #mark, do not change if it works tho
+    # order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id")[:5] #mark, do not change if it works tho
+    # order_list = CartOrder.objects.all().order_by("-id")[:5] #mark, do not change if it works tho
+    order_list = get_object_or_404(CartOrder, id=id)
     
     context = {
         "order_list":order_list,"message_list":message_list,
@@ -58,7 +60,8 @@ def admindash_orders(request):
     message_list = ContactUs.objects.all()
     # order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #mark, do not change if it works tho
     
-    order_list = CartOrder.objects.all()
+    # order_list = CartOrder.objects.all()
+    order_list = CartOrder.objects.all().order_by("-id")[:5]
 
     # Similar analytics as in customer_dashboard
     # orders = CartOrder.objects.filter(profile=request.user.profile).annotate(month=ExtractMonth("order_date")).values("month").annotate(count=Count("id")).values("month", "count")
@@ -98,7 +101,10 @@ def admindash_orders(request):
 from django.shortcuts import render, get_object_or_404
 @allowed_users(allowed_roles=['admin'])
 def order_detail_maindash(request, id):
-    order = get_object_or_404(CartOrder, profile__user__id=request.user.id, id=id)
+    # order = get_object_or_404(CartOrder, profile__user__id=request.user.id, id=id)
+
+    order = get_object_or_404(CartOrder, id=id)
+
     order_items = CartOrderItems.objects.filter(order=order)
     context = {
         'order': order, "order_items":order_items,

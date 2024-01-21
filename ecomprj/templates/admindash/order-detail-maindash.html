@@ -47,7 +47,8 @@
                                 <div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h3 class="mb-0">Customer Orders - Order ID and ORDER INV</h3>
+                                            <h3 class="mb-0">{{order.profile}}'s Order</h3>
+                                            <h3 class="mb-0">ORDER INV-{{order.id}} | {{order.cartorder_id}}</h3>
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
@@ -109,7 +110,7 @@
                                                             <h6>Submitted Receipt</h6>
                                                             <p><img src="{{ order.receipt_img.url }}" style="width: 200px; height:400px; object-fit:cover;"></p>
                                                         {% else %}
-                                                            <h6>No submitted receipts. <a href="{% url 'core:checkout-gcash' order.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></h6>
+                                                            <h6>No submitted receipts.</h6>
                                                 {% endif %} 
                                             </div>
                                         </div>
