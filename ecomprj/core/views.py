@@ -702,6 +702,7 @@ def update_cart(request):
 #     context = {'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount}
 #     return render(request, "core/gcash-receipt-submission-portal.html",context)
 
+from .forms import ReceiptSubmissionForm
 
 @login_required
 def checkout_gcash_view(request,id):
@@ -718,9 +719,21 @@ def checkout_gcash_view(request,id):
     #{% url 'core:order-detail' o.id %}
         
     #BELOW IS EVERYTHING RECEIPT SUBMISSION
+    if request.method == 'POST':
+        form = ReceiptSubmissionForm(request.POST, request.FILES)
+        if form.is_valid():
+            receipt_image = form.cleaned_data['receipt_image']
+            order.receipt_img = receipt_image
+            order.receipt_submitted = True
+            order.save()
+            # Additional logic if needed, e.g., redirect to a success page
+            messages.success(request, 'An Order is created.')
+            return redirect("core:index")
+    else:
+        form = ReceiptSubmissionForm()
 
 
-    context = {"order":order,"order_items":order_items,}
+    context = {"order":order,"order_items":order_items, "form": form}
     return render(request, "core/gcash-receipt-submission-portal.html",context)
 
 

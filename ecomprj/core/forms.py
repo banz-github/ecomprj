@@ -7,3 +7,7 @@ class ProductReviewForm(forms.ModelForm):
     class Meta:
         model = ProductReview
         fields = ['review','rating']
+
+
+class ReceiptSubmissionForm(forms.Form):
+    receipt_image = forms.ImageField()
