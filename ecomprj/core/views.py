@@ -61,7 +61,7 @@ def admindash_orders(request):
     # order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #mark, do not change if it works tho
     
     # order_list = CartOrder.objects.all()
-    order_list = CartOrder.objects.all().order_by("-id")[:5]
+    order_list = CartOrder.objects.all().order_by("-id")#[:10] #NakaCAP LANG
 
     # Similar analytics as in customer_dashboard
     # orders = CartOrder.objects.filter(profile=request.user.profile).annotate(month=ExtractMonth("order_date")).values("month").annotate(count=Count("id")).values("month", "count")
