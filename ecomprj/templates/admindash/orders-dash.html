@@ -42,7 +42,8 @@
                                 <td class="text-danger"><strong>X</strong></td>
                                 {% endif %}
                                 <td>{{o.price|floatformat:2|intcomma}}</td>
-                                <td><a href="{% url 'core:order_detail_maindash' o.id %}" class="primary">View</a></td>
+                                <td><a href="{% url 'core:order_detail_maindash' id=o.id %}" class="primary">View</a></td>
+
                                 {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
 
                                 <td class="warning">Pending</td>
