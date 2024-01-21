@@ -11,6 +11,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <th>Customer Name</th>
                                 <th>Custom Order ID</th>
                                 <th>Product Type</th>
                                 <th>Material</th>
@@ -20,6 +21,12 @@
                                 <th>Quantity</th>
                                 <th>Payment Approved</th>
                                 <th>Percentage</th>
+                                <th>Receipt Submitted</th>
+                                {% comment %} <th>With Downpayment</th> {% endcomment %}
+                                <th>Paid Amount</th>
+                                <th>Date Approved</th>
+                                <th>Verifier</th>
+
 
                             </tr>
                             
@@ -27,6 +34,7 @@
                         <tbody>
                             {% for col in custom_order_list %}
                             <tr>
+                                <td>{{col.profile}}</td>
                                 <td>{{col.co_id}}</td>
                                 <td><a href="{% url 'core:most_ordered_materials' product_type=col.product_type %}" class="primary">{{col.product_type}}</a></td>
                                 <td>{{col.material|title}}</td>
@@ -40,6 +48,17 @@
                                 <td class="text-danger"><strong>X</strong></td>
                                 {% endif %}
                                 <td>{{col.percentage_progress}}%</td>
+
+                                {% if col.receipt_submitted == True %}
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+                                <td>₱{{col.paid_amount}}</td>
+                                <th>{{col.date_approved}}</th>
+
+                                <th>{{col.admin_profile}}</th>
+
                                 <td><a href="#" class="primary">View</a></td>
                                 {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
 

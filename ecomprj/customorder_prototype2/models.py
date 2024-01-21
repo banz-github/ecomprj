@@ -71,9 +71,12 @@ class CustomizationOrder(models.Model):
 
     #Down payment status
     with_downpayment = models.BooleanField(default=False)
-
+    paid_amount = models.DecimalField(max_digits=10, decimal_places=2,default=0) #Magkano ang binayad
     #downpayment receipt submission
+
     receipt_img = models.ImageField(upload_to='receipt/', null=True, blank=True)
+    receipt_submitted = models.BooleanField(default=False)
+
     date_approved = models.DateTimeField(auto_now_add=False, null=True, blank=True)
 
     
@@ -84,7 +87,7 @@ class CustomizationOrder(models.Model):
     #phone = models.ForeignKey(Profile) #
     #address = models.ForeignKey(Address)
 
-    AdminProfile = models.CharField(max_length=100) #Bali dito nalang pass in ng String type na ID nung nagapprove
+    AdminProfile = models.CharField(max_length=100, null=True, blank=True) #Bali dito nalang pass in ng String type na ID nung nagapprove
     #admin notes, igaya dun sa Messaging muna
     admin_notes = RichTextUploadingField(null=True, blank=True, default="")
     #Boolean kung archived yung order , default False
