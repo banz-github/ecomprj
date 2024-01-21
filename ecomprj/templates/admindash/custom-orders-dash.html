@@ -59,7 +59,7 @@
 
                                 <th>{{col.admin_profile}}</th>
 
-                                <td><a href="#" class="primary">View</a></td>
+                                <td><a href="{% url 'core:custom_order_detail_dashboard' co_id=col.co_id %}" class="primary">View</a></td>
                                 {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
 
                                 <td class="warning">Pending</td>

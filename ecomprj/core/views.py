@@ -192,6 +192,17 @@ def get_most_ordered_colors(product_type, material_name):
 ##### MOST ORDERED COLORS IN THE MATERIAL
 
 
+@allowed_users(allowed_roles=['admin'])
+def custom_order_detail_dashboard(request, co_id):
+
+
+    coi_details = CustomizationOrder.objects.filter(co_id=co_id)
+
+    context = {"coi_details":coi_details,}
+    return render(request,'admindash/custom_order_detail_dashboard.html', context)
+
+
+
 
 
 
