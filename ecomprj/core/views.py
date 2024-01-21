@@ -191,17 +191,53 @@ def get_most_ordered_colors(product_type, material_name):
     ).order_by('-total_quantity')[:5]
 ##### MOST ORDERED COLORS IN THE MATERIAL
 
+#This one below is working
+
+from customorder_prototype2.forms import CustomOrderUpdateForm
+from django.contrib import messages
+
+
+# @allowed_users(allowed_roles=['admin'])
+# def custom_order_detail_dashboard(request, co_id):
+
+
+#     coi_details = CustomizationOrder.objects.filter(co_id=co_id)
+
+#     context = {"coi_details":coi_details,}
+#     return render(request,'admindash/custom_order_detail_dashboard.html', context)
+
+# @allowed_users(allowed_roles=['admin'])
+# def custom_order_detail_dashboard(request, co_id):
+#     coi_details = get_object_or_404(CustomizationOrder, co_id=co_id)
+
+#     if request.method == 'POST':
+#         form = CustomOrderUpdateForm(request.POST, instance=coi_details)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Custom order details updated successfully.')
+#             return redirect('your_redirect_view_name')  # Replace with the appropriate view name
+#     else:
+#         form = CustomOrderUpdateForm(instance=coi_details)
+
+#     context = {"coi_details": coi_details, "form": form}
+#     return render(request, 'admindash/custom_order_detail_dashboard.html', context)
 
 @allowed_users(allowed_roles=['admin'])
 def custom_order_detail_dashboard(request, co_id):
-
-
     coi_details = CustomizationOrder.objects.filter(co_id=co_id)
+    coi_details1 = get_object_or_404(CustomizationOrder, co_id=co_id)
 
-    context = {"coi_details":coi_details,}
-    return render(request,'admindash/custom_order_detail_dashboard.html', context)
+    if request.method == 'POST':
+        form = CustomOrderUpdateForm(request.POST, instance=coi_details1)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Custom order details updated successfully.')
+            # return redirect('core:admindash_custom_orders')  # Replace with the appropriate view name
+    else:
+        form = CustomOrderUpdateForm(instance=coi_details1)
 
-
+    context = {"coi_details": coi_details, "form": form, "coi_details1":coi_details1,}
+    return render(request, 'admindash/custom_order_detail_dashboard.html', context)
 
 
 
