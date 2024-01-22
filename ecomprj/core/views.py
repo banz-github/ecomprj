@@ -232,7 +232,7 @@ def custom_order_detail_dashboard(request, co_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Custom order details updated successfully.')
-            # return redirect('core:admindash_custom_orders')  # Replace with the appropriate view name
+            return redirect('core:admindash_custom_orders')  # Replace with the appropriate view name
     else:
         form = CustomOrderUpdateForm(instance=coi_details1)
 

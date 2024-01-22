@@ -133,17 +133,36 @@
                                                     {% comment %} {% for cd in coi_details %}
                                                         <input type="number" value="1" name="" id="product-quantity" class="w-25 mb-10 product-quantity-{{cd.qty}}">
                                                     {% endfor %} {% endcomment %}
-
+                                                
+                                                {% if form.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <strong>Error:</strong> Please correct the following errors.
+                                                        <ul>
+                                                            {% for field, errors in form.errors.items %}
+                                                                {% for error in errors %}
+                                                                    <li>{{ field }}: {{ error }}</li>
+                                                                {% endfor %}
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                {% endif %}
                                                     <br>
 
                                                 <div class="product-extra-link2">
-                                                    <form method="post" action="#">
+                                                    <form method="post" action="{% url 'core:custom_order_detail_dashboard' co_id=coi_details1.co_id %}">
                                                         {% csrf_token %}
                                                         
                                                         {{ form.as_p }}
                                                         
                                                         <button type="submit">Update</button>
                                                     </form>
+                                                    {% if messages %}
+                                                    <ul class="messages">
+                                                        {% for message in messages %}
+                                                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    {% endif %}
                                                     {% comment %} <form method="post">
                                                         {% csrf_token %}
                                                         {{ form.as_p }}
