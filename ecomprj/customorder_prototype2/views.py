@@ -136,6 +136,11 @@ def choose_color_x(request, product_type, foam_types ,material_name):
 from .forms import CustomizationOrderDetails
 #@login_required
 def custom_details(request, product_type, foam_types, material_name, color_name):
+    ORDER_PURPOSE = (
+    ("private", "Private"),
+    ("business", "Business"),
+    ("government", "Government"),
+)
     product_type = product_type.upper()
     foam_types = foam_types.upper()
     material_name = material_name.upper()
@@ -196,6 +201,7 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
             'color': color_instance,
             'user_profile': request.user.profile,
             'form': form,
+            'ORDER_PURPOSE': ORDER_PURPOSE,
         }
 
         return render(request, 'customorder_prototype2/customorder_details.html', context)
@@ -354,7 +360,7 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
 
                 make_or_repair = request.POST.get('make_or_repair')
                 receipt_img = request.FILES.get('receipt_img')
-
+                purpose = request.POST.get('purpose')
                 # Get the user's profile
                 profile = request.user.profile
 
@@ -372,6 +378,7 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
                     # ...
                     make_or_repair=make_or_repair,  # Set the correct value for make_or_repair
                     receipt_img=receipt_img,
+                    purpose=purpose,
                 )
                 order.save()
                 # Additional processing or redirect to success page

@@ -181,8 +181,8 @@
 
         <label for="purpose">Purpose:</label>
         <select name="purpose">
-            {% for purpose_option in ORDER_PURPOSE %}
-                <option value="{{ purpose_option.0 }}">{{ purpose_option.1 }}</option>
+            {% for purpose_option_key, purpose_option_display in ORDER_PURPOSE %}
+                <option value="{{ purpose_option_key }}">{{ purpose_option_display }}</option>
             {% endfor %}
         </select>
 
