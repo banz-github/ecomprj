@@ -147,7 +147,7 @@
     <form method="post" action="{% url 'submit_order' product_type=product_type foam_types=foam_types material_name=material_name color_name=color_name %}" onsubmit="return validateForm()" enctype="multipart/form-data">
         <!-- form contents --> 
         {% csrf_token %}
-        {{ form.as_p }}
+        {% comment %} {{ form.as_table }} {% endcomment %}
         <!-- Quantity Field -->
         <label for="quantity">Quantity:</label>
         <input type="number" name="quantity" min="1" max="4" required>
@@ -178,6 +178,22 @@
                 <option value="{{ purpose_option.0 }}">{{ purpose_option.1 }}</option>
             {% endfor %}
         </select> {% endcomment %}
+
+        <label for="purpose">Purpose:</label>
+        <select name="purpose">
+            {% for purpose_option in ORDER_PURPOSE %}
+                <option value="{{ purpose_option.0 }}">{{ purpose_option.1 }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Make or Repair Radio Buttons -->
+        <label>Make or Repair:</label>
+        <label><input type="radio" name="make_or_repair" value="make" checked> Make</label>
+        <label><input type="radio" name="make_or_repair" value="repair"> Repair</label>
+
+        <!-- Receipt Image Upload -->
+        <label for="receipt_img">Receipt Image:</label>
+        <input type="file" name="receipt_img" accept="image/*">
 
 
         <!-- Profile of the Person Making the Order -->

@@ -333,6 +333,7 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
 #     except Material.DoesNotExist:
 #         # Handle Material.DoesNotExist exception
 #         raise Http404("Material does not exist")
+from django.core.exceptions import ValidationError
 from datetime import datetime
 def submit_order(request, product_type, foam_types, material_name, color_name):
     try:
@@ -343,10 +344,16 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
         color_instance = Color.objects.get(name=color_name, material=material_instance)
 
         if request.method == 'POST':
+            
             try:
+                print(request.POST)  # Print form data for debugging
+                print(request.FILES)  # Print file data for debugging
                 # Extract form data from the POST request
                 quantity = request.POST.get('quantity')
                 customer_notes = request.POST.get('customer_notes')
+
+                make_or_repair = request.POST.get('make_or_repair')
+                receipt_img = request.FILES.get('receipt_img')
 
                 # Get the user's profile
                 profile = request.user.profile
@@ -363,11 +370,17 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
                     profile=profile,  # Set the profile associated with the order
                     # Add other fields as needed
                     # ...
+                    make_or_repair=make_or_repair,  # Set the correct value for make_or_repair
+                    receipt_img=receipt_img,
                 )
                 order.save()
                 # Additional processing or redirect to success page
                 messages.success(request, 'Order submitted successfully!')
                 return redirect('success_page')  # Replace 'success_page' with the actual URL name
+            except ValidationError as ve:
+                # Handle validation errors
+                messages.error(request, f'Validation error: {ve.message}')
+                return redirect('error_page')  # Replace 'error_page' with the actual URL name
 
             except Exception as e:
                 # Handle other exceptions
