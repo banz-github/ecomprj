@@ -6,7 +6,10 @@ class CustomOrderUpdateForm(forms.ModelForm):
         model = CustomizationOrder
         fields = [
             'customer_notes',
-            'make_or_repair',
+            
+            'customization_status',
+            'estimated_date_done',
+            'estimated_total_price', 
             'percentage_progress',
             'with_downpayment',
             'paid_amount',
