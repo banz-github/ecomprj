@@ -6,6 +6,26 @@ from shortuuid.django_fields import ShortUUIDField
 
 from ckeditor_uploader.fields import RichTextUploadingField
 
+MAKE_OR_REPAIR= (
+    ("make", "Make"),
+    ("repair", "Repair"),
+
+)
+
+STATUS_CHOICE = (
+    ("pending", "Pending"),
+    ("processing", "Processing"),
+    ("shipped", "Shipped"),
+    ("delivered", "Delivered"),
+)
+
+ORDER_PURPOSE = (
+    ("private", "Private"),
+    ("business", "Business"),
+    ("government", "Government"),
+
+)
+
 class ProductType(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='product_type/', null=True, blank=True)
@@ -58,17 +78,22 @@ class CustomizationOrder(models.Model):
 
     qty = models.IntegerField(default=1)
     ##############date
+    purpose = models.CharField(choices=ORDER_PURPOSE, max_length=30, default="Private")
 
     customer_notes = models.TextField(null=True, blank=True, default="") #check muna ung sa messaging before imigrate
     
     #Make Repair
-    make_or_repair = models.CharField(max_length=20, default="MAKE")
+    make_or_repair = models.CharField(choices=MAKE_OR_REPAIR,max_length=20, default="MAKE")
 
     #Progress - Percentage
     percentage_progress = models.CharField(max_length=50, default="0")
+    customization_status = models.CharField(choices=STATUS_CHOICE, max_length=30, default="pending")
 
     order_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
+    estimated_date_done = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+
+    estimated_total_price = models.DecimalField(max_digits=99999999, decimal_places=2, null=True, blank=True)
     #Down payment status
     with_downpayment = models.BooleanField(default=False)
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2,default=0) #Magkano ang binayad
@@ -87,7 +112,7 @@ class CustomizationOrder(models.Model):
     #phone = models.ForeignKey(Profile) #
     #address = models.ForeignKey(Address)
 
-    AdminProfile = models.CharField(max_length=100, null=True, blank=True) #Bali dito nalang pass in ng String type na ID nung nagapprove
+    AdminProfile = models.CharField(max_length=30,null=True, blank=True, default="") #Bali dito nalang pass in ng String type na ID nung nagapprove
     #admin notes, igaya dun sa Messaging muna
     admin_notes = RichTextUploadingField(null=True, blank=True, default="")
     #Boolean kung archived yung order , default False
