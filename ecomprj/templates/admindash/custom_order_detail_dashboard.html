@@ -1,6 +1,10 @@
 
 {% load static %}
 
+
+<!-- Include Tempus Dominus CSS and JS in your template -->
+
+
 <head>
     <meta charset="utf-8" />
     <title>Ataiza's Upholstery</title>
@@ -31,6 +35,13 @@
     <link rel="stylesheet" href="{% static 'assets/css/prism.css' %}">
     {% comment %} <link rel="stylesheet" href="{% static 'assets/css/new.css' %}"> {% endcomment %}
 
+    <!-- Popperjs -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <!-- Tempus Dominus JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>
+
+    <!-- Tempus Dominus Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css" crossorigin="anonymous">
 
 
 
@@ -163,6 +174,12 @@
                                                         {% endfor %}
                                                     </ul>
                                                     {% endif %}
+
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            $('[data-toggle="datepicker"]').datepicker();
+                                                        });
+                                                    </script>
                                                     {% comment %} <form method="post">
                                                         {% csrf_token %}
                                                         {{ form.as_p }}

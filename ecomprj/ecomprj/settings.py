@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'customorder',
 
     'customorder_prototype2',
+    
+    'tempus_dominus',
 
 ]
 
