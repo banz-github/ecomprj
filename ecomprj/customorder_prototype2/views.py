@@ -89,6 +89,51 @@ def choose_color_x(request, product_type, foam_types ,material_name):
     return render(request, 'customorder_prototype2/choose_color_x.html', {'colors': colors, 'product_type': product_type,'foam_types': foam_types, 'material_name': material_name})
 
 
+#@login_required #Nagana, checkpoint 23
+# def custom_details(request, product_type, foam_types, material_name, color_name):
+#     product_type = product_type.upper()
+#     foam_types = foam_types.upper()
+#     material_name = material_name.upper()
+#     color_name = color_name.upper()
+
+#     material_name = material_name.replace('_', ' ')
+#     material_name = unquote(material_name)
+
+#     color_name = color_name.replace('_', ' ')
+#     color_name = unquote(color_name)
+
+#     print('Reached customorder_details view')
+#     print('Received product_type:', product_type)
+#     print('Received foam_types:', foam_types)
+#     print('Received material_name:', material_name)
+#     print('Received color_name:', color_name)
+
+#     product_type_instance = ProductType.objects.get(name=product_type)
+#     foam_type_instance = FoamType.objects.get(name=foam_types)
+#     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
+
+#     try:
+#         color_instance = Color.objects.get(name=color_name, material=material_instance)
+
+#         # Debugging information
+#         print('Color Image Path:', color_instance.image.url)
+
+#         colors = Color.objects.filter(material=material_instance)
+
+#         context = {
+#             'product_type': product_type,
+#             'foam_types': foam_types,
+#             'material_name': material_name,
+#             'color_name': color_name,
+#             'color': color_instance,
+#             'user_profile': request.user.profile,
+#         }
+
+#         return render(request, 'customorder_prototype2/customorder_details.html', context)
+
+#     except Color.DoesNotExist:
+#         raise Http404("Color does not exist")
+from .forms import CustomizationOrderDetails
 #@login_required
 def custom_details(request, product_type, foam_types, material_name, color_name):
     product_type = product_type.upper()
@@ -112,6 +157,25 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
     foam_type_instance = FoamType.objects.get(name=foam_types)
     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
 
+    if request.method == 'POST':
+        form = CustomizationOrderDetails(request.POST, request.FILES)  # Include request.FILES for file upload handling
+        if form.is_valid():
+            # Save the form data to your model instance
+            customization_order = form.save(commit=False)
+            customization_order.product_type = product_type_instance
+            customization_order.material = material_instance
+            customization_order.color = color_instance
+            customization_order.foam_type = foam_type_instance
+            customization_order.profile = request.user.profile
+            customization_order.save()
+
+            # Redirect or do whatever you need after successful form submission
+            return redirect('success_page')
+        else:
+            print(form.errors)
+    else:
+        form = CustomizationOrderDetails()
+
     try:
         color_instance = Color.objects.get(name=color_name, material=material_instance)
 
@@ -120,6 +184,10 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
 
         colors = Color.objects.filter(material=material_instance)
 
+    
+
+
+
         context = {
             'product_type': product_type,
             'foam_types': foam_types,
@@ -127,12 +195,14 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
             'color_name': color_name,
             'color': color_instance,
             'user_profile': request.user.profile,
+            'form': form,
         }
 
         return render(request, 'customorder_prototype2/customorder_details.html', context)
 
     except Color.DoesNotExist:
         raise Http404("Color does not exist")
+
 
 #The below is working
 # def custom_details(request, product_type,foam_types, material_name, color_name):

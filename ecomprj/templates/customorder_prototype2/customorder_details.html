@@ -72,6 +72,7 @@
 <body>
 
 <div>
+    <!-- custom_details customorder_prototype2 views -->
     <h1>Custom Order Summary</h1>
 
     <!-- Display Product Type -->
@@ -105,7 +106,7 @@
     <!-- Image upload for receipt_img -->
 
     <!-- Show the profile of who is making the order -->
-
+{% comment %} 
     <script>
         function validateForm() {
             // Get values from form fields
@@ -122,11 +123,31 @@
             // If all fields are filled, allow form submission
             return true;
         }
+    </script> {% endcomment %}
+    
+    <script>
+        function validateForm() {
+            // Get values from form fields
+            var quantity = document.getElementById("quantity").value;
+            var customerNotes = document.getElementById("customer_notes").value;
+
+            // Check if any field is empty
+            if (quantity === "" || customerNotes === "") {
+                // Show a pop-up warning
+                alert("Please complete all the fields.");
+                return false; // Prevent form submission
+            }
+
+            // If all fields are filled, allow form submission
+            return true;
+        }
     </script>
-    <form method="post" action="{% url 'submit_order' product_type=product_type foam_types=foam_types material_name=material_name color_name=color_name %}" onsubmit="return validateForm()">
+
+
+    <form method="post" action="{% url 'submit_order' product_type=product_type foam_types=foam_types material_name=material_name color_name=color_name %}" onsubmit="return validateForm()" enctype="multipart/form-data">
         <!-- form contents --> 
         {% csrf_token %}
-        
+        {{ form.as_p }}
         <!-- Quantity Field -->
         <label for="quantity">Quantity:</label>
         <input type="number" name="quantity" min="1" max="4" required>
@@ -136,19 +157,35 @@
         <textarea name="customer_notes" rows="4" cols="50"></textarea>
 
         <!-- Make or Repair Radio Buttons -->
-        <label>Make or Repair:</label>
+        {% comment %} <label>Make or Repair:</label>
         <label><input type="radio" name="make_or_repair" value="MAKE" checked> Make</label>
-        <label><input type="radio" name="make_or_repair" value="REPAIR"> Repair</label>
+        <label><input type="radio" name="make_or_repair" value="REPAIR"> Repair</label> {% endcomment %}
 
         <!-- Image Upload for Receipt -->
+        {% comment %} <label for="receipt_img">Receipt Image:</label>
+        <input type="file" name="receipt_img" accept="image/*"> {% endcomment %}
+{% comment %} 
+        <label>Make or Repair:</label>
+        <label><input type="radio" name="make_or_repair" value="make" checked> Make</label>
+        <label><input type="radio" name="make_or_repair" value="repair"> Repair</label>
+
         <label for="receipt_img">Receipt Image:</label>
         <input type="file" name="receipt_img" accept="image/*">
+
+        <label for="purpose">Purpose:</label>
+        <select name="purpose">
+            {% for purpose_option in ORDER_PURPOSE %}
+                <option value="{{ purpose_option.0 }}">{{ purpose_option.1 }}</option>
+            {% endfor %}
+        </select> {% endcomment %}
+
 
         <!-- Profile of the Person Making the Order -->
         <p><strong>Ordered by:</strong> {{ request.user.profile }}</p>
 
         <!-- Submit Button -->
         <button type="submit">Submit Order</button>
+    </form>
 
 </div>
 
