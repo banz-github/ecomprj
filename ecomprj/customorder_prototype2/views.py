@@ -381,6 +381,13 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
                     receipt_img=receipt_img,
                     purpose=purpose,
                     receipt_submitted=receipt_submitted,
+
+
+                    estimated_total_price=(
+                        (foam_type_instance.foam_percubicft_price * product_type_instance.foam_amount) +
+                        (material_instance.fabric_peryard_price * product_type_instance.fabric_yard)
+                    ) * int(quantity)
+
                 )
                 order.save()
                 # Additional processing or redirect to success page
