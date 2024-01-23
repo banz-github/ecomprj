@@ -238,6 +238,9 @@ def custom_order_detail_dashboard(request, co_id):
             if instance.with_downpayment:
                 instance.date_approved = timezone.now()
 
+                admin_profile_id = request.user.id
+                instance.AdminProfile = f"Admin-{admin_profile_id}"
+
 
             product_type_month_eta = int(instance.product_type.month_eta)
             qty = int(instance.qty)
