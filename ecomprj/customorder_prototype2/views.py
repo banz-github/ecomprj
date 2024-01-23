@@ -361,6 +361,7 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
                 make_or_repair = request.POST.get('make_or_repair')
                 receipt_img = request.FILES.get('receipt_img')
                 purpose = request.POST.get('purpose')
+                receipt_submitted = receipt_img is not None
                 # Get the user's profile
                 profile = request.user.profile
 
@@ -379,6 +380,7 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
                     make_or_repair=make_or_repair,  # Set the correct value for make_or_repair
                     receipt_img=receipt_img,
                     purpose=purpose,
+                    receipt_submitted=receipt_submitted,
                 )
                 order.save()
                 # Additional processing or redirect to success page
