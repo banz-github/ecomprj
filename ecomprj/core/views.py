@@ -221,7 +221,7 @@ from django.contrib import messages
 
 #     context = {"coi_details": coi_details, "form": form}
 #     return render(request, 'admindash/custom_order_detail_dashboard.html', context)
-
+from django.utils import timezone
 @allowed_users(allowed_roles=['admin'])
 def custom_order_detail_dashboard(request, co_id):
     coi_details = CustomizationOrder.objects.filter(co_id=co_id)
@@ -230,7 +230,13 @@ def custom_order_detail_dashboard(request, co_id):
     if request.method == 'POST':
         form = CustomOrderUpdateForm(request.POST, instance=coi_details1)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+
+            if instance.with_downpayment:
+                instance.date_approved = timezone.now()
+
+
+            instance.save()
             messages.success(request, 'Custom order details updated successfully.')
             return redirect('core:custom-orders-dash')  # Replace with the appropriate view name
     else:
