@@ -221,11 +221,14 @@ from django.contrib import messages
 
 #     context = {"coi_details": coi_details, "form": form}
 #     return render(request, 'admindash/custom_order_detail_dashboard.html', context)
+from datetime import timedelta
 from django.utils import timezone
 @allowed_users(allowed_roles=['admin'])
 def custom_order_detail_dashboard(request, co_id):
     coi_details = CustomizationOrder.objects.filter(co_id=co_id)
     coi_details1 = get_object_or_404(CustomizationOrder, co_id=co_id)
+
+ 
 
     if request.method == 'POST':
         form = CustomOrderUpdateForm(request.POST, instance=coi_details1)
@@ -236,11 +239,25 @@ def custom_order_detail_dashboard(request, co_id):
                 instance.date_approved = timezone.now()
 
 
+            product_type_month_eta = int(instance.product_type.month_eta)
+            qty = int(instance.qty)
+
+            # Calculate timeframe
+            timeframe = timedelta(days=product_type_month_eta * qty * (30))
+            print(timeframe)
+
+            # Calculate estimated_date_done
+            instance.estimated_date_done = instance.date_approved + timeframe
+
             instance.save()
+
+
             messages.success(request, 'Custom order details updated successfully.')
             return redirect('core:custom-orders-dash')  # Replace with the appropriate view name
     else:
         form = CustomOrderUpdateForm(instance=coi_details1)
+
+
 
     context = {"coi_details": coi_details, "form": form, "coi_details1":coi_details1,}
     return render(request, 'admindash/custom_order_detail_dashboard.html', context)
