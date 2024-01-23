@@ -162,6 +162,8 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
     foam_type_instance = FoamType.objects.get(name=foam_types)
     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
 
+    
+
     if request.method == 'POST':
         form = CustomizationOrderDetails(request.POST, request.FILES)  # Include request.FILES for file upload handling
         if form.is_valid():
@@ -348,6 +350,8 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
         foam_type_instance = FoamType.objects.get(name=foam_types)
         material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
         color_instance = Color.objects.get(name=color_name, material=material_instance)
+
+        
 
         if request.method == 'POST':
             

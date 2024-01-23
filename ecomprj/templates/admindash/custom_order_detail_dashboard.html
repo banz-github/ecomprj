@@ -95,7 +95,8 @@
                                         <div class="detail-info pr-30 pl-30">
                                             {% comment %} <span class="stock-status out-stock">-{{p.get_percentage|floatformat:0}}%</span> {% endcomment %}
                                             {% for cd in coi_details %}
-                                            <h2 class="title-detail">{{cd.color.name}} {{cd.material.name}} {{cd.product_type.name}}</h2>
+                                            <h2 class="title-detail">{{cd.color.name}} {{cd.material.name}} {{cd.product_type.name}} </h2>
+                                            <h2 class="title-detail">Foam: {{cd.foam_type.name}}</h2>
                                             <br>
                                             <h2 class="title-detail">{{cd.make_or_repair}} - {{cd.purpose}} </h2>
                                             {% endfor %}
