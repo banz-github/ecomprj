@@ -45,8 +45,8 @@ from paypal.standard.forms import PayPalPaymentsForm
 def admindash(request):
     message_list = ContactUs.objects.all()
     # order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id")[:5] #mark, do not change if it works tho
-    # order_list = CartOrder.objects.all().order_by("-id")[:5] #mark, do not change if it works tho
-    order_list = get_object_or_404(CartOrder, id=id)
+    order_list = CartOrder.objects.all().order_by("-id") #mark, do not change if it works tho
+    #order_list = get_object_or_404(CartOrder, id=id)
     
     context = {
         "order_list":order_list,"message_list":message_list,
