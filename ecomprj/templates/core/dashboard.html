@@ -29,6 +29,9 @@
                                             <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
                                         </li>
                                         <li class="nav-item">
+                                            <a class="nav-link" id="custom-orders-tab" data-bs-toggle="tab" href="#customorders" role="tab" aria-controls="customorders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Custom Orders</a>
+                                        </li>
+                                        <li class="nav-item">
                                             <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
                                         </li>
                                         <li class="nav-item">
@@ -114,6 +117,146 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="mb-0">Receipt Submitted = False</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Order ID</th>
+                                                                <th>Order</th>
+                                                                <th>Date</th>
+                                                                <th>Status</th>
+                                                                <th>Receipt Submitted</th>
+                                                                <th>Payment Status</th>
+                                                                <th>Total</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for orfalse in order_list_rfalse %}
+                                                            <tr>
+                                                                <td>{{orfalse.cartorder_id}}</td>
+                                                                <td>INVOICE_NO-{{o.id}}</td>
+                                                                <td>{{orfalse.order_date}}</td>
+                                                                <td>{{orfalse.product_status|title}}</td>
+
+                                                                {% if orfalse.receipt_submitted == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+
+                                                                {% if orfalse.paid_status == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+                                                                <td>{{orfalse.price|floatformat:2|intcomma}}</td>
+                                                                <td><a href="{% url 'core:order-detail' orfalse.id %}" class="btn-small d-block">View</a></td>
+                                                                <td><a href="{% url 'core:checkout-gcash' orfalse.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td>
+
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- SEPARATION -->
+                                                    <h3 class="mb-0">Receipt Submitted = True</h3>
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Order ID</th>
+                                                                <th>Order</th>
+                                                                <th>Date</th>
+                                                                <th>Status</th>
+                                                                <th>Receipt Submitted</th>
+                                                                <th>Payment Status</th>
+                                                                <th>Total</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for ortrue in order_list_rtrue %}
+                                                            <tr>
+                                                                <td>{{ortrue.cartorder_id}}</td>
+                                                                <td>INVOICE_NO-{{ortrue.id}}</td>
+                                                                <td>{{ortrue.order_date}}</td>
+                                                                <td>{{ortrue.product_status|title}}</td>
+
+                                                                {% if ortrue.receipt_submitted == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+
+                                                                {% if ortrue.paid_status == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+                                                                <td>{{ortrue.price|floatformat:2|intcomma}}</td>
+                                                                <td><a href="{% url 'core:order-detail' ortrue.id %}" class="btn-small d-block">View</a></td>
+                                                                {% comment %} <td><a href="{% url 'core:checkout-gcash' o.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
+
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+
+                                                    <!-- SEPARATION -->
+                                                    <h3 class="mb-0">Paid = True</h3>
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Order ID</th>
+                                                                <th>Order</th>
+                                                                <th>Date</th>
+                                                                <th>Status</th>
+                                                                <th>Receipt Submitted</th>
+                                                                <th>Payment Status</th>
+                                                                <th>Total</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for orpaid in order_list_paid %}
+                                                            <tr>
+                                                                <td>{{orpaid.cartorder_id}}</td>
+                                                                <td>INVOICE_NO-{{orpaid.id}}</td>
+                                                                <td>{{orpaid.order_date}}</td>
+                                                                <td>{{orpaid.product_status|title}}</td>
+
+                                                                {% if orpaid.receipt_submitted == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+
+                                                                {% if orpaid.paid_status == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+                                                                <td>{{orpaid.price|floatformat:2|intcomma}}</td>
+                                                                <td><a href="{% url 'core:order-detail' orpaid.id %}" class="btn-small d-block">View</a></td>
+                                                                {% comment %} <td><a href="{% url 'core:checkout-gcash' o.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
+
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="tab-pane fade" id="customorders" role="tabpanel" aria-labelledby="custom-orders-tab">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h3 class="mb-0">Receipt Submitted = False</h3>
