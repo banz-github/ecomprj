@@ -14,7 +14,7 @@
                             <h5 class="mb-15">No searched item</h5>
                             {% endif %}
                             <div class="breadcrumb">
-                                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                                <a href="{% url 'core:index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
                                 <span></span> Shop <span></span> {{query}}
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                         <div class="totall-product">
                             <p>We found <strong class="text-brand">{{products.count}}</strong> item{{products.count|pluralize}} for you!</p>
                         </div>
-                        <div class="sort-by-product-area">
+                        {% comment %} <div class="sort-by-product-area">
                             <div class="sort-by-cover mr-10">
                                 <div class="sort-by-product-wrap">
                                     <div class="sort-by">
@@ -69,7 +69,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                     <div class="row product-grid">
                         {% for p in products %}
@@ -138,7 +138,7 @@
                             </ul>
                         </nav>
                     </div>
-                    <section class="section-padding pb-5">
+                    {% comment %} <section class="section-padding pb-5">
                         <div class="section-title">
                             <h3 class="">Deals Of The Day</h3>
                             <a class="show-all" href="shop-grid-right.html">
@@ -296,7 +296,7 @@
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section> {% endcomment %}
                     <!--End Deals-->
                 </div>
             </div>
