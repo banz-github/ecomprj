@@ -10,7 +10,7 @@
                         <div class="col-xl-3">
                             <h1 class="mb-15">Categories</h1>
                             <div class="breadcrumb">
-                                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                                <a href="{% url 'core:index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
                                 <span></span> Category
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                                     {{categories.count}} Categories
                                 </h2>
                             </div>
-                            <div class="sort-by-product-area">
+                            {% comment %} <div class="sort-by-product-area">
                                 <div class="sort-by-cover mr-10">
                                     <div class="sort-by-product-wrap">
                                         <div class="sort-by">
@@ -86,7 +86,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                         <div class="loop-grid pr-30">
                             <div class="row">
@@ -97,7 +97,7 @@
                                             <img class="border-radius-15" src="{{ c.image.url }}" alt="" />
                                         </a>
                                         <div class="entry-meta">
-                                            <a class="entry-meta meta-2" href="blog-category-grid.html"><i class="fi-rs-heart"></i></a>
+                                            {% comment %} <a class="entry-meta meta-2" href="blog-category-grid.html"><i class="fi-rs-heart"></i></a> {% endcomment %}
                                         </div>
                                     </div>
                                     <div class="entry-content-2">
@@ -135,26 +135,26 @@
                     </div>
                     <div class="col-lg-3 primary-sidebar sticky-sidebar">
                         <div class="widget-area">
-                            <div class="sidebar-widget-2 widget_search mb-50">
+                            {% comment %} <div class="sidebar-widget-2 widget_search mb-50">
                                 <div class="search-form">
                                     <form action="#">
                                         <input type="text" placeholder="Search…" />
                                         <button type="submit"><i class="fi-rs-search"></i></button>
                                     </form>
                                 </div>
-                            </div>
+                            </div> {% endcomment %}
                             <div class="sidebar-widget widget-category-2 mb-50">
                                 <h5 class="section-title style-1 mb-30">Category</h5>
                                 <ul>
                                     {% for c in categories %}
                                     <li>
-                                        <a href="shop-grid-right.html"> <img src="{{ c.image.url }}" alt="" />{{c.title}}</a><span class="count">{{c.category.count}}</span>
+                                        <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{ c.image.url }}" alt="" />{{c.title}}</a><span class="count">{{c.category.count}}</span>
                                     </li>
                                    {% endfor %}
                                 </ul>
                             </div>
                             <!-- Product sidebar Widget -->
-                            <div class="sidebar-widget product-sidebar mb-50 p-30 bg-grey border-radius-10">
+                            {% comment %} <div class="sidebar-widget product-sidebar mb-50 p-30 bg-grey border-radius-10">
                                 <h5 class="section-title style-1 mb-30">Trending Now</h5>
                                 <div class="single-post clearfix">
                                     <div class="image">
@@ -253,8 +253,8 @@
                                         <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Appetizer</a>
                                     </li>
                                 </ul>
-                            </div>
-                            <div class="banner-img wow fadeIn mb-50 animated d-lg-block d-none">
+                            </div> {% endcomment %}
+                            {% comment %} <div class="banner-img wow fadeIn mb-50 animated d-lg-block d-none">
                                 <img src="assets/imgs/banner/banner-11.png" alt="" />
                                 <div class="banner-text">
                                     <span>Oganic</span>
@@ -264,7 +264,7 @@
                                         Juice
                                     </h4>
                                 </div>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                     </div>
                 </div>

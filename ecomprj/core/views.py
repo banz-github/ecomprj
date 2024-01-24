@@ -349,11 +349,12 @@ def index(request):
 
 
 def category_list_view(request):
+    products = Product.objects.all()
     categories = Category.objects.all()
     #categories = Category.objects.all().annotate(product_count=Count("product"))         
 
     context = {
-        "categories":categories
+        "categories":categories, "products":products,
     }
     return render(request, 'core/category-list.html', context)
 
