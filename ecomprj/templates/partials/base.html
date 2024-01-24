@@ -129,9 +129,10 @@
         </div>
     </div>
     <header class="header-area header-style-1 header-height-2">
-        <div class="mobile-promotion">
+        {% comment %} <div class="mobile-promotion">
             <span>Grand opening, <strong>up to 15%</strong> off all items. Only <strong>3 days</strong> left</span>
-        </div>
+        </div> {% endcomment %}
+
         {% comment %} <div class="header-top header-top-ptb-1 d-none d-lg-block">
             <div class="container">
                 <div class="row align-items-center">
@@ -205,12 +206,14 @@
                             <form action="{% url 'core:search' %}" method="GET">
                                 
                                 <input type="text" placeholder="Search for items..." name="q" />
-                                <button class="fas fa-search" type="submit"></button>
+                                <button class="fa fa-search" type="submit"></button>
                             </form>
                         </div>
                         <div class="header-action-right">
                             <div class="header-action-2">
-                                <div class="search-location">
+
+
+                                {% comment %} <div class="search-location">
                                     <form action="#">
                                         <select class="select-active">
                                             <option>Your Location</option>
@@ -229,7 +232,9 @@
                                             <option>New York</option>
                                         </select>
                                     </form>
-                                </div>
+                                </div> {% endcomment %}
+
+
                                 {% comment %} <div class="header-action-icon-2">
                                     <a href="shop-compare.html">
                                         <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-compare.svg' %}" />
@@ -269,10 +274,10 @@
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                         <ul>
                                             <li><a href="{% url 'core:dashboard' %}"><i class="fi fi-rs-user mr-10"></i>My Account</a></li>
-                                            <li><a href="page-account.html"><i class="fi fi-rs-location-alt mr-10"></i>Order Tracking</a></li>
-                                            <li><a href="page-account.html"><i class="fi fi-rs-label mr-10"></i>My Voucher</a></li>
-                                            <li><a href="shop-wishlist.html"><i class="fi fi-rs-heart mr-10"></i>My Wishlist</a></li>
-                                            <li><a href="page-account.html"><i class="fi fi-rs-settings-sliders mr-10"></i>Setting</a></li>
+                                            {% comment %} <li><a href="page-account.html"><i class="fi fi-rs-location-alt mr-10"></i>Order Tracking</a></li>
+                                            <li><a href="page-account.html"><i class="fi fi-rs-label mr-10"></i>My Voucher</a></li> {% endcomment %}
+                                            {% comment %} <li><a href="shop-wishlist.html"><i class="fi fi-rs-heart mr-10"></i>My Wishlist</a></li>
+                                            <li><a href="page-account.html"><i class="fi fi-rs-settings-sliders mr-10"></i>Setting</a></li> {% endcomment %}
                                             {% if request.user.is_authenticated %}
                                             <li><a href="{% url 'userauths:sign-out' %}"><i class="fi fi-rs-sign-out mr-10"></i>Sign out</a></li>
                                             {% else %}
@@ -643,11 +648,9 @@
                                 <h2 class="mb-20">
                                     Stay home & get your daily <br /> needs from our shop
                                 </h2>
-                                <p class="mb-45">Start You'r Daily Shopping with <span class="text-brand">Nest Mart</span></p>
-                                <form class="form-subcriber d-flex">
-                                    <input type="email" placeholder="Your emaill address" />
-                                    <button class="btn" type="submit">Subscribe</button>
-                                </form>
+                                <p class="mb-45">Fill your home with<span class="text-brand"> LOVE!</span></p>
+                                <button class="btn" type="submit">Sign-up now</button>
+
                             </div>
                             <img src="{% static 'assets/imgs/banner/banner-9.png' %}" alt="newsletter" />
                         </div>
@@ -739,7 +742,7 @@
                             <ul class="contact-infor">
                                 <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Address: </strong> <span>Maharlika Hi-Way, Ilayang Iyam Lucena City</span></li>
                                 <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Call Us:</strong><span>(+63)910 547 7527</span></li>
-                                <li><img src="{% static 'assets/imgs/theme/icons/icon-email-2.svg' %}" alt="" /><strong>Email:</strong><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a190b060f2a240f191e44090507">[email&#160;protected]</a></span></li>
+                                <li><img src="{% static 'assets/imgs/theme/icons/icon-email-2.svg' %}" alt="" /><strong>Email:</strong><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a190b060f2a240f191e44090507"> ataizaupholstery@email.com</a></span></li>
                                 <li><img src="{% static 'assets/imgs/theme/icons/icon-clock.svg' %}" alt="" /><strong>Hours:</strong><span>8:00AM - 5:00PM, Mon - Sat</span></li>
                             </ul>
                         </div>
@@ -748,24 +751,24 @@
                         <h4 class="widget-title">Company</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
                             <li><a href="#">About Us</a></li>
-                            <li><a href="#">Delivery Information</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms &amp; Conditions</a></li>
+                            {% comment %} <li><a href="#">Delivery Information</a></li> {% endcomment %}
+                            {% comment %} <li><a href="#">Privacy Policy</a></li> {% endcomment %}
+                            {% comment %} <li><a href="#">Terms &amp; Conditions</a></li> {% endcomment %}
                             <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Support Center</a></li>
-                            <li><a href="#">Careers</a></li>
+                            {% comment %} <li><a href="#">Support Center</a></li> {% endcomment %}
+                            {% comment %} <li><a href="#">Careers</a></li> {% endcomment %}
                         </ul>
                     </div>
                     <div class="footer-link-widget col">
                         <h4 class="widget-title">Account</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
-                            <li><a href="#">Sign In</a></li>
-                            <li><a href="#">View Cart</a></li>
-                            <li><a href="#">My Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="{% url 'userauths:sign-in' %}">Sign In</a></li>
+                            <li><a href="{% url 'core:cart' %}">View Cart</a></li>
+                            <li><a href="{% url 'core:wishlist' %}">My Wishlist</a></li>
+                            {% comment %} <li><a href="#">Track My Order</a></li>
                             <li><a href="#">Help Ticket</a></li>
                             <li><a href="#">Shipping Details</a></li>
-                            <li><a href="#">Compare products</a></li>
+                            <li><a href="#">Compare products</a></li> {% endcomment %}
                         </ul>
                     </div>
                     {% comment %} <div class="footer-link-widget col">
@@ -793,13 +796,13 @@
                         </ul>
                     </div> {% endcomment %}
                     <div class="footer-link-widget widget-install-app col">
-                        <h4 class="widget-title">Install App</h4>
+                        {% comment %} <h4 class="widget-title">Install App</h4>
                         <p class="wow fadeIn animated">From App Store or Google Play</p>
                         <div class="download-app">
                             <a href="#" class="hover-up mb-sm-2 mb-lg-0"><img class="active" src="{% static 'assets/imgs/theme/app-store.jpg' %}" alt="" /></a>
                             <a href="#" class="hover-up mb-sm-2"><img src="{% static 'assets/imgs/theme/google-play.jpg' %}" alt="" /></a>
-                        </div>
-                        <p class="mb-20">Secured Payment Gateways</p>
+                        </div> {% endcomment %}
+                        <p class="mb-20">Secured Payment</p>
                         <img class="wow fadeIn animated" src="{% static 'assets/imgs/theme/payment-method.png' %}" alt="" />
                     </div>
                 </div>

@@ -12,25 +12,21 @@
                                 <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/slider/slider-1.png' %})">
                                     <div class="slider-content">
                                         <h1 class="display-2 mb-40">
-                                            WANT CUSTOMIZED UPHOLSTERY?<br /> grocery deals
+                                            WANT CUSTOMIZED UPHOLSTERY?<br/>
                                         </h1>
-                                        <p class="mb-65">Sign up for the daily newsletter</p>
-                                        <form class="form-subcriber d-flex">
-                                            <input type="email" placeholder="Your emaill address" />
-                                            <button class="btn" type="submit">GET A QUOTE</button>
-                                        </form>
+                                        {% comment %} <p class="mb-65">Sign up for the daily newsletter</p> {% endcomment %}
+
+                                            <a href="{% url 'choose_product_type' %}" class="btn" type="submit">CUSTOMIZE NOW!</a>
+
                                     </div>
                                 </div>
                                 <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/slider/slider-2.png' %})">
                                     <div class="slider-content">
                                         <h1 class="display-2 mb-40">
-                                            Fresh Vegeasdasdtables<br /> Big discount
+                                            DIFFERENT MATERIALS AND COLORS OPTIONS!<br/>
                                         </h1>
-                                        <p class="mb-65">Save up to 50% off on your first order</p>
-                                        <form class="form-subcriber d-flex">
-                                            <input type="email" placeholder="Your emaill address" />
-                                            <button class="btn" type="submit">Subscribe</button>
-                                        </form>
+                                        {% comment %} <p class="mb-65">Save up to 50% off on your first order</p> {% endcomment %}
+
                                     </div>
                                 </div>
                             </div>
@@ -86,16 +82,16 @@
                                                     <a href="shop-grid-right.html">{{ p.category.title }}</a>
                                                 </div>
                                                 <h2><a href="{% url 'core:product-detail' p.pid %}">{{ p.title }}</a></h2>
-                                                <div class="product-rate-cover">
+                                                {% comment %} <div class="product-rate-cover">
 
                                                     <div class="product-rate d-inline-block">
                                                         <div class="product-rating" style="width: 90%"></div>
                                                     </div>
                                                     <span class="font-small ml-5 text-muted">(4.0)</span> 
-                                                </div>
+                                                </div> {% endcomment %}
 
                                                 <div>
-                                                    <span class="font-small text-muted">By <a href="vendor-details-1.html">{{ p.vendor.title }}</a></span>
+                                                    <span class="font-small text-muted">By <a href="{% url 'core:product-detail' p.pid %}">{{ p.vendor.title }}</a></span>
                                                 </div>
                                                 <div class="product-card-bottom">
                                                     <div class="product-price">
@@ -2892,10 +2888,10 @@
                         
                         <div class="single-post clearfix">
                             <div class="image">
-                                <img src="{{ latest_product.image.url }}" alt="#" />
+                                <img href="{% url 'core:product-detail' latest_product.pid %}" src="{{ latest_product.image.url }}" alt="#" />
                             </div>
                             <div class="content pt-10">
-                                <h5><a href="shop-product-detail.html">{{latest_product.title}}</a></h5>
+                                <h5><a href="{% url 'core:product-detail' latest_product.pid %}">{{latest_product.title}}</a></h5>
                                 <p class="price mb-0 mt-3">₱{{latest_product.price }}</p>
                                 
                             </div>
@@ -3054,15 +3050,15 @@
                         <div class="product-list-small animated animated">
                             <article class="row align-items-center hover-up">
                                 <figure class="col-md-4 mb-0">
-                                    <a href="shop-product-right.html"><img src="{{ latest_product.image.url }}" alt="" /></a>
+                                    <a href="{% url 'core:product-detail' latest_product.pid %}"><img src="{{ latest_product.image.url }}" alt="" /></a>
                                 </figure>
                                 <div class="col-md-8 mb-0">
                                     <h6>
-                                        <a href="shop-product-right.html">{{ latest_product.title }}</a>
+                                        <a href="{% url 'core:product-detail' latest_product.pid %}">{{ latest_product.title }}</a>
                                     </h6>
                                     
                                     <div class="product-price">
-                                        <span>{{ latest_product.price }}</span>
+                                        <span>₱{{ latest_product.price }}</span>
                                         <span class="old-price">{{ latest_product.old_price }}</span>
                                     </div>
                                 </div>
