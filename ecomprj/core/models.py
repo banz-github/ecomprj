@@ -105,6 +105,7 @@ class Product(models.Model):
     color = models.ImageField(upload_to=user_directory_path, default="color.jpg") #initial color
 
     description = RichTextUploadingField(null=True, blank=True, default="Hand-made")
+    month_eta = models.IntegerField(default=30)
 
     price = models.DecimalField(max_digits=99999999, decimal_places=2, default="500.00") 
     old_price = models.DecimalField(max_digits=99999999, decimal_places=2, default="1000.00")

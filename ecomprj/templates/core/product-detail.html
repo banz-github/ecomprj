@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-xl-11 col-lg-12 m-auto">
                     <div class="row">
-                        <div class="col-xl-9">
+                        <div class="col-xl-11">
                             <div class="product-detail accordion-detail">
                                 <div class="row mb-50 mt-30">
                                     <div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
@@ -55,14 +55,14 @@
                                         <div class="detail-info pr-30 pl-30">
                                             <span class="stock-status out-stock">-{{p.get_percentage|floatformat:0}}%</span>
                                             <h2 class="title-detail">{{p.title}}</h2>
-                                            <div class="product-detail-rating">
+                                            {% comment %} <div class="product-detail-rating">
                                                 <div class="product-rate-cover text-end">
                                                     <div class="product-rate d-inline-block">
                                                         <div class="product-rating" style="width: 90%"></div>
                                                     </div>
                                                     <span class="font-small ml-5 text-muted"> (TOEDIT reviews)</span>
                                                 </div>
-                                            </div>
+                                            </div> {% endcomment %}
                                             <div class="clearfix product-price-cover">
                                                 <div class="product-price primary-color float-left">
                                                     <span class="current-price text-brand">₱</span><span class="current-price text-brand current-price current-product-price-{{ p.id }}" id="current-product-price">{{p.price}}</span>
@@ -74,7 +74,7 @@
                                             </div>
                                             <div class="short-desc mb-30">
                                                 <p class="font-lg">{{p.description|safe}}</p>
-                                            </div>
+                                            </div>  
                                             <!-- SIZESSSSSSSSSSSSS
                                             <div class="attr-detail attr-size mb-30">
                                                 <strong class="mr-10">Size / Weight: </strong>
@@ -109,32 +109,35 @@
                                                             <input type="hidden" class="product-title-{{p.id}}" value="{{p.title}}">
                                                         </div>
 
-                                                        <div class="special-container scrollable-container">
+                                                        {% comment %} <div class="special-container scrollable-container">
                                                             {% for p in p_color %}
                                                             <figure class="color-swatches">
                                                                 <img class="color-swatches img" src="{{p.colors.url}}" alt="product image" />
                                                             </figure>
                                                             {% endfor %}
 
-                                                        </div>
+                                                        </div> {% endcomment %}
 
                                                         
 
                                                     <button type="submit" class="button button-add-to-cart add-to-cart-btn" data-index="{{p.id}}" id="add-to-cart-btn" ><i class="fi-rs-shopping-cart"></i>Add to cart</button>
-                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                                    <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                    <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{p.id}}"><i
+                                                        class="fi-rs-heart" style="fill: aqua;"></i></button>
+
+                                                    </div>
+                                                    {% comment %} <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> {% endcomment %}
                                                 </div>
                                             </div>
                                             <div class="font-xs">
                                                 <ul class="mr-50 float-start">
                                                     <li class="mb-5">Type: <span class="text-brand">{{p.type}}</span></li>
                                                     <!-- <li class="mb-5">MFG:<span class="text-brand"> Jun 4.2022</span></li> -->
-                                                    <li>Stock:<span class="in-stock text-brand ml-5">{{p.stock_count}} items in stock.</span></li>
+                                                    <li>Estimated Days to Finish:<span class="in-stock text-brand ml-5">{{p.month_eta}}</span></li>
                                                 </ul>
                                                 <ul class="float-start">
                                                     <li class="mb-5">SKU: <a href="#">{{p.sku}}</a></li>
                                                     <li class="mb-5">Tags: {% for tag in p.tags.all%} <a href="{% url 'core:tags' tag.slug %}" rel="tag">#{{tag.name}}</a> {% endfor %}</li>
-                                                    <li>Colors:<span class="in-stock text-brand ml-5">There are {{p.color_count}} CHECK available colors for this item.</span></li>
+                                                    {% comment %} <li>Colors:<span class="in-stock text-brand ml-5">There are {{p.color_count}} CHECK available colors for this item.</span></li> {% endcomment %}
                                                 </ul>
                                             </div>
                                         </div>
@@ -145,30 +148,28 @@
                                     <div class="tab-style3">
                                         <ul class="nav nav-tabs text-uppercase">
                                             <li class="nav-item">
-                                                <a class="nav-link active" id="Description-tab" data-bs-toggle="tab" href="#Description">Description</a>
+                                                <a class="nav-link active" id="Description-tab" data-bs-toggle="tab" href="#Description">Specifications</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="Additional-info-tab" data-bs-toggle="tab" href="#Additional-info">Additional info</a>
+                                                <a class="nav-link" id="Additional-info-tab" data-bs-toggle="tab" href="#Additional-info">Description</a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="Vendor-info-tab" data-bs-toggle="tab" href="#Vendor-info">Vendor</a>
-                                            </li>
+                                           
                                             <li class="nav-item">
                                                 <a class="nav-link" id="Reviews-tab" data-bs-toggle="tab" href="#Reviews">Reviews ({{reviews.count}})</a>
                                             </li>
                                         </ul>
                                         <div class="tab-content shop_info_tab entry-main-content">
                                             <div class="tab-pane fade show active" id="Description">
-                                                <div class="">
-                                                    <p>{{p.specifications|safe}}</p>
-                                                    <ul class="product-more-infor mt-30">
+                                                <div class="short-desc mb-30">
+                                                    <p class="font-lg">{{p.specifications|safe}}</p>
+                                                    {% comment %} <ul class="product-more-infor mt-30">
                                                         <li><span>Type Of Packing</span> Bottle</li>
                                                         <li><span>Color</span> Green, Pink, Powder Blue, Purple</li>
                                                         <li><span>Quantity Per Case</span> 100ml</li>
                                                         <li><span>Ethyl Alcohol</span> 70%</li>
                                                         <li><span>Piece In One</span> Carton</li>
-                                                    </ul>
-                                                    <hr class="wp-block-separator is-style-dots" />
+                                                    </ul> {% endcomment %}
+                                                    {% comment %} <hr class="wp-block-separator is-style-dots" />
                                                     <p>Laconic overheard dear woodchuck wow this outrageously taut beaver hey hello far meadowlark imitatively egregiously hugged that yikes minimally unanimous pouted flirtatiously as beaver beheld above forward
                                                         energetic across this jeepers beneficently cockily less a the raucously that magic upheld far so the this where crud then below after jeez enchanting drunkenly more much wow callously irrespective
                                                         limpet.</p>
@@ -193,142 +194,19 @@
                                                     <h4 class="mt-30">Warnings</h4>
                                                     <ul class="product-more-infor mt-30">
                                                         <li>Oil separation occurs naturally. May contain pieces of shell.</li>
-                                                    </ul>
+                                                    </ul> {% endcomment %}
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="Additional-info">
-                                                <table class="font-md">
-                                                    <tbody>
-                                                        <tr class="stand-up">
-                                                            <th>Stand Up</th>
-                                                            <td>
-                                                                <p>35″L x 24″W x 37-45″H(front to back wheel)</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="folded-wo-wheels">
-                                                            <th>Folded (w/o wheels)</th>
-                                                            <td>
-                                                                <p>32.5″L x 18.5″W x 16.5″H</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="folded-w-wheels">
-                                                            <th>Folded (w/ wheels)</th>
-                                                            <td>
-                                                                <p>32.5″L x 24″W x 18.5″H</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="door-pass-through">
-                                                            <th>Door Pass Through</th>
-                                                            <td>
-                                                                <p>24</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="frame">
-                                                            <th>Frame</th>
-                                                            <td>
-                                                                <p>Aluminum</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="weight-wo-wheels">
-                                                            <th>Weight (w/o wheels)</th>
-                                                            <td>
-                                                                <p>20 LBS</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="weight-capacity">
-                                                            <th>Weight Capacity</th>
-                                                            <td>
-                                                                <p>60 LBS</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="width">
-                                                            <th>Width</th>
-                                                            <td>
-                                                                <p>24″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="handle-height-ground-to-handle">
-                                                            <th>Handle height (ground to handle)</th>
-                                                            <td>
-                                                                <p>37-45″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="wheels">
-                                                            <th>Wheels</th>
-                                                            <td>
-                                                                <p>12″ air / wide track slick tread</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="seat-back-height">
-                                                            <th>Seat back height</th>
-                                                            <td>
-                                                                <p>21.5″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="head-room-inside-canopy">
-                                                            <th>Head room (inside canopy)</th>
-                                                            <td>
-                                                                <p>25″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="pa_color">
-                                                            <th>Color</th>
-                                                            <td>
-                                                                <p>Black, Blue, Red, White</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="pa_size">
-                                                            <th>Size</th>
-                                                            <td>
-                                                                <p>M, S</p>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                {{p.description}}
                                             </div>
-                                            <div class="tab-pane fade" id="Vendor-info">
-                                                <div class="vendor-logo d-flex mb-30">
-                                                    <img src="{% static 'assets/imgs/vendor/vendor-18.svg' %}" alt="" />
-                                                    <div class="vendor-name ml-15">
-                                                        <h6>
-                                                            <a href="vendor-details-2.html">TO BE CHANGEDDDDDDD</a>
-                                                        </h6>
-                                                        <div class="product-rate-cover text-end">
-                                                            <div class="product-rate d-inline-block">
-                                                                <div class="product-rating" style="width: 90%"></div>
-                                                            </div>
-                                                            <span class="font-small ml-5 text-muted"> (32 reviews)</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <ul class="contact-infor mb-50">
-                                                    <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Address: </strong> <span>5171 W Campbell Ave undefined Kent, Utah 53127 United States</span></li>
-                                                    <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Contact Seller:</strong><span>(+91) - 540-025-553</span></li>
-                                                </ul>
-                                                <div class="d-flex mb-55">
-                                                    <div class="mr-30">
-                                                        <p class="text-brand font-xs">Rating</p>
-                                                        <h4 class="mb-0">92%</h4>
-                                                    </div>
-                                                    <div class="mr-30">
-                                                        <p class="text-brand font-xs">Ship on time</p>
-                                                        <h4 class="mb-0">100%</h4>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-brand font-xs">Chat response</p>
-                                                        <h4 class="mb-0">89%</h4>
-                                                    </div>
-                                                </div>
-                                                <p>TO BE CHANGEDDDDDD Noodles & Company is an American fast-casual restaurant that offers international and American noodle dishes and pasta in addition to soups and salads. Noodles & Company was founded in 1995 by Aaron Kennedy
-                                                    and is headquartered in Broomfield, Colorado. The company went public in 2013 and recorded a $457 million revenue in 2017.In late 2018, there were 460 Noodles & Company locations across 29 states and
-                                                    Washington, D.C.</p>
-                                            </div>
+                                            
                                             <div class="tab-pane fade" id="Reviews">
                                                 <!--Comments-->
                                                 <div class="comments-area">
                                                     <div class="row">
                                                         <div class="col-lg-8">
-                                                            <h4 class="mb-30">Customer questions & answers</h4>
+                                                            <h4 class="mb-30">Customer Reviews</h4>
                                                             <div class="comment-list">
                                                                 {% for r in reviews %} <!--START-->
                                                                 <div class="single-comment justify-content-between d-flex mb-30">
@@ -488,7 +366,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 primary-sidebar sticky-sidebar mt-30">
+                        {% comment %} <div class="col-xl-3 primary-sidebar sticky-sidebar mt-30">
                             <div class="sidebar-widget widget-delivery mb-30 bg-grey-9 box-shadow-none">
                                 <h5 class="section-title style-3 mb-20">Delivery</h5>
                                 <ul>
@@ -666,7 +544,7 @@
                                     </h4>
                                 </div>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                 </div>
             </div>
