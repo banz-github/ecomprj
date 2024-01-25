@@ -13,7 +13,7 @@
                 </form>
             </div>
             <!-- END OF INSIGHTS -->
-            <div class="recent-orders">
+            {% comment %} <div class="recent-orders">
                 <h2>All Custom Orders</h2>
                 <div class="table-container">
                     <table>
@@ -30,7 +30,6 @@
                                 <th>Payment Approved</th>
                                 <th>Percentage</th>
                                 <th>Receipt Submitted</th>
-                                {% comment %} <th>With Downpayment</th> {% endcomment %}
                                 <th>Paid Amount</th>
                                 <th>Date Approved</th>
                                 <th>Verifier</th>
@@ -68,10 +67,7 @@
                                 <th data-date="{{ col.date_approved }}">{{col.admin_profile}}</th>
 
                                 <td><a href="{% url 'core:custom_order_detail_dashboard' co_id=col.co_id %}" class="primary">View</a></td>
-                                {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
 
-                                <td class="warning">Pending</td>
-                                <td class="primary">Details</td> {% endcomment %}
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -79,7 +75,7 @@
                 </div>
                 
 
-            </div>
+            </div> {% endcomment %}
             <br>
             <div class="recent-orders">
                 <h2>All Approved Custom Orders</h2>
@@ -108,6 +104,7 @@
                             
                         </thead>
                         <tbody>
+
                             {% for cola in custom_order_list_approved %}
                             <tr>
                                 <td data-date="{{ cola.date_approved }}">{{cola.profile}}</td>
@@ -148,11 +145,82 @@
                 
 
             </div>
+
+            
+            <div class="recent-orders">
+                <h2>Receipt to be checked - Custom Orders</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Custom Order ID</th>
+                                <th>Product Type</th>
+                                <th>Material</th>
+                                <th>Color</th>
+                                <th>Foam Type</th>
+                                <th>M/R</th>
+                                <th>Quantity</th>
+                                <th>Payment Approved</th>
+                                <th>Percentage</th>
+                                <th>Receipt Submitted</th>
+                                {% comment %} <th>With Downpayment</th> {% endcomment %}
+                                <th>Paid Amount</th>
+                                <th>Date Approved</th>
+                                <th>Verifier</th>
+
+
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+
+                            {% for colna in custom_order_list_not_approved %}
+                            <tr>
+                                <td data-date="{{ colna.date_approved }}">{{colna.profile}}</td>
+                                <td data-date="{{ colna.date_approved }}">{{colna.co_id}}</td>
+                                <td data-date="{{ colna.date_approved }}">{{colna.product_type}}</a></td>
+                                <td data-date="{{ colna.date_approved }}">{{colna.material|title}}</td>
+                                <td data-date="{{ colna.date_approved }}">{{colna.color|title}}</td>
+                                <td data-date="{{ colna.date_approved }}">{{colna.foam_type|title}}</td>
+                                <td data-date="{{ colna.date_approved }}">{{colna.make_or_repair|title}}</td>
+                                <td data-date="{{ colna.date_approved }}">{{colna.qty|title}}</td>
+                                {% if colna.with_downpayment == True %}
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+                                <td data-date="{{ colna.date_approved }}">{{colna.percentage_progress}}%</td>
+
+                                {% if colna.receipt_submitted == True %}
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+                                <td data-date="{{ colna.date_approved }}">₱{{colna.paid_amount}}</td>
+                                <th data-date="{{ colna.date_approved }}">{{colna.date_approved}}</th>
+
+                                <th data-date="{{ colna.date_approved }}">{{colna.admin_profile}}</th>
+
+                                <td><a href="{% url 'core:custom_order_detail_dashboard' co_id=colna.co_id %}" class="primary">View</a></td>
+                                {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
+
+                                <td class="warning">Pending</td>
+                                <td class="primary">Details</td> {% endcomment %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+
+            </div>
         <!-- ... (existing code) -->    
         <!-- ... (existing code) -->
 <!-- ... (existing code) -->
 <!-- Bar Graph Container for Most Ordered Product Types -->
 <div class="bar-graph-container">
+    <h2>Top 5 Most Ordered Products of All-Time</h2>
     <canvas style="height:300px;" id="productTypeBarGraph"></canvas>
 </div>
 

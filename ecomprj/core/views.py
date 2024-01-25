@@ -125,7 +125,7 @@ def admindash_custom_orders(request):
     custom_order_list = CustomizationOrder.objects.all()
 
     custom_order_list_approved = CustomizationOrder.objects.filter(with_downpayment=True)
-    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False)
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
 
     most_ordered_product_types = get_most_ordered_product_types()
 
