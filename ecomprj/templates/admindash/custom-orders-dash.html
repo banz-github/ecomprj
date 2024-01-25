@@ -1,16 +1,12 @@
 {% extends 'admindash/base-dash.html' %}
 {% load static %}
 {% block content %}       
-    {% load humanize %}
-    {% load custom_filters %}
+{% load humanize %}
+{% load custom_filters %}
 
         <main>
             <div class="date">
-                <form method="GET">
-                    <label for="datePicker">Select Date:</label>
-                    <input type="date" id="dateFilter" name="selected_date">
-                    <input type="submit" value="Apply">
-                </form>
+                <input type="date">
             </div>
             <!-- END OF INSIGHTS -->
             <div class="recent-orders">
@@ -42,30 +38,30 @@
                         <tbody>
                             {% for col in custom_order_list %}
                             <tr>
-                                <td data-date="{{ col.date_approved }}">{{col.profile}}</td>
-                                <td data-date="{{ col.date_approved }}">{{col.co_id}}</td>
-                                <td data-date="{{ col.date_approved }}"><a href="{% url 'core:most_ordered_materials' product_type=col.product_type %}" class="primary">{{col.product_type}}</a></td>
-                                <td data-date="{{ col.date_approved }}">{{col.material|title}}</td>
-                                <td data-date="{{ col.date_approved }}">{{col.color|title}}</td>
-                                <td data-date="{{ col.date_approved }}">{{col.foam_type|title}}</td>
-                                <td data-date="{{ col.date_approved }}">{{col.make_or_repair|title}}</td>
-                                <td data-date="{{ col.date_approved }}">{{col.qty|title}}</td>
+                                <td>{{col.profile}}</td>
+                                <td>{{col.co_id}}</td>
+                                <td><a href="{% url 'core:most_ordered_materials' product_type=col.product_type %}" class="primary">{{col.product_type}}</a></td>
+                                <td>{{col.material|title}}</td>
+                                <td>{{col.color|title}}</td>
+                                <td>{{col.foam_type|title}}</td>
+                                <td>{{col.make_or_repair|title}}</td>
+                                <td>{{col.qty|title}}</td>
                                 {% if col.with_downpayment == True %}
-                                <td data-date="{{ col.date_approved }}"><i class="fas fa-check-circle text-success">✔️</i></td>
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
                                 {% else %}
-                                <td data-date="{{ col.date_approved }}" class="text-danger"><strong>X</strong></td>
+                                <td class="text-danger"><strong>X</strong></td>
                                 {% endif %}
-                                <td data-date="{{ col.date_approved }}">{{col.percentage_progress}}%</td>
+                                <td>{{col.percentage_progress}}%</td>
 
                                 {% if col.receipt_submitted == True %}
-                                <td data-date="{{ col.date_approved }}"><i class="fas fa-check-circle text-success">✔️</i></td>
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
                                 {% else %}
-                                <td data-date="{{ col.date_approved }}" class="text-danger"><strong>X</strong></td>
+                                <td class="text-danger"><strong>X</strong></td>
                                 {% endif %}
-                                <td data-date="{{ col.date_approved }}">₱{{col.paid_amount}}</td>
-                                <th data-date="{{ col.date_approved }}">{{col.date_approved}}</th>
+                                <td>₱{{col.paid_amount}}</td>
+                                <th>{{col.date_approved}}</th>
 
-                                <th data-date="{{ col.date_approved }}">{{col.admin_profile}}</th>
+                                <th>{{col.admin_profile}}</th>
 
                                 <td><a href="{% url 'core:custom_order_detail_dashboard' co_id=col.co_id %}" class="primary">View</a></td>
                                 {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
@@ -178,8 +174,8 @@
                         <tbody>
                             {% for product_type in most_ordered_product_types %}
                             <tr>
-                                <td data-date="{{ product_type.date_approved }}">{{ product_type.product_type__name }} PT</td>
-                                <td data-date="{{ product_type.date_approved }}">{{ product_type.total_quantity }} QTY</td>
+                                <td>{{ product_type.product_type__name }} PT</td>
+                                <td>{{ product_type.total_quantity }} QTY</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -191,129 +187,14 @@
         <!-- ... (existing code) -->    
         <!-- ... (existing code) -->
 <!-- ... (existing code) -->
-<!-- Bar Graph Container for Most Ordered Product Types -->
+
 <div class="bar-graph-container">
     <canvas style="height:300px;" id="productTypeBarGraph"></canvas>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('dateFilter').addEventListener('change', function() {
-            const selectedDate = this.value;
-            const formattedSelectedDate = convertDateFormat(selectedDate);
-
-            console.log('Selected Date:', formattedSelectedDate);
-
-            filterByDate('.recent-orders tbody tr', formattedSelectedDate);
-            filterByDate('.analytics-section tbody tr', formattedSelectedDate);
-
-            const allTimeSections = document.querySelectorAll('.analytics-section');
-            allTimeSections.forEach(function(section) {
-                const hasSelectedDate = selectedDate !== '';
-                if (hasSelectedDate) {
-                    section.style.display = 'none';
-                } else {
-                    section.style.display = 'block';
-                }
-            });
-
-            const newProductTypeData = {
-                labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
-                datasets: [{
-                    label: 'Total Quantity for Each Product Type',
-                    backgroundColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
-                    borderColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
-                    borderWidth: 1,
-                    data: [{% for product_type in most_ordered_product_types %}{{ product_type.total_quantity }},{% endfor %}]
-                }]
-            };
-
-            console.log('New Product Type Data:', newProductTypeData);
-
-            productTypeBarGraph.data = newProductTypeData;
-            productTypeBarGraph.update();
-        });
-
-        const productTypeData = {
-            labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
-            datasets: [{
-                label: 'Total Quantity for Each Product Type',
-                backgroundColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
-                borderColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
-                borderWidth: 1,
-                data: [{% for product_type in most_ordered_product_types %}{{ product_type.total_quantity }},{% endfor %}]
-            }]
-        };
-
-        const productTypeConfig = {
-            type: 'bar',
-            data: productTypeData,
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Product Type'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Total Quantity'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false,
-                    }
-                }
-            }
-        };
-
-        const productTypeBarGraph = new Chart(
-            document.getElementById('productTypeBarGraph'),
-            productTypeConfig
-        );
-    });
-
-    function convertDateFormat(dateString) {
-        const date = new Date(dateString);
-        
-        if (isNaN(date.getTime())) {
-            return ''; // Invalid date format
-        }
-
-        const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        return date.toLocaleDateString('en-US', options);
-    }
-
-    function filterByDate(selector, selectedDate) {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(function (element) {
-            const elementDate = element.querySelector('td[data-date]').getAttribute('data-date');
-            const isoSelectedDate = new Date(selectedDate).toISOString().slice(0, 16).replace("T", ", ");
-            const isoElementDate = new Date(elementDate).toISOString().slice(0, 16).replace("T", ", ");
-
-            if (selectedDate === '' || isoSelectedDate === isoElementDate) {
-                element.style.display = '';
-            } else {
-                element.style.display = 'none';
-            }
-        });
-    }
-</script>
-
-
-
-
-
-
-
-        </main>
-
-        {% endblock content %}
-    {% comment %} <script>
+<!-- ... (existing code) -->
+<div class="bar-graph-container">
+    <canvas style="height:300px;" id="productTypeBarGraph"></canvas>
+    <script>
         const productTypeData = {
             labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
             datasets: [{
@@ -355,8 +236,15 @@
             document.getElementById('productTypeBarGraph'),
             productTypeConfig
         );
+    </script>
+</div>
 
 
-        
 
-    </script> {% endcomment %}
+
+
+
+
+        </main>
+
+        {% endblock content %}
