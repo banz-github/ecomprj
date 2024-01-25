@@ -171,7 +171,7 @@ def get_most_ordered_materials(product_type):
     # Returns a queryset of materials for a specific product type with the total quantity
     return CustomizationOrder.objects.filter(product_type__name=product_type).values('material__name').annotate(
         total_quantity=Sum('qty')
-    ).order_by('-total_quantity')[:5]
+    ).order_by('-total_quantity')
 ###############MOST ORDERED MATERIALS
 
 
@@ -204,7 +204,7 @@ def get_most_ordered_product_types_by_date(month, year):
     return CustomizationOrder.objects.filter(date_approved__month=month, date_approved__year=year).values('product_type__name').annotate(
         total_orders=Count('id'),
         total_quantity=Sum('qty')
-    ).order_by('-total_orders')[:5]
+    ).order_by('-total_orders')
 
 def get_most_ordered_materials_by_date(product_type, month, year):
     # Returns a queryset of materials for a specific product type with the total quantity for a specific month and year
@@ -214,7 +214,7 @@ def get_most_ordered_materials_by_date(product_type, month, year):
         date_approved__year=year
     ).values('material__name').annotate(
         total_quantity=Sum('qty')
-    ).order_by('-total_quantity')[:5]
+    ).order_by('-total_quantity')
 
 def get_most_ordered_colors_by_date(product_type, material_name, month, year):
     # Returns a queryset of colors for a specific material with the total quantity for a specific month and year
@@ -225,7 +225,7 @@ def get_most_ordered_colors_by_date(product_type, material_name, month, year):
         date_approved__year=year
     ).values('color__name').annotate(
         total_quantity=Sum('qty')
-    ).order_by('-total_quantity')[:5]
+    ).order_by('-total_quantity')
 
 ############## DATE FILTERING ^^^^^^^^^^
 
@@ -355,7 +355,7 @@ def admindash_products(request):
 @allowed_users(allowed_roles=['admin'])
 def admindash_analytics(request):
 
-
+#Ignore this section
     category_orders = CartOrderItems.objects.values('category__title').annotate(count=Count('id'))
 
     category_labels = []
@@ -364,10 +364,39 @@ def admindash_analytics(request):
     for category_order in category_orders:
         category_labels.append(category_order['category__title'])
         category_data.append(category_order['count'])
+#Ignore this section ^^^^^^^^^^^^
+   
+
+    
 
 
     context = {"category_labels":category_labels,"category_data":category_data,}
-    return render(request, 'admindash/analytics-dash.html', context )
+
+    return render(request, 'admindash/analytics-dash.html', context)
+
+@allowed_users(allowed_roles=['admin'])
+def admindash_analytics2(request):
+         
+    months = CustomizationOrder.objects.dates('date_approved', 'month', order='DESC')
+
+    # Get the most ordered product types for each month
+    most_ordered_product_types_by_month = {}
+    for month in months:
+        product_types = CustomizationOrder.objects.filter(
+            date_approved__month=month.month,
+            date_approved__year=month.year
+        ).values('product_type__name').annotate(
+            total_orders=Count('id'),
+            total_quantity=Sum('qty')
+        ).order_by('-total_orders')[:5]
+
+        most_ordered_product_types_by_month[month] = product_types
+
+    context= {
+        'months': months,
+        'most_ordered_product_types_by_month': most_ordered_product_types_by_month,
+    }
+    return render(request, 'admindash/analytics-dash2.html', context)
 
 
 # Create your views here.

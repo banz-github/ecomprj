@@ -1,0 +1,38 @@
+<!-- templates/admindash/analytics-dash.html -->
+
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+    {% load humanize %}
+    {% load custom_filters %}
+
+    <main>
+        <div class="analytics-section">
+            <h2>Most Ordered Product Types Monthly Comparison</h2>
+
+            {% for month, product_types in most_ordered_product_types_by_month.items %}
+                <h3>{{ month|date:"F Y" }}</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Type</th>
+                                <th>Total Orders</th>
+                                <th>Total Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product_type in product_types %}
+                                <tr>
+                                    <td>{{ product_type.product_type__name }}</td>
+                                    <td>{{ product_type.total_orders }}</td>
+                                    <td>{{ product_type.total_quantity }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock content %}

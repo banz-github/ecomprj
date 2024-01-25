@@ -1,8 +1,8 @@
 {% extends 'admindash/base-dash.html' %}
 {% load static %}
 {% block content %}       
-{% load humanize %}
-{% load custom_filters %}
+    {% load humanize %}
+    {% load custom_filters %}
 
         <main>
             <div class="date">
@@ -191,13 +191,128 @@
         <!-- ... (existing code) -->    
         <!-- ... (existing code) -->
 <!-- ... (existing code) -->
-
+<!-- Bar Graph Container for Most Ordered Product Types -->
 <div class="bar-graph-container">
     <canvas style="height:300px;" id="productTypeBarGraph"></canvas>
 </div>
-<!-- ... (existing code) -->
-<div class="bar-graph-container">
-    <canvas style="height:300px;" id="productTypeBarGraph"></canvas>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('dateFilter').addEventListener('change', function() {
+            const selectedDate = this.value;
+            const formattedSelectedDate = convertDateFormat(selectedDate);
+
+            console.log('Selected Date:', formattedSelectedDate);
+
+            filterByDate('.recent-orders tbody tr', formattedSelectedDate);
+            filterByDate('.analytics-section tbody tr', formattedSelectedDate);
+
+            const allTimeSections = document.querySelectorAll('.analytics-section');
+            allTimeSections.forEach(function(section) {
+                const hasSelectedDate = selectedDate !== '';
+                if (hasSelectedDate) {
+                    section.style.display = 'none';
+                } else {
+                    section.style.display = 'block';
+                }
+            });
+
+            const newProductTypeData = {
+                labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
+                datasets: [{
+                    label: 'Total Quantity for Each Product Type',
+                    backgroundColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
+                    borderColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
+                    borderWidth: 1,
+                    data: [{% for product_type in most_ordered_product_types %}{{ product_type.total_quantity }},{% endfor %}]
+                }]
+            };
+
+            console.log('New Product Type Data:', newProductTypeData);
+
+            productTypeBarGraph.data = newProductTypeData;
+            productTypeBarGraph.update();
+        });
+
+        const productTypeData = {
+            labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
+            datasets: [{
+                label: 'Total Quantity for Each Product Type',
+                backgroundColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
+                borderColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
+                borderWidth: 1,
+                data: [{% for product_type in most_ordered_product_types %}{{ product_type.total_quantity }},{% endfor %}]
+            }]
+        };
+
+        const productTypeConfig = {
+            type: 'bar',
+            data: productTypeData,
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Product Type'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total Quantity'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                }
+            }
+        };
+
+        const productTypeBarGraph = new Chart(
+            document.getElementById('productTypeBarGraph'),
+            productTypeConfig
+        );
+    });
+
+    function convertDateFormat(dateString) {
+        const date = new Date(dateString);
+        
+        if (isNaN(date.getTime())) {
+            return ''; // Invalid date format
+        }
+
+        const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    function filterByDate(selector, selectedDate) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(function (element) {
+            const elementDate = element.querySelector('td[data-date]').getAttribute('data-date');
+            const isoSelectedDate = new Date(selectedDate).toISOString().slice(0, 16).replace("T", ", ");
+            const isoElementDate = new Date(elementDate).toISOString().slice(0, 16).replace("T", ", ");
+
+            if (selectedDate === '' || isoSelectedDate === isoElementDate) {
+                element.style.display = '';
+            } else {
+                element.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+        </main>
+
+        {% endblock content %}
     {% comment %} <script>
         const productTypeData = {
             labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
@@ -245,113 +360,3 @@
         
 
     </script> {% endcomment %}
-    <script>
-        document.getElementById('dateFilter').addEventListener('change', function() {
-            // Get the selected date
-            const selectedDate = this.value;
-    
-            // Filter orders based on the selected date
-            filterByDate('.recent-orders tbody tr', selectedDate);
-    
-            // Filter most ordered product types
-            filterByDate('.analytics-section tbody tr', selectedDate);
-    
-            // Show or hide "all-time" based on the selected date
-            const allTimeSections = document.querySelectorAll('.analytics-section');
-            allTimeSections.forEach(function(section) {
-                const hasSelectedDate = selectedDate !== '';
-                if (hasSelectedDate) {
-                    section.style.display = 'none';
-                } else {
-                    section.style.display = 'block';
-                }
-            });
-    
-            // Update the most-ordered product types chart based on the selected date
-            const newProductTypeData = {
-                labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
-                datasets: [{
-                    label: 'Total Quantity for Each Product Type',
-                    backgroundColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
-                    borderColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
-                    borderWidth: 1,
-                    data: [{% for product_type in most_ordered_product_types %}{{ product_type.total_quantity }},{% endfor %}]
-                }]
-            };
-    
-            productTypeBarGraph.data = newProductTypeData;
-            productTypeBarGraph.update();
-        });
-    
-        // Function to filter elements by date
-        function filterByDate(selector, selectedDate) {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(function(element) {
-                const elementDate = element.querySelector('td[data-date]').getAttribute('data-date');
-                if (selectedDate === '' || selectedDate === elementDate) {
-                    element.style.display = '';
-                } else {
-                    element.style.display = 'none';
-                }
-            });
-        }
-    
-        // Existing code for productTypeBarGraph
-        const productTypeData = {
-            labels: [{% for product_type in most_ordered_product_types %}"{{ product_type.product_type__name }}",{% endfor %}],
-            datasets: [{
-                label: 'Total Quantity for Each Product Type',
-                backgroundColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
-                borderColor: [{% for product_type in most_ordered_product_types %}'{{ product_type|random_color }}',{% endfor %}],
-                borderWidth: 1,
-                data: [{% for product_type in most_ordered_product_types %}{{ product_type.total_quantity }},{% endfor %}]
-            }]
-        };
-    
-        const productTypeConfig = {
-            type: 'bar',
-            data: productTypeData,
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Product Type'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Total Quantity'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false, // Set to false to hide the legend
-                    }
-                }
-            }
-        };
-    
-        const productTypeBarGraph = new Chart(
-            document.getElementById('productTypeBarGraph'),
-            productTypeConfig
-        );
-    </script>
-    
-    
-    
-    
-    
-</div>
-
-
-
-
-
-
-
-        </main>
-
-        {% endblock content %}
