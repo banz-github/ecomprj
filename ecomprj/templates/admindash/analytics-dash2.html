@@ -63,6 +63,41 @@
             {% endfor %}
         </div>
 
+
+        {% comment %} <div class="analytics-section">
+            <h2>Most Ordered Product Types by Month</h2>
+
+            <!-- Create a canvas for the chart -->
+            <canvas id="myChart" width="800" height="400"></canvas>
+            <script>
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [{% for month_data in monthly_data %}"{{ month_data.month|date:"F Y" }}",{% endfor %}],
+                        datasets: [
+                            {% for month_data in monthly_data %}
+                            {
+                                label: '{{ month_data.month|date:"F Y" }}',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                data: [{% for product_type_data in month_data.data %}{{ product_type_data.total_orders }},{% endfor %}]
+                            },
+                            {% endfor %}
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div> {% endcomment %}
+
         <!-- ... (existing code) -->
     </main>
 {% endblock content %}

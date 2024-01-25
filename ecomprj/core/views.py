@@ -434,8 +434,8 @@ def admindash_analytics2(request):
 
     # Prepare data for the template
     context = {
-        'months': months, "custom_order_list_not_approved":custom_order_list_not_approved,
-        'most_ordered_product_types_by_month': most_ordered_product_types_by_month,
+        'months': months, "custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,
+        'most_ordered_product_types_by_month': most_ordered_product_types_by_month, 
         'monthly_data': []  # Add an empty list for monthly data
     }
 
