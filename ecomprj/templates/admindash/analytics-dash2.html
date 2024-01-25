@@ -23,13 +23,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for product_type_data in month_data.data %}
-                                <tr>
-                                    <td>{{ product_type_data.product_type__name }}</td>
-                                    <td>{{ product_type_data.total_orders }}</td>
-                                    <td>{{ product_type_data.total_quantity }}</td>
-                                </tr>
-                            {% endfor %}
+                                {% for product_type_data in month_data.data %}
+                                    <tr>
+                                        <td><a href="{% url 'core:most_ordered_materials_per_month' product_type=product_type_data.product_type__name %}"  class="primary">{{ product_type_data.product_type__name }}</a></td>
+
+                                        <td>{{ product_type_data.total_orders }}</td>
+                                        <td>{{ product_type_data.total_quantity }}</td>
+                                    </tr>
+                                {% endfor %}
                         </tbody>
                     </table>
                 </div>

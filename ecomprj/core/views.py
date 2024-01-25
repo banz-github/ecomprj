@@ -402,6 +402,34 @@ def admindash_analytics2(request):
         context['monthly_data'].append({'month': month, 'data': list(monthly_data)})
 
     return render(request, 'admindash/analytics-dash2.html', context)
+
+@allowed_users(allowed_roles=['admin'])
+def most_ordered_materials_per_month(request, product_type):
+    months = CustomizationOrder.objects.filter(with_downpayment=True).dates('date_approved', 'month', order='DESC')
+
+    most_ordered_materials_by_month = {}
+    for month in months:
+        materials = CustomizationOrder.objects.filter(
+            date_approved__month=month.month,
+            date_approved__year=month.year,
+            with_downpayment=True,
+            product_type__name=product_type
+        ).values('material__name').annotate(
+            total_quantity=Sum('qty')
+        ).order_by('-total_quantity')[:5]
+
+        most_ordered_materials_by_month[month] = materials
+
+    context = {
+        'product_type': product_type,
+        'months': months,
+        'most_ordered_materials_by_month': most_ordered_materials_by_month,
+    }
+
+    return render(request, 'admindash/most-ordered-materials-per-month.html', context)
+
+
+
 # Create your views here.
 #@allowed_users(allowed_roles=['customer'])
 def index(request):

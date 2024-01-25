@@ -1,0 +1,42 @@
+<!-- In your most-ordered-materials-per-month.html template -->
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+    {% load humanize %}
+    {% load custom_filters %}
+
+    <main>
+        <!-- Add any necessary styling or structure here -->
+
+        <div class="analytics-section">
+            <h2>Most Ordered Materials Monthly Comparison</h2>
+
+            {% for month, materials in most_ordered_materials_by_month.items %}
+                {% if materials %}
+                    <h3>{{ month|date:"F Y" }}</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Material Name</th>
+                                    <th>Total Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for material_data in materials %}
+                                    <tr>
+                                        <td>{{ material_data.material__name }}</td>
+                                        <td>{{ material_data.total_quantity }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                <!-- Add any additional visualization or charts if needed -->
+            {% endfor %}
+        </div>
+
+        <!-- ... (existing code) -->
+    </main>
+{% endblock content %}
