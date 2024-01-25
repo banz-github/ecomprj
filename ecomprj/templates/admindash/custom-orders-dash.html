@@ -14,7 +14,7 @@
             </div>
             <!-- END OF INSIGHTS -->
             <div class="recent-orders">
-                <h2>Custom Orders</h2>
+                <h2>All Custom Orders</h2>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -51,16 +51,16 @@
                                 <td data-date="{{ col.date_approved }}">{{col.make_or_repair|title}}</td>
                                 <td data-date="{{ col.date_approved }}">{{col.qty|title}}</td>
                                 {% if col.with_downpayment == True %}
-                                <td data-date="{{ col.date_approved }}"><i class="fas fa-check-circle text-success">✔️</i></td>
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
                                 {% else %}
-                                <td data-date="{{ col.date_approved }}" class="text-danger"><strong>X</strong></td>
+                                <td class="text-danger"><strong>X</strong></td>
                                 {% endif %}
                                 <td data-date="{{ col.date_approved }}">{{col.percentage_progress}}%</td>
 
                                 {% if col.receipt_submitted == True %}
-                                <td data-date="{{ col.date_approved }}"><i class="fas fa-check-circle text-success">✔️</i></td>
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
                                 {% else %}
-                                <td data-date="{{ col.date_approved }}" class="text-danger"><strong>X</strong></td>
+                                <td class="text-danger"><strong>X</strong></td>
                                 {% endif %}
                                 <td data-date="{{ col.date_approved }}">₱{{col.paid_amount}}</td>
                                 <th data-date="{{ col.date_approved }}">{{col.date_approved}}</th>
@@ -77,117 +77,77 @@
                         </tbody>
                     </table>
                 </div>
-                {% comment %} <a href="#"  id="show-all-orders">Show All</a> <!-- self suggestion doblehin ung page--> {% endcomment %}
-
-                {% comment %} <div class="table-container">
-                    <table>
-                    <!-- here is where we will put the canvas, also include JS code to your response --> 
-                        <canvas style="height:50px;" id="adminChart"></canvas>
-                        <script>
-                            const adminLabels = {{ month|safe }};
-                            
-                            const adminData = {
-                                labels: adminLabels,
-                                datasets: [{
-                                    label: 'Total orders in each month',
-                                    backgroundColor: 'rgb(59, 183, 126)',
-                                    borderColor: 'rgb(59, 183, 126)',
-                                    data: {{ total_orders|safe }}
-                                }],
-                            };
-                        
-                            const adminConfig = {
-                                type: 'bar',
-                                data: adminData,
-                                options: {
-                                    tooltips: { enabled: false },
-                                    hover: { mode: null },
-                                }
-                            };
-                        
-                            const adminChart = new Chart(
-                                document.getElementById('adminChart'),
-                                adminConfig
-                            );
-                        </script>
-                    </table>
-                    
-                </div> {% endcomment %}
-
-                {% comment %} <div class="table-container">
-                    <table>
-                        <canvas style="height:50px;" id="adminCategoryChart"></canvas>
-                        <script>
-                            const categoryLabels = {{ category_labels|safe }};
-                            
-                            const categoryData = {
-                                labels: categoryLabels,
-                                datasets: [{
-                                    label: 'Orders by Category',
-                                    backgroundColor: [
-                                        'rgb(255, 99, 132)',
-                                        'rgb(255, 205, 86)',
-                                        'rgb(54, 162, 235)',
-                                        // Add more colors as needed
-                                    ],
-                                    borderColor: 'white',
-                                    borderWidth: 2,
-                                    data: {{ category_data|safe }}
-                                }]
-                            };
-
-                            const categoryConfig = {
-                                type: 'pie',
-                                data: categoryData,
-                                label: 'Orders by Category',
-                                options: {
-                                    tooltips: {
-                                        callbacks: {
-                                            label: function (tooltipItem, data) {
-                                                return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                                            }
-                                        }
-                                    },
-                                    hover: { mode: null },
-                                }
-                            };
-
-                            const categoryChart = new Chart(
-                                document.getElementById('adminCategoryChart'),
-                                categoryConfig
-                            );
-                        </script>
-
-                    </table>
-                </div> {% endcomment %}
+                
 
             </div>
-
             <br>
-            <!-- ... (existing code) -->
-            <div class="analytics-section">
-                <h2>Most Ordered Product Types</h2>
+            <div class="recent-orders">
+                <h2>All Approved Custom Orders</h2>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
+                                <th>Customer Name</th>
+                                <th>Custom Order ID</th>
                                 <th>Product Type</th>
-                                <th>Total Quantity</th>
+                                <th>Material</th>
+                                <th>Color</th>
+                                <th>Foam Type</th>
+                                <th>M/R</th>
+                                <th>Quantity</th>
+                                <th>Payment Approved</th>
+                                <th>Percentage</th>
+                                <th>Receipt Submitted</th>
+                                {% comment %} <th>With Downpayment</th> {% endcomment %}
+                                <th>Paid Amount</th>
+                                <th>Date Approved</th>
+                                <th>Verifier</th>
+
+
                             </tr>
+                            
                         </thead>
                         <tbody>
-                            {% for product_type in most_ordered_product_types %}
+                            {% for cola in custom_order_list_approved %}
                             <tr>
-                                <td data-date="{{ product_type.date_approved }}">{{ product_type.product_type__name }} PT</td>
-                                <td data-date="{{ product_type.date_approved }}">{{ product_type.total_quantity }} QTY</td>
+                                <td data-date="{{ cola.date_approved }}">{{cola.profile}}</td>
+                                <td data-date="{{ cola.date_approved }}">{{cola.co_id}}</td>
+                                <td data-date="{{ cola.date_approved }}"><a href="{% url 'core:most_ordered_materials' product_type=cola.product_type %}" class="primary">{{cola.product_type}}</a></td>
+                                <td data-date="{{ cola.date_approved }}">{{cola.material|title}}</td>
+                                <td data-date="{{ cola.date_approved }}">{{cola.color|title}}</td>
+                                <td data-date="{{ cola.date_approved }}">{{cola.foam_type|title}}</td>
+                                <td data-date="{{ cola.date_approved }}">{{cola.make_or_repair|title}}</td>
+                                <td data-date="{{ cola.date_approved }}">{{cola.qty|title}}</td>
+                                {% if cola.with_downpayment == True %}
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+                                <td data-date="{{ cola.date_approved }}">{{cola.percentage_progress}}%</td>
+
+                                {% if cola.receipt_submitted == True %}
+                                <td><i class="fas fa-check-circle text-success">✔️</i></td>
+                                {% else %}
+                                <td class="text-danger"><strong>X</strong></td>
+                                {% endif %}
+                                <td data-date="{{ cola.date_approved }}">₱{{cola.paid_amount}}</td>
+                                <th data-date="{{ cola.date_approved }}">{{cola.date_approved}}</th>
+
+                                <th data-date="{{ cola.date_approved }}">{{cola.admin_profile}}</th>
+
+                                <td><a href="{% url 'core:custom_order_detail_dashboard' co_id=cola.co_id %}" class="primary">View</a></td>
+                                {% comment %} <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
+
+                                <td class="warning">Pending</td>
+                                <td class="primary">Details</td> {% endcomment %}
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </div>
-            
+                
 
+            </div>
         <!-- ... (existing code) -->    
         <!-- ... (existing code) -->
 <!-- ... (existing code) -->

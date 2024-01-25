@@ -123,41 +123,32 @@ from django.db.models import Sum
 @allowed_users(allowed_roles=['admin'])
 def admindash_custom_orders(request):
     custom_order_list = CustomizationOrder.objects.all()
-    #custom_order_list = CustomizationOrder.objects.filter(with_downpayment=True)
-    today = datetime.now()
-    most_ordered_product_types = get_most_ordered_product_types_by_date(today.month, today.year)
+
+    custom_order_list_approved = CustomizationOrder.objects.filter(with_downpayment=True)
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False)
+
+    most_ordered_product_types = get_most_ordered_product_types()
 
     context = {
         "custom_order_list": custom_order_list,
         "most_ordered_product_types": most_ordered_product_types,
+        "custom_order_list_approved": custom_order_list_approved,
+        "custom_order_list_not_approved":custom_order_list_not_approved,
+
     }
 
     return render(request, 'admindash/custom-orders-dash.html', context)
 
-
 def get_most_ordered_product_types():
     # Returns a queryset of product types with the total quantity
-    return CustomizationOrder.objects.values('product_type__name').annotate(
+    return CustomizationOrder.objects.filter(with_downpayment=True).values('product_type__name').annotate(
         total_quantity=Sum('qty')
     ).order_by('-total_quantity')[:5]
-def get_most_ordered_product_types():
-    # Returns a queryset of product types with the most orders multiplied by quantity
-    return CustomizationOrder.objects.values('product_type__name').annotate(
-        total_orders=F('qty') * Count('id')
-    ).order_by('-total_orders')[:5]
-def get_most_ordered_product_types():
-    # Returns a queryset of product types with the most orders and total quantity
-    return CustomizationOrder.objects.values('product_type__name').annotate(
-        total_orders=Count('id'),
-        total_quantity=Sum('qty')
-    ).order_by('-total_orders')[:5]
+
 
 ###############MOST ORDERED MATERIALS
 def most_ordered_materials(request, product_type):
-
-    today = datetime.now()
-    materials = get_most_ordered_materials_by_date(product_type, today.month, today.year)
-    #materials = get_most_ordered_materials(product_type)
+    materials = get_most_ordered_materials(product_type)
 
     
 
@@ -169,16 +160,15 @@ def most_ordered_materials(request, product_type):
 
 def get_most_ordered_materials(product_type):
     # Returns a queryset of materials for a specific product type with the total quantity
-    return CustomizationOrder.objects.filter(product_type__name=product_type).values('material__name').annotate(
+    return CustomizationOrder.objects.filter(with_downpayment=True, product_type__name=product_type).values('material__name').annotate(
         total_quantity=Sum('qty')
-    ).order_by('-total_quantity')
+    ).order_by('-total_quantity')[:5]
 ###############MOST ORDERED MATERIALS
 
 
 ##### MOST ORDERED COLORS IN THE MATERIAL
 def most_ordered_colors(request, product_type, material_name):
-    today = datetime.now()
-    colors = get_most_ordered_colors_by_date(product_type, material_name, today.month, today.year)
+    colors = get_most_ordered_colors(product_type, material_name)
 
     context = {
         'product_type': product_type,
@@ -190,6 +180,7 @@ def most_ordered_colors(request, product_type, material_name):
 def get_most_ordered_colors(product_type, material_name):
     # Returns a queryset of colors for a specific material with the total quantity
     return CustomizationOrder.objects.filter(
+        with_downpayment=True,
         product_type__name=product_type,
         material__name=material_name
     ).values('color__name').annotate(
@@ -199,33 +190,33 @@ def get_most_ordered_colors(product_type, material_name):
 
 
 ############## NEW DATE FILTERING
-def get_most_ordered_product_types_by_date(month, year):
-    # Returns a queryset of product types with the most orders and total quantity for a specific month and year
-    return CustomizationOrder.objects.filter(date_approved__month=month, date_approved__year=year).values('product_type__name').annotate(
-        total_orders=Count('id'),
-        total_quantity=Sum('qty')
-    ).order_by('-total_orders')
+# def get_most_ordered_product_types_by_date(month, year):
+#     # Returns a queryset of product types with the most orders and total quantity for a specific month and year
+#     return CustomizationOrder.objects.filter(date_approved__month=month, date_approved__year=year).values('product_type__name').annotate(
+#         total_orders=Count('id'),
+#         total_quantity=Sum('qty')
+#     ).order_by('-total_orders')
 
-def get_most_ordered_materials_by_date(product_type, month, year):
-    # Returns a queryset of materials for a specific product type with the total quantity for a specific month and year
-    return CustomizationOrder.objects.filter(
-        product_type__name=product_type,
-        date_approved__month=month,
-        date_approved__year=year
-    ).values('material__name').annotate(
-        total_quantity=Sum('qty')
-    ).order_by('-total_quantity')
+# def get_most_ordered_materials_by_date(product_type, month, year):
+#     # Returns a queryset of materials for a specific product type with the total quantity for a specific month and year
+#     return CustomizationOrder.objects.filter(
+#         product_type__name=product_type,
+#         date_approved__month=month,
+#         date_approved__year=year
+#     ).values('material__name').annotate(
+#         total_quantity=Sum('qty')
+#     ).order_by('-total_quantity')
 
-def get_most_ordered_colors_by_date(product_type, material_name, month, year):
-    # Returns a queryset of colors for a specific material with the total quantity for a specific month and year
-    return CustomizationOrder.objects.filter(
-        product_type__name=product_type,
-        material__name=material_name,
-        date_approved__month=month,
-        date_approved__year=year
-    ).values('color__name').annotate(
-        total_quantity=Sum('qty')
-    ).order_by('-total_quantity')
+# def get_most_ordered_colors_by_date(product_type, material_name, month, year):
+#     # Returns a queryset of colors for a specific material with the total quantity for a specific month and year
+#     return CustomizationOrder.objects.filter(
+#         product_type__name=product_type,
+#         material__name=material_name,
+#         date_approved__month=month,
+#         date_approved__year=year
+#     ).values('color__name').annotate(
+#         total_quantity=Sum('qty')
+#     ).order_by('-total_quantity')
 
 ############## DATE FILTERING ^^^^^^^^^^
 
