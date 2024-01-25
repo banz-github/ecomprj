@@ -1,5 +1,4 @@
-<!-- templates/admindash/analytics-dash.html -->
-
+<!-- In your analytics-dash2.html template -->
 {% extends 'admindash/base-dash.html' %}
 {% load static %}
 {% block content %}       
@@ -7,11 +6,13 @@
     {% load custom_filters %}
 
     <main>
+        <!-- Add any necessary styling or structure here -->
+
         <div class="analytics-section">
             <h2>Most Ordered Product Types Monthly Comparison</h2>
 
-            {% for month, product_types in most_ordered_product_types_by_month.items %}
-                <h3>{{ month|date:"F Y" }}</h3>
+            {% for month_data in monthly_data %}
+                <h3>{{ month_data.month|date:"F Y" }}</h3>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -22,7 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for product_type in product_types %}
+                            {% for product_type in month_data.data %} 
                                 <tr>
                                     <td>{{ product_type.product_type__name }}</td>
                                     <td>{{ product_type.total_orders }}</td>
@@ -32,7 +33,35 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Add a canvas for the chart -->
+                <canvas id="myChart{{ forloop.counter }}" width="400" height="200"></canvas>
+                <script>
+                    var ctx = document.getElementById('myChart{{ forloop.counter }}').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [{% for product_type in month_data.data %}"{{ product_type.product_type__name }}",{% endfor %}],
+                            datasets: [{
+                                label: 'Total Orders',
+                                data: [{% for product_type in month_data.data %}{{ product_type.total_orders }},{% endfor %}],
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                </script>
             {% endfor %}
         </div>
+
+        <!-- ... (existing code) -->
     </main>
 {% endblock content %}
