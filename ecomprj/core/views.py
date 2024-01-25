@@ -440,7 +440,8 @@ def most_ordered_colors_per_month(request, product_type, material_name):
             date_approved__month=month.month,
             date_approved__year=month.year,
             with_downpayment=True,
-            product_type__name=product_type
+            product_type__name=product_type,
+            material__name=material_name  # Filter by material as well
         ).values('color__name').annotate(
             total_quantity=Sum('qty')
         ).order_by('-total_quantity')[:5]
@@ -449,11 +450,13 @@ def most_ordered_colors_per_month(request, product_type, material_name):
 
     context = {
         'product_type': product_type,
-        'months': months,
+        'material_name': material_name,
         'most_ordered_colors_by_month': most_ordered_colors_by_month,
+        # Other context variables as needed
     }
 
     return render(request, 'admindash/most-ordered-colors-per-month.html', context)
+
 
 
 

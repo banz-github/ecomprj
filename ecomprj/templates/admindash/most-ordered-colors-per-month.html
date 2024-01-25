@@ -9,7 +9,7 @@
         <!-- Add any necessary styling or structure here -->
 
         <div class="analytics-section">
-            <h2>Most Ordered Colors for {{product_type}} by Month</h2>
+            <h2>Most Ordered Colors for {{ material_name }} - {{product_type}} by Month</h2>
 
             {% for month, colors in most_ordered_colors_by_month.items %}
                 {% if colors %}
