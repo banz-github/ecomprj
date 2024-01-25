@@ -133,21 +133,24 @@
                 <!--END OF RECENT UPDATES-->
             <div class="sales-analytics">
                 <h2>Most Ordered Foam this month</h2>
-                
-                <div class="item offline">
-                    <div class="icon">
-                        <span class="material-icons-sharp">local_mall</span>
-                    </div>
-                    <div class="right">
-                        <div class="info">
-                            <h3>OFFLINE ORDERS</h3>
-                            <small class="text-muted">Last 24 Hours</small>
+                {% for foam_type in foam_types_display %}
+                    <div class="item offline">
+                        <div class="icon" style="color:#D3D3D3; background-color:#D3D3D3;">
+                            <!-- Display the foam image -->
+                            <img src="{{ foam_type.image.url }}" alt="Foam Image">
                         </div>
-                        <h5 class="danger">-17%</h5>
-                        <h3>1100</h3>
+                        <div class="right">
+                            <div class="info">
+                                <!-- Display foam name -->
+                                <small>{{ foam_type.name }}</small>
+                                <!-- Display count of orders for this foam type -->
+                                <h1>{{ foam_type.order_count }}</h1>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="item customers">
+                {% endfor %}
+
+                {% comment %} <div class="item customers">
                     <div class="icon">
                         <span class="material-icons-sharp">person</span>
                     </div>
@@ -159,7 +162,7 @@
                         <h5 class="success">+25%</h5>
                         <h3>849</h3>
                     </div>
-                </div>
+                </div> {% endcomment %}
                 <div class="item add-product">
                     <div>
                         <span class="material-icons-sharp">add</span>

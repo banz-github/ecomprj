@@ -25,7 +25,7 @@ from .decorators import allowed_users
 
 #trial for customizationorder
 from django.db.models.functions import TruncMonth
-from customorder_prototype2.models import CustomizationOrder
+from customorder_prototype2.models import CustomizationOrder, FoamType
 #trial for customizationorder
 
 
@@ -41,17 +41,33 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from paypal.standard.forms import PayPalPaymentsForm
 
+
+#global variable
+# foam = CustomizationOrder.objects.filter(with_downpayment=True, receipt_submitted=True)
+# foamtypes = FoamType.objects.all()
+
+# universal_context = {"foam":foam, "foamtypes":foamtypes,}
+
+foam_types_display = FoamType.objects.annotate(order_count=Count('customizationorder'))
+
 # admin dashboard 
 #@allowed_users(allowed_roles=['admin'])
 @allowed_users(allowed_roles=['admin'])
 def admindash(request):
+    #universal
+    
+
+
     message_list = ContactUs.objects.all()
     # order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id")[:5] #mark, do not change if it works tho
     order_list = CartOrder.objects.all().order_by("-id") #mark, do not change if it works tho
     #order_list = get_object_or_404(CartOrder, id=id)
+
+    #universal
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
     
     context = {
-        "order_list":order_list,"message_list":message_list,
+        "order_list":order_list,"message_list":message_list, "custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,
     }
 
     return render(request, 'admindash/main-dash.html',context)
@@ -59,6 +75,9 @@ def admindash(request):
 from django.db.models import Count
 @allowed_users(allowed_roles=['admin'])
 def admindash_orders(request):
+    #universal
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+
     message_list = ContactUs.objects.all()
     # order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #mark, do not change if it works tho
     
@@ -80,6 +99,8 @@ def admindash_orders(request):
         "message_list": message_list,
         "month": month,
         "total_orders": total_orders,
+        "custom_order_list_not_approved":custom_order_list_not_approved,
+        "foam_types_display":foam_types_display,
     }
 
 
@@ -103,13 +124,15 @@ def admindash_orders(request):
 from django.shortcuts import render, get_object_or_404
 @allowed_users(allowed_roles=['admin'])
 def order_detail_maindash(request, id):
+        #universal
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
     # order = get_object_or_404(CartOrder, profile__user__id=request.user.id, id=id)
 
     order = get_object_or_404(CartOrder, id=id)
 
     order_items = CartOrderItems.objects.filter(order=order)
     context = {
-        'order': order, "order_items":order_items,
+        'order': order, "order_items":order_items,"custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,
     }
 
     return render(request, 'admindash/order-detail-maindash.html', context)
@@ -122,6 +145,8 @@ from django.db.models import Sum
 
 @allowed_users(allowed_roles=['admin'])
 def admindash_custom_orders(request):
+    
+
     custom_order_list = CustomizationOrder.objects.all()
 
     custom_order_list_approved = CustomizationOrder.objects.filter(with_downpayment=True)
@@ -134,6 +159,7 @@ def admindash_custom_orders(request):
         "most_ordered_product_types": most_ordered_product_types,
         "custom_order_list_approved": custom_order_list_approved,
         "custom_order_list_not_approved":custom_order_list_not_approved,
+        "foam_types_display":foam_types_display,
 
     }
 
@@ -150,11 +176,13 @@ def get_most_ordered_product_types():
 def most_ordered_materials(request, product_type):
     materials = get_most_ordered_materials(product_type)
 
-    
+    #universal
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
 
     context = {
         'product_type': product_type,
-        'most_ordered_materials': materials,
+        'most_ordered_materials': materials, "custom_order_list_not_approved":custom_order_list_not_approved,
+        "foam_types_display":foam_types_display,
     }
     return render(request, 'admindash/most-ordered-materials.html', context)
 
@@ -168,12 +196,17 @@ def get_most_ordered_materials(product_type):
 
 ##### MOST ORDERED COLORS IN THE MATERIAL
 def most_ordered_colors(request, product_type, material_name):
+    #universal
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+    
     colors = get_most_ordered_colors(product_type, material_name)
 
     context = {
         'product_type': product_type,
         'material_name': material_name,
         'most_ordered_colors': colors,
+        'custom_order_list_not_approved':custom_order_list_not_approved,
+        "foam_types_display":foam_types_display,
     }
     return render(request, 'admindash/most-ordered-colors.html', context)
 
@@ -262,8 +295,12 @@ from datetime import timedelta
 from django.utils import timezone
 @allowed_users(allowed_roles=['admin'])
 def custom_order_detail_dashboard(request, co_id):
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+
     coi_details = CustomizationOrder.objects.filter(co_id=co_id)
     coi_details1 = get_object_or_404(CustomizationOrder, co_id=co_id)
+
+    
 
  
 
@@ -299,7 +336,7 @@ def custom_order_detail_dashboard(request, co_id):
 
 
 
-    context = {"coi_details": coi_details, "form": form, "coi_details1":coi_details1,}
+    context = {"coi_details": coi_details, "form": form, "coi_details1":coi_details1, "custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,}
     return render(request, 'admindash/custom_order_detail_dashboard.html', context)
 
 
@@ -308,9 +345,12 @@ def custom_order_detail_dashboard(request, co_id):
 @allowed_users(allowed_roles=['admin'])
 def admindash_customers(request):
     customers = Profile.objects.filter(verified=True)
+
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+
     
     context = {
-        "customers":customers,
+        "customers":customers,"custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,
     }
 
     return render(request, 'admindash/customers-dash.html',context)
@@ -320,26 +360,32 @@ def admindash_customers(request):
 
 @allowed_users(allowed_roles=['admin'])
 def admindash_messages(request):
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+
+
     message_list = ContactUs.objects.all()
 
-
+    
 
  
     context = {
-        "message_list":message_list,
+        "message_list":message_list, "custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,
     }
     return render(request, 'admindash/messages-dash.html',context)
 
 
 @allowed_users(allowed_roles=['admin'])
 def admindash_products(request):
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+
+
     product_list = Product.objects.all()
 
 
 
  
     context = {
-        "product_list":product_list,
+        "product_list":product_list, "custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,
     }
     return render(request, 'admindash/products-dash.html',context)
 
@@ -368,6 +414,9 @@ def admindash_analytics(request):
 
 @allowed_users(allowed_roles=['admin'])
 def admindash_analytics2(request):
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+
+
     months = CustomizationOrder.objects.filter(with_downpayment=True).dates('date_approved', 'month', order='DESC')
 
     # Get the most ordered product types for each month
@@ -385,7 +434,7 @@ def admindash_analytics2(request):
 
     # Prepare data for the template
     context = {
-        'months': months,
+        'months': months, "custom_order_list_not_approved":custom_order_list_not_approved,
         'most_ordered_product_types_by_month': most_ordered_product_types_by_month,
         'monthly_data': []  # Add an empty list for monthly data
     }
@@ -405,6 +454,9 @@ def admindash_analytics2(request):
 
 @allowed_users(allowed_roles=['admin'])
 def most_ordered_materials_per_month(request, product_type):
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+
+
     months = CustomizationOrder.objects.filter(with_downpayment=True).dates('date_approved', 'month', order='DESC')
 
     most_ordered_materials_by_month = {}
@@ -423,7 +475,7 @@ def most_ordered_materials_per_month(request, product_type):
     context = {
         'product_type': product_type,
         'months': months,
-        'most_ordered_materials_by_month': most_ordered_materials_by_month,
+        'most_ordered_materials_by_month': most_ordered_materials_by_month, "custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,
     }
 
     return render(request, 'admindash/most-ordered-materials-per-month.html', context)
@@ -432,6 +484,9 @@ def most_ordered_materials_per_month(request, product_type):
 # In your views.py
 @allowed_users(allowed_roles=['admin'])
 def most_ordered_colors_per_month(request, product_type, material_name):
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+    
+
     months = CustomizationOrder.objects.filter(with_downpayment=True).dates('date_approved', 'month', order='DESC')
 
     most_ordered_colors_by_month = {}
@@ -451,7 +506,7 @@ def most_ordered_colors_per_month(request, product_type, material_name):
     context = {
         'product_type': product_type,
         'material_name': material_name,
-        'most_ordered_colors_by_month': most_ordered_colors_by_month,
+        'most_ordered_colors_by_month': most_ordered_colors_by_month, "custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,
         # Other context variables as needed
     }
 
