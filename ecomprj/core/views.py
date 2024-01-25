@@ -373,9 +373,11 @@ def admindash_analytics(request):
     context = {"category_labels":category_labels,"category_data":category_data,}
 
     return render(request, 'admindash/analytics-dash.html', context)
+
+
 @allowed_users(allowed_roles=['admin'])
 def admindash_analytics2(request):
-    months = CustomizationOrder.objects.dates('date_approved', 'month', order='DESC')
+    months = CustomizationOrder.objects.filter(with_downpayment=True).dates('date_approved', 'month', order='DESC')
 
     # Get the most ordered product types for each month
     most_ordered_product_types_by_month = {}
@@ -390,6 +392,7 @@ def admindash_analytics2(request):
 
         most_ordered_product_types_by_month[month] = product_types
 
+    # Prepare data for the template
     context = {
         'months': months,
         'most_ordered_product_types_by_month': most_ordered_product_types_by_month,
@@ -400,15 +403,14 @@ def admindash_analytics2(request):
         monthly_data = CustomizationOrder.objects.filter(
             date_approved__month=month.month,
             date_approved__year=month.year
-        ).annotate(
+        ).values('product_type__name').annotate(
             total_orders=Sum('qty'),  # Replace 'qty' with the correct field name
             total_quantity=Sum('qty')  # Replace 'qty' with the correct field name
-        ).values('product_type__name', 'total_orders', 'total_quantity')
+        )
 
         context['monthly_data'].append({'month': month, 'data': list(monthly_data)})
 
     return render(request, 'admindash/analytics-dash2.html', context)
-
 # Create your views here.
 #@allowed_users(allowed_roles=['customer'])
 def index(request):

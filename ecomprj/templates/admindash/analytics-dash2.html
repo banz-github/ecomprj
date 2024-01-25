@@ -23,11 +23,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for product_type in month_data.data %} 
+                            {% for product_type_data in month_data.data %}
                                 <tr>
-                                    <td>{{ product_type.product_type__name }}</td>
-                                    <td>{{ product_type.total_orders }}</td>
-                                    <td>{{ product_type.total_quantity }}</td>
+                                    <td>{{ product_type_data.product_type__name }}</td>
+                                    <td>{{ product_type_data.total_orders }}</td>
+                                    <td>{{ product_type_data.total_quantity }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
