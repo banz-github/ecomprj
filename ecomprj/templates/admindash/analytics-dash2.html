@@ -9,17 +9,17 @@
         <!-- Add any necessary styling or structure here -->
 
         <div class="analytics-section">
-            <h2>Most Ordered Product Types Monthly Comparison</h2>
+            <h2>Most Ordered Product Types by Month</h2>
 
             {% for month_data in monthly_data %}
-                <h3>{{ month_data.month|date:"F Y" }}</h3>
+                <h1 style="color:#72bcd4">{{ month_data.month|date:"F Y" }}</h1>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Product Type</th>
-                                <th>Total Orders</th>
-                                <th>Total Quantity</th>
+                                <th>Product Type |</th>
+                                <th> Total Orders |</th>
+                                <th> Total Quantity</th>
                             </tr>
                         </thead>
                         <tbody>

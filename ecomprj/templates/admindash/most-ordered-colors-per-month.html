@@ -1,4 +1,4 @@
-<!-- In your most-ordered-materials-per-month.html template -->
+<!-- In your most-ordered-colors-per-month.html template -->
 {% extends 'admindash/base-dash.html' %}
 {% load static %}
 {% block content %}       
@@ -9,26 +9,24 @@
         <!-- Add any necessary styling or structure here -->
 
         <div class="analytics-section">
-            <h2>Most Ordered Materials for {{product_type}} by Month</h2>
+            <h2>Most Ordered Colors for {{product_type}} by Month</h2>
 
-            {% for month, materials in most_ordered_materials_by_month.items %}
-                {% if materials %}
+            {% for month, colors in most_ordered_colors_by_month.items %}
+                {% if colors %}
                 <h1 style="color:#72bcd4">{{ month|date:"F Y" }}</h1>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Material Name |</th>
-                                    <th> Total Quantity</th>
+                                    <th>Color Name</th>
+                                    <th>Total Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for material_data in materials %}
+                                {% for color_data in colors %}
                                     <tr>
-                                        <td><a class="primary" href="{% url 'core:most_ordered_colors_per_month' product_type=product_type material_name=material_data.material__name %}">{{ material_data.material__name }}</a></td>
-
-
-                                        <td>{{ material_data.total_quantity }}</td>
+                                        <td>{{ color_data.color__name }}</td>
+                                        <td>{{ color_data.total_quantity }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -37,29 +35,27 @@
                     
                     <!-- Donut Chart Container -->
                     <div class="donut-chart-container">
-                        <canvas id="donutChart{{ forloop.counter }}"></canvas>
+                        <canvas id="colorDonutChart{{ forloop.counter }}"></canvas>
                     </div>
                     
-                    <!-- Add JavaScript to create Donut Chart -->
+                    <!-- Add JavaScript to create Donut Chart for Colors -->
                     <script>
-                        var donutData{{ forloop.counter }} = {
-                            labels: [{% for material_data in materials %}"{{ material_data.material__name }}",{% endfor %}],
+                        var colorDonutData{{ forloop.counter }} = {
+                            labels: [{% for color_data in colors %}"{{ color_data.color__name }}",{% endfor %}],
                             datasets: [{
-                                data: [{% for material_data in materials %}{{ material_data.total_quantity }},{% endfor %}],
+                                data: [{% for color_data in colors %}{{ color_data.total_quantity }},{% endfor %}],
                                 backgroundColor: [
-                                    'rgba(255, 99, 132, 0.7)',
-                                    'rgba(54, 162, 235, 0.7)',
-                                    'rgba(255, 205, 86, 0.7)',
-                                    'rgba(75, 192, 192, 0.7)',
-                                    'rgba(153, 102, 255, 0.7)'
+                                    {% for color_data in colors %}
+                                        '{{ color_data.color__name|random_neutral_color }}',
+                                    {% endfor %}
                                 ],
                                 hoverOffset: 4
                             }]
                         };
 
-                        var donutChart{{ forloop.counter }} = new Chart(document.getElementById('donutChart{{ forloop.counter }}'), {
+                        var colorDonutChart{{ forloop.counter }} = new Chart(document.getElementById('colorDonutChart{{ forloop.counter }}'), {
                             type: 'doughnut',
-                            data: donutData{{ forloop.counter }},
+                            data: colorDonutData{{ forloop.counter }},
                             options: {
                                 responsive: true,
                                 maintainAspectRatio: false,
@@ -69,7 +65,7 @@
                                     },
                                     title: {
                                         display: false,
-                                        text: 'Most Ordered Materials'
+                                        text: 'Most Ordered Colors'
                                     }
                                 }
                             }

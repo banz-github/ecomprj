@@ -429,6 +429,33 @@ def most_ordered_materials_per_month(request, product_type):
     return render(request, 'admindash/most-ordered-materials-per-month.html', context)
 
 
+# In your views.py
+@allowed_users(allowed_roles=['admin'])
+def most_ordered_colors_per_month(request, product_type, material_name):
+    months = CustomizationOrder.objects.filter(with_downpayment=True).dates('date_approved', 'month', order='DESC')
+
+    most_ordered_colors_by_month = {}
+    for month in months:
+        colors = CustomizationOrder.objects.filter(
+            date_approved__month=month.month,
+            date_approved__year=month.year,
+            with_downpayment=True,
+            product_type__name=product_type
+        ).values('color__name').annotate(
+            total_quantity=Sum('qty')
+        ).order_by('-total_quantity')[:5]
+
+        most_ordered_colors_by_month[month] = colors
+
+    context = {
+        'product_type': product_type,
+        'months': months,
+        'most_ordered_colors_by_month': most_ordered_colors_by_month,
+    }
+
+    return render(request, 'admindash/most-ordered-colors-per-month.html', context)
+
+
 
 # Create your views here.
 #@allowed_users(allowed_roles=['customer'])
