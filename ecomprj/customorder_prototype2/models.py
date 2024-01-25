@@ -128,7 +128,7 @@ class CustomizationOrder(models.Model):
         super().delete(*args, **kwargs)    
 
     def __str__(self):
-        return self.co_id
+        return f"{self.co_id} - {self.product_type}"
 
     
 class Analytics(models.Model):

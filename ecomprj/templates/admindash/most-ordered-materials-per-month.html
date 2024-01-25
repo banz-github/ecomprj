@@ -32,6 +32,47 @@
                             </tbody>
                         </table>
                     </div>
+                    
+                    <!-- Donut Chart Container -->
+                    <div class="donut-chart-container">
+                        <canvas id="donutChart{{ forloop.counter }}"></canvas>
+                    </div>
+                    
+                    <!-- Add JavaScript to create Donut Chart -->
+                    <script>
+                        var donutData{{ forloop.counter }} = {
+                            labels: [{% for material_data in materials %}"{{ material_data.material__name }}",{% endfor %}],
+                            datasets: [{
+                                data: [{% for material_data in materials %}{{ material_data.total_quantity }},{% endfor %}],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.7)',
+                                    'rgba(54, 162, 235, 0.7)',
+                                    'rgba(255, 205, 86, 0.7)',
+                                    'rgba(75, 192, 192, 0.7)',
+                                    'rgba(153, 102, 255, 0.7)'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        };
+
+                        var donutChart{{ forloop.counter }} = new Chart(document.getElementById('donutChart{{ forloop.counter }}'), {
+                            type: 'doughnut',
+                            data: donutData{{ forloop.counter }},
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: false,
+                                        text: 'Most Ordered Materials'
+                                    }
+                                }
+                            }
+                        });
+                    </script>
                 {% endif %}
                 <!-- Add any additional visualization or charts if needed -->
             {% endfor %}
