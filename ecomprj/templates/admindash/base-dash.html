@@ -49,7 +49,7 @@
                     <h3>Custom Orders</h3>
                 </a>
 
-                <a href="{% url 'core:analytics-dash' %}">
+                <a href="{% url 'core:analytics-dash2' %}">
                     <span class="material-icons-sharp">insights</span>
                     <h3>Analytics</h3>
                 </a>
@@ -118,35 +118,17 @@
             <!--END OF TOP-->
             <div class="recent-updates">
                 <h2>Recent Updates</h2>
+
                 <div class="updates">
+
                     <div class="update">
-                        <div class="profile-photo">
-                            <img src="{% static 'assets/images/profile-2.jpg' %}" alt="">
-                        </div>
-                        <div class="message">
-                            <p><b>Mike Tyson</b> received his order of Sofa.</p>
-                            <small class="text-muted">2 minutes ago</small>
-                        </div>
+                        <h1>{{custom_order_list_not_approved.count}}</h1>
+                        <p>New submitted receipts</p>
                     </div>
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="{% static 'assets/images/profile-2.jpg' %}" alt="">
-                        </div>
-                        <div class="message">
-                            <p><b>Mike Tyson</b> received his order of Sofa.</p>
-                            <small class="text-muted">2 minutes ago</small>
-                        </div>
-                    </div>
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="{% static 'assets/images/profile-2.jpg' %}" alt="">
-                        </div>
-                        <div class="message">
-                            <p><b>Mike Tyson</b> received his order of Sofa.</p>
-                            <small class="text-muted">2 minutes ago</small>
-                        </div>
-                    </div>
+                    
+                        
                 </div>
+
             </div>
                 <!--END OF RECENT UPDATES-->
             <div class="sales-analytics">
