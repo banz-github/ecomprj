@@ -297,7 +297,7 @@
                                                                 <td>Settle your payment first</td>
 
                                                                 <td><a href="{% url 'core:custom-order-detail' co_id=col_rp.co_id %}">View Order</a></td>
-                                                                <td><a href="">Pay Now</a></td>
+                                                                <td><a href="{% url 'custom_order_receipt_submission' co_id=col_rp.co_id %}">Pay Now</a></td>
 
 
 {% comment %} 
