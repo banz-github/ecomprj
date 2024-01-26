@@ -3,65 +3,7 @@
 {% block content %}       
 {% load humanize %}
 <main>
-    <div class="insights">
-        <div class="sales">
-            <span class="material-icons-sharp">analytics</span>
-            <div class="middle">
-                <div class="left">
-                    <h3>Total Sales</h3>
-                    <h1>₱1,503,200</h1>
-                </div>
-                <div class="progress">
-                    <svg>
-                        <circle cx='38' cy='38' r='36'></circle>
-                    </svg>
-                    <div class="number">
-                        <p>81%</p>
-                    </div>
-                </div>
-            </div>
-            <small class="text-muted">Last 24 hours</small>
-        </div>
-        <!--END OF SALES-->
-        <div class="expenses">
-            <span class="material-icons-sharp">bar_chart</span>
-            <div class="middle">
-                <div class="left">
-                    <h3>Total Expense</h3>
-                    <h1>₱503,200</h1>
-                </div>
-                <div class="progress">
-                    <svg>
-                        <circle cx='38' cy='38' r='36'></circle>
-                    </svg>
-                    <div class="number">
-                        <p>61%</p>
-                    </div>
-                </div>
-            </div>
-            <small class="text-muted">Last 24 hours</small>
-        </div>
-        <!--END OF EXPENSES-->
-        <div class="income">
-            <span class="material-icons-sharp">stacked_line_chart</span>
-            <div class="middle">
-                <div class="left">
-                    <h3>Total Sales</h3>
-                    <h1>₱1,000,203</h1>
-                </div>
-                <div class="progress">
-                    <svg>
-                        <circle cx='38' cy='38' r='36'></circle>
-                    </svg>
-                    <div class="number">
-                        <p>44%</p>
-                    </div>
-                </div>
-            </div>
-            <small class="text-muted">Last 24 hours</small>
-        </div>
-        <!--END OF INCOME-->
-    </div>
+    
     <!-- END OF INSIGHTS -->
 
 
@@ -113,14 +55,14 @@
                     <h3>Task Completed in this Month</h3>
                     <h1>8</h1>
                 </div>
-                <div class="progress">
+                {% comment %} <div class="progress">
                     <svg>
                         <circle cx='38' cy='38' r='36'></circle>
                     </svg>
                     <div class="number">
                         <p>44%</p>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
             <small class="text-muted">Last 24 hours</small>
         </div>

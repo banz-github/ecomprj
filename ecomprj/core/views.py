@@ -535,12 +535,21 @@ def report_dash(request):
 
     task_starts_thismonth = with_downpayment_orders_thismonth.filter(customization_status="production starts")
     task_done_thismonth = with_downpayment_orders_thismonth.filter(customization_status="done")
+
+    #############TASK COMPLETION
+    total_tasks_thismonth = task_starts_thismonth.count()  # Total tasks created this month
+    completed_tasks_thismonth = task_done_thismonth.count()  # Total tasks completed this month
+
+    completion_ratio_thismonth = 0
+    if total_tasks_thismonth > 0:
+        completion_ratio_thismonth = (completed_tasks_thismonth / total_tasks_thismonth) * 100
+    ##############TASK COMPLETION
     
 
     context = {
         "task_pending":task_pending, "task_processing": task_processing, "task_starts": task_starts, "task_drafting": task_drafting, "task_cutting": task_cutting, 
         "task_assembly": task_assembly, "task_seaming": task_seaming, "task_padding": task_padding, "task_detailing": task_detailing, "task_quality_control": task_quality_control,
-          "task_pickup": task_pickup, "task_done":task_done, "task_starts_thismonth":task_starts_thismonth, "task_done_thismonth":task_done_thismonth,
+          "task_pickup": task_pickup, "task_done":task_done, "task_starts_thismonth":task_starts_thismonth, "task_done_thismonth":task_done_thismonth, "completion_ratio_thismonth":completion_ratio_thismonth,
     }
     return render(request, 'admindash/report-dash.html', context)
 
