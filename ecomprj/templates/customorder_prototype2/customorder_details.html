@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Order Summary</title>
-    <!-- Add any additional styles or scripts here -->
-
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
@@ -17,45 +16,27 @@
         }
 
         .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .order-details {
+        .card {
             margin-bottom: 20px;
         }
 
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: none;
+            color: #333;
+        }
+
         .color-image {
-            max-width: 100%;
+            width: 125%;
             height: auto;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-
-        .order-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .order-form input,
-        .order-form textarea,
-        .order-form select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        .radio-group {
-            margin-bottom: 10px;
+        .color-image:hover {
+            transform: scale(1.1);
+ 
         }
 
         .submit-btn {
@@ -66,144 +47,109 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
     </style>
 </head>
 <body>
 
-<div>
-    <!-- custom_details customorder_prototype2 views -->
-    <h1>Custom Order Summary</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <p><strong>Product Type:</strong> {{ product_type }}</p>
+                    <p><strong>Foam:</strong> {{ foam_types }}</p>
+                    <p><strong>Material:</strong> {{ material_name }}</p>
+                    <p><strong>Color:</strong> {{ color_name }}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Order Form</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'submit_order' product_type=product_type foam_types=foam_types material_name=material_name color_name=color_name %}" onsubmit="return validateForm()" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" class="form-control" name="quantity" min="1" max="4" required>
+                        </div>
 
-    <!-- Display Product Type -->
-    <p><strong>Product Type:</strong> {{ product_type }}</p>
+                        <div class="form-group">
+                            <label for="customer_notes">Customer Notes:</label>
+                            <textarea class="form-control" name="customer_notes" rows="4" cols="50"></textarea>
+                        </div>
 
-    <p><strong>Foam:</strong> {{ foam_types }}</p>
+                        <div class="form-group">
+                            <label for="purpose">Purpose:</label>
+                            <select class="form-control" name="purpose">
+                                {% for purpose_option_key, purpose_option_display in ORDER_PURPOSE %}
+                                    <option value="{{ purpose_option_key }}">{{ purpose_option_display }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-    <!-- Display Material -->
-    <p><strong>Material:</strong> {{ material_name }}</p>
+                        <div class="form-group">
+                            <label>Make or Repair:</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="make_or_repair" id="make" value="make" checked>
+                                <label class="form-check-label" for="make">Make</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="make_or_repair" id="repair" value="repair">
+                                <label class="form-check-label" for="repair">Repair</label>
+                            </div>
+                        </div>
 
-    <!-- Display Color -->
-    <p><strong>Color:</strong> {{ color_name }}</p>
+                        <div class="form-group">
+                            <label for="receipt_img">Receipt Image:</label>
+                            <input type="file" class="form-control-file" name="receipt_img" accept="image/*">
+                        </div>
 
-    
+                        <div class="form-group">
+                            <p><strong>Ordered by:</strong> {{ request.user.profile }}</p>
+                        </div>
 
-    <!-- Display Color Image -->
-    {% if color.image %}
-        <p><strong>Color Image:</strong></p>
-        <img src="{{ color.image.url }}" style="max-width: 300px; max-height: 300px;">
-    {% else %}
-        <p>No image available for this color.</p>
-    {% endif %}
-
-    <!-- READ-->
-    <!-- additional information I want to display -->
-
-    <!-- Insert a qty field here, 4 is the max -->
-
-    <!-- text box for Customer notes -->
-    <!--A radio button of Make or Repair -->
-    <!-- Image upload for receipt_img -->
-
-    <!-- Show the profile of who is making the order -->
-{% comment %} 
-    <script>
-        function validateForm() {
-            // Get values from form fields
-            var quantity = document.getElementById("quantity").value;
-            var customerNotes = document.getElementById("customer_notes").value;
-    
-            // Check if any field is empty
-            if (quantity === "" || customerNotes === "") {
-                // Show a pop-up warning
-                alert("Please complete all the fields.");
-                return false; // Prevent form submission
-            }
-    
-            // If all fields are filled, allow form submission
-            return true;
-        }
-    </script> {% endcomment %}
-    
-    <script>
-        function validateForm() {
-            // Get values from form fields
-            var quantity = document.getElementById("quantity").value;
-            var customerNotes = document.getElementById("customer_notes").value;
-
-            // Check if any field is empty
-            if (quantity === "" || customerNotes === "") {
-                // Show a pop-up warning
-                alert("Please complete all the fields.");
-                return false; // Prevent form submission
-            }
-
-            // If all fields are filled, allow form submission
-            return true;
-        }
-    </script>
-
-
-    <form method="post" action="{% url 'submit_order' product_type=product_type foam_types=foam_types material_name=material_name color_name=color_name %}" onsubmit="return validateForm()" enctype="multipart/form-data">
-        <!-- form contents --> 
-        {% csrf_token %}
-        {% comment %} {{ form.as_table }} {% endcomment %}
-        <!-- Quantity Field -->
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" min="1" max="4" required>
-
-        <!-- Customer Notes -->
-        <label for="customer_notes">Customer Notes:</label>
-        <textarea name="customer_notes" rows="4" cols="50"></textarea>
-
-        <!-- Make or Repair Radio Buttons -->
-        {% comment %} <label>Make or Repair:</label>
-        <label><input type="radio" name="make_or_repair" value="MAKE" checked> Make</label>
-        <label><input type="radio" name="make_or_repair" value="REPAIR"> Repair</label> {% endcomment %}
-
-        <!-- Image Upload for Receipt -->
-        {% comment %} <label for="receipt_img">Receipt Image:</label>
-        <input type="file" name="receipt_img" accept="image/*"> {% endcomment %}
-{% comment %} 
-        <label>Make or Repair:</label>
-        <label><input type="radio" name="make_or_repair" value="make" checked> Make</label>
-        <label><input type="radio" name="make_or_repair" value="repair"> Repair</label>
-
-        <label for="receipt_img">Receipt Image:</label>
-        <input type="file" name="receipt_img" accept="image/*">
-
-        <label for="purpose">Purpose:</label>
-        <select name="purpose">
-            {% for purpose_option in ORDER_PURPOSE %}
-                <option value="{{ purpose_option.0 }}">{{ purpose_option.1 }}</option>
-            {% endfor %}
-        </select> {% endcomment %}
-
-        <label for="purpose">Purpose:</label>
-        <select name="purpose">
-            {% for purpose_option_key, purpose_option_display in ORDER_PURPOSE %}
-                <option value="{{ purpose_option_key }}">{{ purpose_option_display }}</option>
-            {% endfor %}
-        </select>
-
-        <!-- Make or Repair Radio Buttons -->
-        <label>Make or Repair:</label>
-        <label><input type="radio" name="make_or_repair" value="make" checked> Make</label>
-        <label><input type="radio" name="make_or_repair" value="repair"> Repair</label>
-
-        <!-- Receipt Image Upload -->
-        <label for="receipt_img">Receipt Image:</label>
-        <input type="file" name="receipt_img" accept="image/*">
-
-
-        <!-- Profile of the Person Making the Order -->
-        <p><strong>Ordered by:</strong> {{ request.user.profile }}</p>
-
-        <!-- Submit Button -->
-        <button type="submit">Submit Order</button>
-    </form>
-
+                        <button type="submit" class="btn btn-primary">Submit Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    {% if color.image %}
+                        <img src="{{ color.image.url }}" class="color-image" alt="Color Image">
+                    {% else %}
+                        <p>No image available for this color.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Client-side validation -->
+<script>
+    function validateForm() {
+        var quantity = document.getElementById("quantity").value;
+        var customerNotes = document.getElementById("customer_notes").value;
+
+        if (quantity === "" || customerNotes === "") {
+            alert("Please complete all the fields.");
+            return false;
+        }
+        return true;
+    }
+</script>
 
 </body>
 </html>
