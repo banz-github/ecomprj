@@ -296,7 +296,7 @@
 
                                                                 <td>Settle your payment first</td>
 
-                                                                <td><a href="">View Order</a></td>
+                                                                <td><a href="{% url 'core:custom-order-detail' co_id=col_rp.co_id %}">View Order</a></td>
                                                                 <td><a href="">Pay Now</a></td>
 
 
@@ -361,6 +361,8 @@
                                                                 {% else %}
                                                                 <td class="text-danger"><strong>Waiting for approval</strong></td>
                                                                 {% endif %}
+
+                                                                <td><a href="{% url 'core:custom-order-detail' co_id=col_rt.co_id %}">View Order</a></td>
                                                                 
 
 
@@ -437,6 +439,7 @@
                                                                 <td>{{orfalse.price|floatformat:2|intcomma}}</td>
                                                                 <td><a href="{% url 'core:order-detail' orfalse.id %}" class="btn-small d-block">View</a></td>
                                                                 <td><a href="{% url 'core:checkout-gcash' orfalse.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
+                                                                <td><a href="{% url 'core:custom-order-detail' co_id=col_approved.co_id %}">View Order</a></td>
 
                                                             </tr>
                                                             {% endfor %}
