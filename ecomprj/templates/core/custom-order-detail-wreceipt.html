@@ -66,11 +66,39 @@
                                         <div class="card-header">
                                             <h3 class="mb-0">Your Custom Orders</h3> 
                                             <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-                                            <img src="{{ custom_order.color.image.url }}" style="width: 300px; height:300px; object-fit:cover;">
+                                            <div style="display: flex; align-items: center;">
+                                                <img src="{{ custom_order.color.image.url }}" style="width: 300px; height: 300px; object-fit: cover; margin-right: 10px;">
+                                                
+                                                <!-- Textbox with RichTextField content -->
+                                                <div style="display: flex; align-items: center;">
+                                                    <!-- Label for admin notes -->
+                                                    <div><strong>Admin Notes:</strong></div>
+                                                    
+                                                    <!-- Textarea for admin notes -->
+                                                    <textarea class="form-control" rows="5" cols="50" style="height: 300px;">
+                                                        {{ custom_order.admin_notes }}
+                                                    </textarea>
+                                                </div>
+
+                                                <script>
+                                                    window.addEventListener('load', function() {
+                                                        var textarea = document.querySelector('.form-control');
+                                                        if (textarea) {
+                                                            textarea.value = textarea.value.replace(/<p>/g, '').replace(/<\/p>/g, '');
+                                                        }
+                                                    });
+                                                </script>
+                                            </div>
+                                            
                                             <br>
+                                            
                                             <div class="w3-light-grey">
-                                                <div class="w3-container w3-blue" style="width:{{custom_order.percentage_progress}}%">{{custom_order.percentage_progress}}% - {{custom_order.customization_status}}</div>
-                                              </div><br>
+                                                <div class="w3-container w3-blue" style="width:{{ custom_order.percentage_progress }}%">
+                                                    {{ custom_order.percentage_progress }}% - {{ custom_order.customization_status }}
+                                                </div>
+                                            </div>
+
+                                              
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
