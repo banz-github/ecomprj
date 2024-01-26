@@ -15,8 +15,18 @@ MAKE_OR_REPAIR= (
 STATUS_CHOICE = (
     ("pending", "Pending"),
     ("processing", "Processing"),
-    ("shipped", "Shipped"),
-    ("delivered", "Delivered"),
+
+    ("production starts", "Production Starts"),
+    ("drafting", "Drafting"),
+    ("cutting phase", "Cutting"),
+    ("assembly", "Assembly"),
+    ("seaming", "Seaming"),
+    ("padding", "Padding"),
+    ("detailing", "Detailing"),
+    ("quality control", "Quality Control"),
+
+    ("to be picked up", "To Be Picked Up"),
+    ("done", "Done"),
 )
 
 ORDER_PURPOSE = (
@@ -69,6 +79,7 @@ class FoamType(models.Model):
 
     def __str__(self):
         return self.name
+    
 class CustomizationOrder(models.Model):
     co_id = ShortUUIDField(unique=True, max_length=25, prefix="CO", alphabet="abcdefgh12345")
     product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE)

@@ -512,7 +512,37 @@ def most_ordered_colors_per_month(request, product_type, material_name):
 
     return render(request, 'admindash/most-ordered-colors-per-month.html', context)
 
+from django.utils import timezone
+from datetime import datetime
+def report_dash(request):
+    current_month = timezone.now().month
+    with_downpayment_orders = CustomizationOrder.objects.filter(with_downpayment=True, receipt_submitted=True)
 
+    with_downpayment_orders_thismonth = CustomizationOrder.objects.filter(with_downpayment=True,receipt_submitted=True,date_approved__month=current_month)
+
+    task_pending = with_downpayment_orders.filter(customization_status="pending")
+    task_processing = with_downpayment_orders.filter(customization_status="processing")
+    task_starts = with_downpayment_orders.filter(customization_status="production starts")
+    task_drafting = with_downpayment_orders.filter(customization_status="drafting")
+    task_cutting = with_downpayment_orders.filter(customization_status="cutting phase")
+    task_assembly = with_downpayment_orders.filter(customization_status="assembly")
+    task_seaming = with_downpayment_orders.filter(customization_status="seaming")
+    task_padding = with_downpayment_orders.filter(customization_status="padding")
+    task_detailing = with_downpayment_orders.filter(customization_status="detailing")
+    task_quality_control = with_downpayment_orders.filter(customization_status="quality control")
+    task_pickup = with_downpayment_orders.filter(customization_status="to be picked up")
+    task_done = with_downpayment_orders.filter(customization_status="done")
+
+    task_starts_thismonth = with_downpayment_orders_thismonth.filter(customization_status="production starts")
+    task_done_thismonth = with_downpayment_orders_thismonth.filter(customization_status="done")
+    
+
+    context = {
+        "task_pending":task_pending, "task_processing": task_processing, "task_starts": task_starts, "task_drafting": task_drafting, "task_cutting": task_cutting, 
+        "task_assembly": task_assembly, "task_seaming": task_seaming, "task_padding": task_padding, "task_detailing": task_detailing, "task_quality_control": task_quality_control,
+          "task_pickup": task_pickup, "task_done":task_done, "task_starts_thismonth":task_starts_thismonth, "task_done_thismonth":task_done_thismonth,
+    }
+    return render(request, 'admindash/report-dash.html', context)
 
 
 # Create your views here.

@@ -1,0 +1,191 @@
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+<main>
+    <div class="insights">
+        <div class="sales">
+            <span class="material-icons-sharp">analytics</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Sales</h3>
+                    <h1>₱1,503,200</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx='38' cy='38' r='36'></circle>
+                    </svg>
+                    <div class="number">
+                        <p>81%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+        <!--END OF SALES-->
+        <div class="expenses">
+            <span class="material-icons-sharp">bar_chart</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Expense</h3>
+                    <h1>₱503,200</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx='38' cy='38' r='36'></circle>
+                    </svg>
+                    <div class="number">
+                        <p>61%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+        <!--END OF EXPENSES-->
+        <div class="income">
+            <span class="material-icons-sharp">stacked_line_chart</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Sales</h3>
+                    <h1>₱1,000,203</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx='38' cy='38' r='36'></circle>
+                    </svg>
+                    <div class="number">
+                        <p>44%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+        <!--END OF INCOME-->
+    </div>
+    <!-- END OF INSIGHTS -->
+
+
+
+
+    <div class="insights">
+        <div class="sales">
+            <span class="material-icons-sharp">analytics</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Statuses</h3>
+                    <h1>1</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx='38' cy='38' r='36'></circle>
+                    </svg>
+                    <div class="number">
+                        <p>81%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+        <!--END OF SALES-->
+        <div class="expenses">
+            <span class="material-icons-sharp">bar_chart</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Task Creation vs Completion</h3>
+                    <h1>{{task_starts_thismonth.count}} : {{task_done_thismonth.count}}</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx='38' cy='38' r='36'></circle>
+                    </svg>
+                    <div class="number">
+                        <p>61%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+        <!--END OF EXPENSES-->
+        <div class="income">
+            <span class="material-icons-sharp">stacked_line_chart</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Task Completed in this Month</h3>
+                    <h1>8</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx='38' cy='38' r='36'></circle>
+                    </svg>
+                    <div class="number">
+                        <p>44%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+        <!--END OF INCOME-->
+    </div>
+
+    <canvas id="donutChart" width="100" height="100"></canvas>
+    
+
+<script>
+    var ctx = document.getElementById('donutChart').getContext('2d');
+
+    var data = {
+        labels: [
+            "Pending",
+            "Processing",
+            "Production Starts",
+            "Drafting",
+            "Cutting",
+            "Assembly",
+            "Seaming",
+            "Padding",
+            "Detailing",
+            "Quality Control",
+            "To Be Picked Up",
+            "Done"
+        ],
+        datasets: [{
+            data: [
+                {{ task_pending.count }},
+                {{ task_processing.count }},
+                {{ task_starts.count }},
+                {{ task_drafting.count }},
+                {{ task_cutting.count }},
+                {{ task_assembly.count }},
+                {{ task_seaming.count }},
+                {{ task_padding.count }},
+                {{ task_detailing.count }},
+                {{ task_quality_control.count }},
+                {{ task_pickup.count }},
+                {{ task_done.count }}
+            ],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                "#8A2BE2",
+                "#7FFF00",
+                "#FF7F50",
+                "#6495ED",
+                "#DC143C",
+                "#00FFFF",
+                "#FF4500",
+                "#9400D3",
+                "#008080"
+            ]
+        }]
+    };
+
+    var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: data
+    });
+</script>
+
+
+</main>
+{% endblock content %}
