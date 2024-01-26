@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Order Receipt Submission</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: none;
+            color: #333;
+        }
+
+        .color-image {
+            width: 125%;
+            height: auto;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .color-image:hover {
+            transform: scale(1.1);
+        }
+
+        .submit-btn {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    {% if order.color.image %}
+                        <img src="{{ order.color.image.url }}" class="color-image" alt="Color Image">
+                    {% else %}
+                        <p>No image available for this color.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Order Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Product Type:</strong> {{ order.product_type }}</p>
+                    <p><strong>Foam:</strong> {{ order.foam_type }}</p>
+                    <p><strong>Material:</strong> {{ order.material }}</p>
+                    <p><strong>Color:</strong> {{ order.color }}</p>
+                    <!-- Add other order details as needed -->
+                    <p><strong>Quantity:</strong> {{ order.qty }}</p>
+                    <p><strong>Customer Notes:</strong> {{ order.customer_notes }}</p>
+                    <p><strong>Make or Repair:</strong> {{ order.make_or_repair }}</p>
+                    <p><strong>Purpose:</strong> {{ order.purpose }}</p>
+                    <p><strong>Estimated Total Price:</strong> ₱{{ order.estimated_total_price }}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Receipt Submission</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'submit_receipt_image' co_id=order.co_id  %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="receipt_img">Receipt Image:</label>
+                            <input type="file" class="form-control-file" name="receipt_img" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Receipt</button>
+                    </form>
+                </div>
+
+                
+
+            </div>
+
+
+            
+
+        </div>
+    </div>
+
+    
+
+</div>
+
+
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

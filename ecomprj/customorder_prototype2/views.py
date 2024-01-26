@@ -382,9 +382,9 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
                     # Add other fields as needed
                     # ...
                     make_or_repair=make_or_repair,  # Set the correct value for make_or_repair
-                    receipt_img=receipt_img,
+                    # receipt_img=receipt_img,
                     purpose=purpose,
-                    receipt_submitted=receipt_submitted,
+                    # receipt_submitted=receipt_submitted,
 
 
                     estimated_total_price=(
@@ -396,7 +396,7 @@ def submit_order(request, product_type, foam_types, material_name, color_name):
                 order.save()
                 # Additional processing or redirect to success page
                 messages.success(request, 'Order submitted successfully!')
-                return redirect('success_page')  # Replace 'success_page' with the actual URL name
+                return redirect('custom_order_receipt_submission', co_id=order.co_id)  # Replace 'success_page' with the actual URL name
             except ValidationError as ve:
                 # Handle validation errors
                 messages.error(request, f'Validation error: {ve.message}')
@@ -420,8 +420,33 @@ def success_page(request):
 
 def error_page(request):
     return render(request, 'customorder_prototype2/error_page.html')
+def custom_order_receipt_submission(request, co_id):
+    try:
+        order = CustomizationOrder.objects.get(co_id=co_id)
+        return render(request, 'customorder_prototype2/custom_order_receipt_submission.html', {'order': order})
+    except CustomizationOrder.DoesNotExist:
+        messages.error(request, 'Order not found.')
+        return redirect('error_page')  # Redirect to an error page or handle appropriately
+    
+from django.shortcuts import get_object_or_404
 
-
+def submit_receipt_image(request, co_id):
+    if request.method == 'POST':
+        receipt_img = request.FILES.get('receipt_img')
+        
+        # Retrieve the CustomizationOrder instance using co_id
+        order = get_object_or_404(CustomizationOrder, co_id=co_id)
+        
+        if receipt_img:
+            order.receipt_img = receipt_img
+            order.receipt_submitted = True
+            order.save()
+            messages.success(request, 'Receipt image submitted successfully.')
+            return redirect('success_page')
+        else:
+            return JsonResponse({'error': 'No receipt image provided.'}, status=400)  # Return error JSON response
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)  # Return error JSON response for invalid method
 
     #trial muna for customization order
 from django.shortcuts import render

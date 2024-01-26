@@ -102,10 +102,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        {% comment %} <div class="form-group">
                             <label for="receipt_img">Receipt Image:</label>
                             <input type="file" class="form-control-file" name="receipt_img" accept="image/*">
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="form-group">
                             <p><strong>Ordered by:</strong> {{ request.user.profile }}</p>
