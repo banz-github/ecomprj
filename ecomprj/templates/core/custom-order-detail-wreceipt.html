@@ -64,7 +64,7 @@
                                     
                                     <div class="card">
                                         <div class="card-header">
-                                            <h3 class="mb-0">Your Custom Orders</h3> 
+                                            <h3 class="mb-0">Your Custom Order</h3> 
                                             <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
                                             <div style="display: flex; align-items: center;">
                                                 <img src="{{ custom_order.color.image.url }}" style="width: 300px; height: 300px; object-fit: cover; margin-right: 10px;">
@@ -76,7 +76,7 @@
                                                     
                                                     <!-- Textarea for admin notes -->
                                                     <textarea class="form-control" rows="5" cols="50" style="height: 300px;">
-                                                        {{ custom_order.admin_notes }}
+                                                        {{ custom_order.admin_notes|title }}
                                                     </textarea>
                                                 </div>
 
@@ -84,7 +84,7 @@
                                                     window.addEventListener('load', function() {
                                                         var textarea = document.querySelector('.form-control');
                                                         if (textarea) {
-                                                            textarea.value = textarea.value.replace(/<p>/g, '').replace(/<\/p>/g, '');
+                                                            textarea.value = textarea.value.replace(/<P>/g, '').replace(/<\/P>/g, '');
                                                         }
                                                     });
                                                 </script>
@@ -94,7 +94,7 @@
                                             
                                             <div class="w3-light-grey">
                                                 <div class="w3-container w3-blue" style="width:{{ custom_order.percentage_progress }}%">
-                                                    {{ custom_order.percentage_progress }}% - {{ custom_order.customization_status }}
+                                                    {{ custom_order.percentage_progress }}% - {{ custom_order.customization_status|title }}
                                                 </div>
                                             </div>
 
