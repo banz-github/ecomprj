@@ -1256,6 +1256,7 @@ def payment_failed_view(request):
 def customer_dashboard(request):
     #orders = request.user.customer.order_set.all() #profile?
 
+    ###################### order list
     order_list = CartOrder.objects.filter(profile=request.user.profile).order_by("-id") #raw
 
     order_list_rfalse = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=False).order_by("-id")
@@ -1263,6 +1264,14 @@ def customer_dashboard(request):
     order_list_rtrue = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=True, paid_status=False).order_by("-id")
     
     order_list_paid = CartOrder.objects.filter(profile=request.user.profile, receipt_submitted=True, paid_status=True).order_by("-id")
+
+     ###################### custom order list
+
+    custom_order_list_receiptfalse = CustomizationOrder.objects.filter(profile=request.user.profile, with_downpayment=False, receipt_submitted = False) #to submit resibo
+    custom_order_list_receipttrue = CustomizationOrder.objects.filter(profile=request.user.profile, with_downpayment=False, receipt_submitted = True ) #paid, order approved
+    custom_order_list_approved = CustomizationOrder.objects.filter(profile=request.user.profile, with_downpayment=True, receipt_submitted = True )
+
+    ##########################################
 
     address = Address.objects.filter(profile=request.user.profile) #mark 2
     
@@ -1294,7 +1303,7 @@ def customer_dashboard(request):
     
     context = {
         "profile" : profile,"orders" : orders,"order_list":order_list, "address":address,"month":month,"total_orders":total_orders, "order_list_rfalse":order_list_rfalse,
-        "order_list_rtrue":order_list_rtrue, "order_list_paid":order_list_paid, 
+        "order_list_rtrue":order_list_rtrue, "order_list_paid":order_list_paid, "custom_order_list_receiptfalse": custom_order_list_receiptfalse, "custom_order_list_receipttrue": custom_order_list_receipttrue, "custom_order_list_approved": custom_order_list_approved
     }
     return render(request, 'core/dashboard.html',context)
     

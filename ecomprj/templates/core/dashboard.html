@@ -261,37 +261,42 @@
                                         <div class="card">
                                             <h3>Custom Orders</h3>
                                             <div class="card-header">
-                                                <h3 class="mb-0">Receipt Submitted = False</h3>
+                                                <h3 class="mb-0">Waiting for Payment</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th>Order ID</th>
-                                                                <th>Order</th>
-                                                                <th>Date</th>
-                                                                <th>Status</th>
-                                                                <th>Receipt Submitted</th>
-                                                                <th>Payment Status</th>
-                                                                <th>Total</th>
-                                                                <th>Actions</th>
+                                                                <th>Custom Order ID</th>
+                                                                <th>Product Type</th>
+                                                                <th>Material</th>
+                                                                <th>Color</th>
+                                                                <th>Foam Type</th>
+                                                                <th>M/R</th>
+                                                                <th>Quantity</th>
+
+                                                                <th>Percentage</th>
+
+                                                                
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {% for orfalse in order_list_rfalse %}
+                                                            {% for col_rp in custom_order_list_receiptfalse %} {% comment %} wala pareho {% endcomment %}
                                                             <tr>
-                                                                <td>{{orfalse.cartorder_id}}</td>
-                                                                <td>INVOICE_NO-{{o.id}}</td>
-                                                                <td>{{orfalse.order_date}}</td>
-                                                                <td>{{orfalse.product_status|title}}</td>
+                                                                <td>{{col_rp.co_id}}</td>
+                                                                <td>{{col_rp.product_type}}</td>
+                                                                <td>{{col_rp.material}}</td>
+                                                                <td>{{col_rp.color}}</td>
+                                                                <td>{{col_rp.foam_type}}</td>
+                                                                <td>{{col_rp.make_or_repair}}</td>
+                                                                <td>{{col_rp.qty}}</td>
+                                                                
 
-                                                                {% if orfalse.receipt_submitted == True %}
-                                                                <td><i class="fas fa-check-circle text-success"></i></td>
-                                                                {% else %}
-                                                                <td class="text-danger"><strong>X</strong></td>
-                                                                {% endif %}
+                                                                <td>Settle your payment first</td>
 
+
+{% comment %} 
                                                                 {% if orfalse.paid_status == True %}
                                                                 <td><i class="fas fa-check-circle text-success"></i></td>
                                                                 {% else %}
@@ -299,101 +304,148 @@
                                                                 {% endif %}
                                                                 <td>{{orfalse.price|floatformat:2|intcomma}}</td>
                                                                 <td><a href="{% url 'core:order-detail' orfalse.id %}" class="btn-small d-block">View</a></td>
-                                                                <td><a href="{% url 'core:checkout-gcash' orfalse.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td>
+                                                                <td><a href="{% url 'core:checkout-gcash' orfalse.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
 
                                                             </tr>
                                                             {% endfor %}
                                                         </tbody>
                                                     </table>
-                                                    <!-- SEPARATION -->
-                                                    <h3 class="mb-0">Receipt Submitted = True</h3>
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Order ID</th>
-                                                                <th>Order</th>
-                                                                <th>Date</th>
-                                                                <th>Status</th>
-                                                                <th>Receipt Submitted</th>
-                                                                <th>Payment Status</th>
-                                                                <th>Total</th>
-                                                                <th>Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for ortrue in order_list_rtrue %}
-                                                            <tr>
-                                                                <td>{{ortrue.cartorder_id}}</td>
-                                                                <td>INVOICE_NO-{{ortrue.id}}</td>
-                                                                <td>{{ortrue.order_date}}</td>
-                                                                <td>{{ortrue.product_status|title}}</td>
+                                                    
 
-                                                                {% if ortrue.receipt_submitted == True %}
-                                                                <td><i class="fas fa-check-circle text-success"></i></td>
-                                                                {% else %}
-                                                                <td class="text-danger"><strong>X</strong></td>
-                                                                {% endif %}
-
-                                                                {% if ortrue.paid_status == True %}
-                                                                <td><i class="fas fa-check-circle text-success"></i></td>
-                                                                {% else %}
-                                                                <td class="text-danger"><strong>X</strong></td>
-                                                                {% endif %}
-                                                                <td>{{ortrue.price|floatformat:2|intcomma}}</td>
-                                                                <td><a href="{% url 'core:order-detail' ortrue.id %}" class="btn-small d-block">View</a></td>
-                                                                {% comment %} <td><a href="{% url 'core:checkout-gcash' o.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
-
-                                                            </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-
-                                                    <!-- SEPARATION -->
-                                                    <h3 class="mb-0">Paid = True</h3>
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Order ID</th>
-                                                                <th>Order</th>
-                                                                <th>Date</th>
-                                                                <th>Status</th>
-                                                                <th>Receipt Submitted</th>
-                                                                <th>Payment Status</th>
-                                                                <th>Total</th>
-                                                                <th>Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for orpaid in order_list_paid %}
-                                                            <tr>
-                                                                <td>{{orpaid.cartorder_id}}</td>
-                                                                <td>INVOICE_NO-{{orpaid.id}}</td>
-                                                                <td>{{orpaid.order_date}}</td>
-                                                                <td>{{orpaid.product_status|title}}</td>
-
-                                                                {% if orpaid.receipt_submitted == True %}
-                                                                <td><i class="fas fa-check-circle text-success"></i></td>
-                                                                {% else %}
-                                                                <td class="text-danger"><strong>X</strong></td>
-                                                                {% endif %}
-
-                                                                {% if orpaid.paid_status == True %}
-                                                                <td><i class="fas fa-check-circle text-success"></i></td>
-                                                                {% else %}
-                                                                <td class="text-danger"><strong>X</strong></td>
-                                                                {% endif %}
-                                                                <td>{{orpaid.price|floatformat:2|intcomma}}</td>
-                                                                <td><a href="{% url 'core:order-detail' orpaid.id %}" class="btn-small d-block">View</a></td>
-                                                                {% comment %} <td><a href="{% url 'core:checkout-gcash' o.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
-
-                                                            </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
+                                                    
 
 
                                                 </div>
                                             </div>
+
+                                            <!-- separation -->
+                                            <h3>Custom Orders</h3>
+                                            <div class="card-header">
+                                                <h3 class="mb-0">Receipt Submitted</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Custom Order ID</th>
+                                                                <th>Product Type</th>
+                                                                <th>Material</th>
+                                                                <th>Color</th>
+                                                                <th>Foam Type</th>
+                                                                <th>M/R</th>
+                                                                <th>Quantity</th>
+                                                                <th>Payment Approved</th>
+                                                                
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for col_rt in custom_order_list_receipttrue %}
+                                                            <tr>
+                                                                <td>{{col_rt.co_id}}</td>
+                                                                <td>{{col_rt.product_type}}</td>
+                                                                <td>{{col_rt.material}}</td>
+                                                                <td>{{col_rt.color}}</td>
+                                                                <td>{{col_rt.foam_type}}</td>
+                                                                <td>{{col_rt.make_or_repair}}</td>
+                                                                <td>{{col_rt.qty}}</td>
+                                                                
+
+                                                                {% if col_rt.payment_approved == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>Waiting for approval</strong></td>
+                                                                {% endif %}
+                                                                
+
+
+{% comment %} 
+                                                                {% if orfalse.paid_status == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+                                                                <td>{{orfalse.price|floatformat:2|intcomma}}</td>
+                                                                <td><a href="{% url 'core:order-detail' orfalse.id %}" class="btn-small d-block">View</a></td>
+                                                                <td><a href="{% url 'core:checkout-gcash' orfalse.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
+
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                    
+
+                                                    
+
+
+                                                </div>
+                                            </div>
+
+                                            <h3>Custom Orders</h3>
+                                            <div class="card-header">
+                                                <h3 class="mb-0">Payment Approved</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Custom Order ID</th>
+                                                                <th>Product Type</th>
+                                                                <th>Material</th>
+                                                                <th>Color</th>
+                                                                <th>Foam Type</th>
+                                                                <th>M/R</th>
+                                                                <th>Quantity</th>
+                                                                
+                                                                <th>Percentage</th>
+                                                                
+                                                                <th>Paid Amount</th>
+                                                                <th>Date Approved</th>  
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for col_approved in custom_order_list_approved %}
+                                                            <tr>
+                                                                <td>{{col_approved.co_id}}</td>
+                                                                <td>{{col_approved.product_type}}</td>
+                                                                <td>{{col_approved.material}}</td>
+                                                                <td>{{col_approved.color}}</td>
+                                                                <td>{{col_approved.foam_type}}</td>
+                                                                <td>{{col_approved.make_or_repair}}</td>
+                                                                <td>{{col_approved.qty}}</td>
+                                                                
+
+                                                                
+                                                                <td>{{col_approved.percentage_progress}}%</td>
+
+                                                                
+                                                                <td>₱{{col_approved.paid_amount}}</td>
+
+                                                                <td>{{col_approved.date_approved}}</td>
+{% comment %} 
+                                                                {% if orfalse.paid_status == True %}
+                                                                <td><i class="fas fa-check-circle text-success"></i></td>
+                                                                {% else %}
+                                                                <td class="text-danger"><strong>X</strong></td>
+                                                                {% endif %}
+                                                                <td>{{orfalse.price|floatformat:2|intcomma}}</td>
+                                                                <td><a href="{% url 'core:order-detail' orfalse.id %}" class="btn-small d-block">View</a></td>
+                                                                <td><a href="{% url 'core:checkout-gcash' orfalse.id %}" class="btn-small d-block" style="color:blue;">Pay Now</a></td> {% endcomment %}
+
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                    
+
+                                                    
+
+
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
 
