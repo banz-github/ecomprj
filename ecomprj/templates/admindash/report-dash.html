@@ -10,24 +10,49 @@
 
 
     <div class="insights">
-        <div class="sales">
+        <div class="sales" style="width:800px;height:500px">
             <span class="material-icons-sharp">analytics</span>
-            <div class="middle">
-                <div class="left">
-                    <h3>Statuses</h3>
-                    <h1>1</h1>
-                </div>
-                <div class="progress">
-                    <svg>
-                        <circle cx='38' cy='38' r='36'></circle>
-                    </svg>
-                    <div class="number">
-                        <p>81%</p>
-                    </div>
-                </div>
-            </div>
-            <small class="text-muted">Last 24 hours</small>
+            <!--Write the code here-->
+            <canvas id="lineChart" width="800" height="400"></canvas>
         </div>
+        <script>
+            var ctx = document.getElementById('lineChart').getContext('2d');
+        
+            var data = {
+                labels: [{% for month_data in all_months_data %}"{{ month_data.month }}/{{ month_data.year }}", {% endfor %}],
+                datasets: [{
+                    label: 'Task Completion Ratio (%)',
+                    data: [{% for month_data in all_months_data %}{{ month_data.completion_ratio }}, {% endfor %}],
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                    fill: true
+                }]
+            };
+        
+            var options = {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Completion Ratio (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                }
+            };
+        
+            var lineChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: options
+            });
+        </script>
         <!--END OF SALES-->
         <div class="expenses">
             <span class="material-icons-sharp">bar_chart</span>
@@ -38,14 +63,15 @@
                 </div>
                 <div class="progress">
                     <svg>
-                        <circle cx='38' cy='38' r='36'></circle>
+                        {% comment %} <circle cx='38' cy='38' r='36'></circle> {% endcomment %}
                     </svg>
                     <div class="number">
-                        <p>61%</p>
+                        <h1>{{completion_ratio_thismonth}}%</h1> 
+                        
                     </div>
                 </div>
             </div>
-            <small class="text-muted">Last 24 hours</small>
+            <small class="text-muted">Last 30 days</small>
         </div>
         <!--END OF EXPENSES-->
         <div class="income">
@@ -53,7 +79,7 @@
             <div class="middle">
                 <div class="left">
                     <h3>Task Completed in this Month</h3>
-                    <h1>8</h1>
+                    <h1>{{task_done_thismonth.count}}</h1>
                 </div>
                 {% comment %} <div class="progress">
                     <svg>
@@ -64,7 +90,7 @@
                     </div>
                 </div> {% endcomment %}
             </div>
-            <small class="text-muted">Last 24 hours</small>
+            <small class="text-muted">Last 30 days</small>
         </div>
         <!--END OF INCOME-->
     </div>

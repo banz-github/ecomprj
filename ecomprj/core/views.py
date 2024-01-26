@@ -511,12 +511,13 @@ def most_ordered_colors_per_month(request, product_type, material_name):
     }
 
     return render(request, 'admindash/most-ordered-colors-per-month.html', context)
-
+from django.db.models import Count, Case, When
+from django.db.models.functions import ExtractYear, ExtractMonth
 from django.utils import timezone
 from datetime import datetime
 def report_dash(request):
     current_month = timezone.now().month
-    with_downpayment_orders = CustomizationOrder.objects.filter(with_downpayment=True, receipt_submitted=True)
+    with_downpayment_orders = CustomizationOrder.objects.filter(with_downpayment=True)
 
     with_downpayment_orders_thismonth = CustomizationOrder.objects.filter(with_downpayment=True,receipt_submitted=True,date_approved__month=current_month)
 
@@ -544,12 +545,41 @@ def report_dash(request):
     if total_tasks_thismonth > 0:
         completion_ratio_thismonth = (completed_tasks_thismonth / total_tasks_thismonth) * 100
     ##############TASK COMPLETION
-    
+    reverse_completion_ratio_thismonth = 100 - completion_ratio_thismonth
+
+
+
+
+    ################### EVERY MONTH
+    all_months_data = CustomizationOrder.objects \
+        .annotate(month=ExtractMonth('date_approved'), year=ExtractYear('date_approved')) \
+        .values('month', 'year') \
+        .annotate(total_tasks=Count('id'), total_completed_tasks=Count(Case(When(customization_status='Done', then=1)))) \
+        .order_by('year', 'month') 
+
+    monthly_completion_ratios = []
+    monthly_reverse_completion_ratios = []
+
+    for month_data in all_months_data:
+        total_tasks = month_data['total_tasks']
+        total_completed_tasks = month_data['total_completed_tasks']
+
+        if total_tasks > 0:
+            completion_ratio = (total_completed_tasks / total_tasks) * 100
+            reverse_completion_ratio = 100 - completion_ratio
+        else:
+            completion_ratio = 0
+            reverse_completion_ratio = 0
+
+        monthly_completion_ratios.append(completion_ratio)
+        monthly_reverse_completion_ratios.append(reverse_completion_ratio)
+
+
 
     context = {
         "task_pending":task_pending, "task_processing": task_processing, "task_starts": task_starts, "task_drafting": task_drafting, "task_cutting": task_cutting, 
         "task_assembly": task_assembly, "task_seaming": task_seaming, "task_padding": task_padding, "task_detailing": task_detailing, "task_quality_control": task_quality_control,
-          "task_pickup": task_pickup, "task_done":task_done, "task_starts_thismonth":task_starts_thismonth, "task_done_thismonth":task_done_thismonth, "completion_ratio_thismonth":completion_ratio_thismonth,
+          "task_pickup": task_pickup, "task_done":task_done, "task_starts_thismonth":task_starts_thismonth, "task_done_thismonth":task_done_thismonth, "completion_ratio_thismonth":completion_ratio_thismonth,"reverse_completion_ratio_thismonth":reverse_completion_ratio_thismonth,
     }
     return render(request, 'admindash/report-dash.html', context)
 
