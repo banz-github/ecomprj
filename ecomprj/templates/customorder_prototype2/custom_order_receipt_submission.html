@@ -30,7 +30,7 @@
         }
 
         .color-image {
-            width: 125%;
+            width: 100%;
             height: auto;
             transition: transform 0.3s, box-shadow 0.3s;
         }
@@ -56,13 +56,17 @@
             <div class="card">
                 <div class="card-header">
                 </div>
+                <img  src="{% static 'assets/images/gcashw_qr.png' %}" alt="gcashlogo"/>
                 <div class="card-body">
                     {% if order.color.image %}
                         <img src="{{ order.color.image.url }}" class="color-image" alt="Color Image">
                     {% else %}
                         <p>No image available for this color.</p>
                     {% endif %}
+                    
                 </div>
+                
+
             </div>
         </div>
         <div class="col-md-6">
@@ -78,8 +82,8 @@
                     <!-- Add other order details as needed -->
                     <p><strong>Quantity:</strong> {{ order.qty }}</p>
                     <p><strong>Customer Notes:</strong> {{ order.customer_notes }}</p>
-                    <p><strong>Make or Repair:</strong> {{ order.make_or_repair }}</p>
-                    <p><strong>Purpose:</strong> {{ order.purpose }}</p>
+                    <p><strong>Make or Repair:</strong> {{ order.make_or_repair |upper }}</p>
+                    <p><strong>Purpose:</strong> {{ order.purpose |upper }}</p>
                     <p><strong>Estimated Total Price:</strong> ₱{{ order.estimated_total_price }}</p>
                 </div>
             </div>
