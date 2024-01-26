@@ -1351,6 +1351,69 @@ def custom_order_detail(request, co_id):
         }
     return render(request, 'core/custom-order-detail.html',context)
 
+
+@login_required
+def custom_order_detail_wreceipt(request, co_id):
+    try:
+        custom_order = CustomizationOrder.objects.get(profile=request.user.profile, co_id=co_id)
+
+        # Calculate the divided version of estimated total price
+        fifty_percent_down = None
+        if custom_order.estimated_total_price is not None:
+            fifty_percent_down = custom_order.estimated_total_price / 2
+
+        # Format the divided estimated total price with floatformat and intcomma
+
+
+
+        context = {
+            "custom_order":custom_order,"fifty_percent_down": fifty_percent_down,
+        }
+
+    except CustomizationOrder.DoesNotExist:
+        # Handle the case where the CustomizationOrder does not exist
+        custom_order = None
+        context = {"custom_order": custom_order}
+
+    except ValueError as e:
+        # Handle the case where the 'receipt_img' attribute has no file associated with it
+        context = {
+            "custom_order": None,
+            "error_message": str(e),  # Pass the error message to the template
+        }
+    return render(request, 'core/custom-order-detail-wreceipt.html',context)
+
+@login_required
+def custom_order_detail_paid(request, co_id):
+    try:
+        custom_order = CustomizationOrder.objects.get(profile=request.user.profile, co_id=co_id)
+
+        # Calculate the divided version of estimated total price
+        fifty_percent_down = None
+        if custom_order.estimated_total_price is not None:
+            fifty_percent_down = custom_order.estimated_total_price / 2
+
+        # Format the divided estimated total price with floatformat and intcomma
+
+
+
+        context = {
+            "custom_order":custom_order,"fifty_percent_down": fifty_percent_down,
+        }
+
+    except CustomizationOrder.DoesNotExist:
+        # Handle the case where the CustomizationOrder does not exist
+        custom_order = None
+        context = {"custom_order": custom_order}
+
+    except ValueError as e:
+        # Handle the case where the 'receipt_img' attribute has no file associated with it
+        context = {
+            "custom_order": None,
+            "error_message": str(e),  # Pass the error message to the template
+        }
+    return render(request, 'core/custom-order-detail-paid.html',context)
+
 ### TRY LANG FROM pt 
 # def generate_pdf(request):
 #     html_content = f"""`
