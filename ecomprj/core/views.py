@@ -534,6 +534,20 @@ def report_dash(request):
     task_pickup = with_downpayment_orders.filter(customization_status="to be picked up")
     task_done = with_downpayment_orders.filter(customization_status="done")
 
+    task_creation_all = (
+    task_pending.count() +  
+    task_processing.count() + 
+    task_starts.count() + 
+    task_drafting.count() + 
+    task_cutting.count() + 
+    task_assembly.count() + 
+    task_seaming.count() + 
+    task_padding.count() + 
+    task_detailing.count() + 
+    task_quality_control.count() + 
+    task_pickup.count()
+)
+
     task_starts_thismonth = with_downpayment_orders_thismonth.filter(customization_status="production starts")
     task_done_thismonth = with_downpayment_orders_thismonth.filter(customization_status="done")
 
@@ -543,7 +557,7 @@ def report_dash(request):
 
     completion_ratio_thismonth = 0
     if total_tasks_thismonth > 0:
-        completion_ratio_thismonth = (completed_tasks_thismonth / total_tasks_thismonth) * 100
+        completion_ratio_thismonth = (completed_tasks_thismonth / task_creation_all) * 100
     ##############TASK COMPLETION
     reverse_completion_ratio_thismonth = 100 - completion_ratio_thismonth
 
@@ -578,7 +592,7 @@ def report_dash(request):
 
     context = {
         "task_pending":task_pending, "task_processing": task_processing, "task_starts": task_starts, "task_drafting": task_drafting, "task_cutting": task_cutting, 
-        "task_assembly": task_assembly, "task_seaming": task_seaming, "task_padding": task_padding, "task_detailing": task_detailing, "task_quality_control": task_quality_control,
+        "task_assembly": task_assembly, "task_seaming": task_seaming, "task_padding": task_padding, "task_detailing": task_detailing, "task_quality_control": task_quality_control, "task_creation_all":task_creation_all,
           "task_pickup": task_pickup, "task_done":task_done, "task_starts_thismonth":task_starts_thismonth, "task_done_thismonth":task_done_thismonth, "completion_ratio_thismonth":completion_ratio_thismonth,"reverse_completion_ratio_thismonth":reverse_completion_ratio_thismonth,
     }
     return render(request, 'admindash/report-dash.html', context)

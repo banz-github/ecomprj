@@ -10,7 +10,7 @@
 
 
     <div class="insights">
-        <div class="sales" style="width:800px;height:500px">
+        {% comment %} <div class="sales" style="width:800px;height:500px">
             <span class="material-icons-sharp">analytics</span>
             <!--Write the code here-->
             <canvas id="lineChart" width="800" height="400"></canvas>
@@ -52,14 +52,14 @@
                 data: data,
                 options: options
             });
-        </script>
+        </script> {% endcomment %}
         <!--END OF SALES-->
         <div class="expenses">
             <span class="material-icons-sharp">bar_chart</span>
             <div class="middle">
                 <div class="left">
                     <h3>Task Creation vs Completion</h3>
-                    <h1>{{task_starts_thismonth.count}} : {{task_done_thismonth.count}}</h1>
+                    <h1>{{task_creation_all}} : {{task_done_thismonth.count}}</h1>
                 </div>
                 <div class="progress">
                     <svg>
