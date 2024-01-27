@@ -593,7 +593,8 @@ def index(request):
 
     
 
-    products = Product.objects.filter(product_status="published", featured=True)
+    #products = Product.objects.filter(product_status="published", featured=True)
+    products = Product.objects.all()
     latest_product = Product.objects.latest('date')  # Assuming you have a 'created_at' field
 
     for product in products:
