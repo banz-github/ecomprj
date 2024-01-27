@@ -212,7 +212,7 @@
                                                     <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> {% endcomment %}
                                                 </div>
                                             </div>
-                                            <div class="font-xs">
+                                            {% comment %} <div class="font-xs">
                                                 <ul class="mr-50 float-start">
                                                     <li class="mb-5">Type: <span class="text-brand">{{p.type}}</span></li>
                                                     <!-- <li class="mb-5">MFG:<span class="text-brand"> Jun 4.2022</span></li> -->
@@ -223,7 +223,7 @@
                                                     <li class="mb-5">Tags: {% for tag in p.tags.all%} <a href="{% url 'core:tags' tag.slug %}" rel="tag">#{{tag.name}}</a> {% endfor %}</li>
                                                     <li>Colors:<span class="in-stock text-brand ml-5">There are {{p.color_count}} CHECK available colors for this item.</span></li>
                                                 </ul>
-                                            </div>
+                                            </div> {% endcomment %}
                                         </div>
                                         <!-- Detail Info -->
                                     </div>
