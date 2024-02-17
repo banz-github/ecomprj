@@ -35,28 +35,47 @@
                                         <form method="post" method="POST">
                                             {% csrf_token %}
 
-                                            <div class="form-group">
+                                            <div class="form-group"><p><strong>First Name:</strong></p>
                                                 {{pform.first_name}}
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group"><p><strong>Last Name:</strong></p>
                                                 {{pform.last_name}}
                                             </div>
 
-                                            <div class="form-group">
+                                            <div class="form-group"><p><strong>Username:</strong></p>
                                                 {{form.username}}
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group"><p><strong>Phone Number:</strong></p>
                                                 {{form.phone_number}}
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group"><p><strong>Email:</strong></p>
                                                 {{form.email}}
                                             </div>
+                                            
                                             <div class="form-group">
-                                                {{form.password1}}
+                                                <p><strong>Password:</strong></p>
+                                                
+                                                <input type="password" name="password1" id="id_password1" class="form-control">
+                                                <div class="password-input-container">
+                                                    <label for="show_password1" class="toggle-password-label">Show Password</label>
+                                                    <input type="checkbox" id="show_password1" class="toggle-password-checkbox">
+                                                    
+                                                </div>
                                             </div>
                                             <div class="form-group">
-                                                {{form.password2}}
+                                                <p><strong>Confirm Password:</strong></p>
+                                                
+                                                <input type="password" name="password2" id="id_password2" class="form-control">
+                                                <div class="password-input-container">
+                                                    <label for="show_password2" class="toggle-password-label">Show Password</label>
+                                                    <input type="checkbox" id="show_password2" class="toggle-password-checkbox">
+                                                    
+                                                </div>
                                             </div>
+
+
+
+                                            
                         
                                        
                                             <div class="form-group mb-30">
@@ -74,4 +93,49 @@
             </div>
         </div>
     </main>
+
+    <style>
+        .password-input-container {
+            display: inline-flex;
+            align-items: center;
+        }
+    
+        .toggle-password-checkbox {
+            transform: scale(0.3); /* Adjust the scale to make the checkbox smaller */
+            margin-right: 5px; /* Adjust the margin as needed */
+            height: auto; /* Reset height to default */
+
+        }
+
+
+
+    </style>
+    
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#show_password1').change(function() {
+        var password1Field = $('#id_password1');
+        var password1FieldType = password1Field.attr('type');
+        if (password1FieldType === 'password') {
+            password1Field.attr('type', 'text');
+        } else {
+            password1Field.attr('type', 'password');
+        }
+    });
+
+    $('#show_password2').change(function() {
+        var password2Field = $('#id_password2');
+        var password2FieldType = password2Field.attr('type');
+        if (password2FieldType === 'password') {
+            password2Field.attr('type', 'text');
+        } else {
+            password2Field.attr('type', 'password');
+        }
+    });
+});
+</script>
+
 {% endblock content %}

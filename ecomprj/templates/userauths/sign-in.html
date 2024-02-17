@@ -29,11 +29,17 @@
                                         </div>
                                         <form method="POST">
                                             {% csrf_token %}
-                                            <div class="form-group">
+                                            <div class="form-group"><p><strong>Phone Number:</strong></p>
                                                 <input type="tel" required name="phone_number" placeholder="Phone Number *" />
                                             </div>
                                             <div class="form-group">
-                                                <input required type="password" name="password" placeholder="Your password *" />
+                                                <input required type="password" name="password" id="id_password" placeholder="Your password *" />
+                                                <div class="password-input-container">
+                                                    <label for="show_password" class="toggle-password-label">Show Password</label>
+                                                    <input type="checkbox" id="show_password" class="toggle-password-checkbox">
+                                                    
+                                                </div>
+                                            </div>
                                             {% comment %} </div>
                                             <div class="login_footer form-group">
                                                 <div class="chek-form">
@@ -46,7 +52,7 @@
                                                     <b class="text-best">5</b>
                                                 </span>
                                             </div> {% endcomment %}
-                                            <div class="login_footer form-group mb-50">
+                                            {% comment %} <div class="login_footer form-group mb-50">
                                                 <div class="chek-form">
                                                     <div class="custome-checkbox">
                                                         <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
@@ -54,7 +60,7 @@
                                                     </div>
                                                 </div>
                                                 <a class="text-muted" href="#">Forgot password?</a>
-                                            </div>
+                                            </div> {% endcomment %}
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-heading btn-block hover-up" name="login">Log in</button>
                                             </div>
@@ -68,4 +74,33 @@
             </div>
         </div>
     </main>
+    <style>
+        .password-input-container {
+            display: inline-flex;
+            align-items: center;
+        }
+    
+        .toggle-password-checkbox {
+            transform: scale(0.3); /* Adjust the scale to make the checkbox smaller */
+            margin-right: 5px; /* Adjust the margin as needed */
+            height: auto; /* Reset height to default */
+        }
+
+    </style>
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#show_password').change(function() {
+                var passwordField = $('#id_password');
+                var passwordFieldType = passwordField.attr('type');
+                if (passwordFieldType === 'password') {
+                    passwordField.attr('type', 'text');
+                } else {
+                    passwordField.attr('type', 'password');
+                }
+            });
+        });
+    </script>
 {% endblock content %}
