@@ -1,3 +1,6 @@
+
+
+
 var TrandingSlider = new Swiper('.tranding-slider', {
   effect: 'coverflow',
   grabCursor: true,
@@ -19,3 +22,5 @@ var TrandingSlider = new Swiper('.tranding-slider', {
     prevEl: '.swiper-button-prev',
   }
 });
+
+

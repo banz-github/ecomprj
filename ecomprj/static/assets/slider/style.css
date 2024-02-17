@@ -21,6 +21,32 @@ html {
   scroll-behavior: smooth;
 }
 
+/* just addded */
+
+.tranding-slide .tranding-slide-img img {
+  width: 37rem;
+  height: 42rem;
+  border-radius: 2rem;
+  object-fit: cover;
+  position: relative;
+}
+
+.magnifying-glass {
+  width: 200px; /* Adjust the size of the magnifying glass */
+  height: 200px; /* Adjust the size of the magnifying glass */
+  position: absolute;
+  border: 1px solid #ccc; /* Magnifying glass border */
+  background: white; /* Magnifying glass background color */
+  background-repeat: no-repeat;
+  background-size: 1000% 1000%;
+  z-index: 999; /* Ensure the magnifying glass appears above other elements */
+  display: none; /* Initially hide the magnifying glass */
+  pointer-events: none; /* Allow the cursor to interact with elements beneath the magnifying glass */
+}
+
+
+/* just addded */
+
 @media (min-width: 1440px) {
   html {
     zoom: 1.5;

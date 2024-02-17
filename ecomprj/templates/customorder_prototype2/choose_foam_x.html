@@ -88,6 +88,7 @@
                         <h1 class="food-price">{{ft.description}}</h1>
                         <div class="tranding-slide-content-bottom">
                           <h2 class="food-name">{{ft.name}}</h2>
+                          <h3 class="food-name-2">{{ft.description}}</h2>
                         </div>
                       </div>
                     </div>
@@ -112,6 +113,7 @@
     <script src="{% static 'assets/slider/script.js' %}"></script> 
 
     <script>
+      
         function selectSlide(element) {
           // Remove 'selected' class from all slides
           var slides = document.querySelectorAll('.swiper-slide');
@@ -141,6 +143,9 @@
                 window.location.href = `/customorder_prototype2/choose_material_${productType.toLowerCase()}/${selectedFoamType.toLowerCase()}/`;
             });
         });
+
+
+        
 
       </script>
 
