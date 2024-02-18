@@ -99,36 +99,35 @@
     <script src="{% static 'assets/slider/script.js' %}"></script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const productImages = document.querySelectorAll('.productimage');
-
-        productImages.forEach(img => {
-            img.addEventListener('mouseenter', function (e) {
-                const activeSlide = document.querySelector('.swiper-slide-active .food-name .productimage');
-                    const magnifyingGlass = this.parentElement.querySelector('.magnifying-glass');
-                    magnifyingGlass.style.backgroundImage = `url('${this.src}')`;
+        document.addEventListener('DOMContentLoaded', function () {
+            const swiperSlides = document.querySelectorAll('.swiper-slide');
+        
+            swiperSlides.forEach(slide => {
+                slide.addEventListener('mouseenter', function (e) {
+                    const magnifyingGlass = this.querySelector('.magnifying-glass');
+                    magnifyingGlass.style.backgroundImage = `url('${this.querySelector('.productimage').src}')`;
                     magnifyingGlass.style.display = 'block';
-
+        
                     const updateMagnifyingGlass = function (event) {
-                        const posX = event.clientX - this.getBoundingClientRect().left - magnifyingGlass.offsetWidth / 2 - 400; /*mas mataas mas kaliwa*/
-                        const posY = event.clientY - this.getBoundingClientRect().top - magnifyingGlass.offsetHeight / 3 - 150; /* mas mataas , mas tataas*/
-                        const bgPosX = -posX * 3 + (-1000) + 'px'; 
-                        const bgPosY = -posY * 3 + (-600) + 'px'; /* mas nega mas mababa */
+                        const posX = event.clientX - this.getBoundingClientRect().left - magnifyingGlass.offsetWidth / 2 - 300;
+                        const posY = event.clientY - this.getBoundingClientRect().top - magnifyingGlass.offsetHeight / 2 - 150;
+                        const bgPosX = -posX * 2 + (-900) + 'px'; 
+                        const bgPosY = -posY * 2 + (-600) + 'px';
                         magnifyingGlass.style.backgroundPosition = `${bgPosX} ${bgPosY}`;
                         magnifyingGlass.style.left = posX + 'px';
                         magnifyingGlass.style.top = posY + 'px';
                     };
-
+        
                     const removeMagnifyingGlass = function () {
                         magnifyingGlass.style.display = 'none';
                     };
-
+        
                     this.addEventListener('mousemove', updateMagnifyingGlass);
                     this.addEventListener('mouseleave', removeMagnifyingGlass);
-                
+                });
             });
         });
-    });
+        
 
         
         
