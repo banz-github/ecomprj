@@ -32,6 +32,7 @@
                     <div class="swiper-slide tranding-slide">
                         <div class="tranding-slide-img">
                             {% if c.image %}
+                                <div class="magnifying-glass"></div>
                                 <img class="productimage" src="{{ c.image.url }}" alt="Tranding" style="box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); background-color: #999999; padding: 10px; width: 112%;">
                             {% else %}
                                 <p>No Image Available</p>
@@ -124,6 +125,35 @@
     </script> {% endcomment %}
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const swiperSlides = document.querySelectorAll('.swiper-slide');
+        
+            swiperSlides.forEach(slide => {
+                slide.addEventListener('mouseenter', function (e) {
+                    const magnifyingGlass = this.querySelector('.magnifying-glass');
+                    magnifyingGlass.style.backgroundImage = `url('${this.querySelector('.productimage').src}')`;
+                    magnifyingGlass.style.display = 'block';
+        
+                    const updateMagnifyingGlass = function (event) {
+                        const posX = event.clientX - this.getBoundingClientRect().left - magnifyingGlass.offsetWidth / 2 - 300;
+                        const posY = event.clientY - this.getBoundingClientRect().top - magnifyingGlass.offsetHeight / 2 - 150;
+                        const bgPosX = -posX * 2 + (-900) + 'px'; 
+                        const bgPosY = -posY * 2 + (-600) + 'px';
+                        magnifyingGlass.style.backgroundPosition = `${bgPosX} ${bgPosY}`;
+                        magnifyingGlass.style.left = posX + 'px';
+                        magnifyingGlass.style.top = posY + 'px';
+                    };
+        
+                    const removeMagnifyingGlass = function () {
+                        magnifyingGlass.style.display = 'none';
+                    };
+        
+                    this.addEventListener('mousemove', updateMagnifyingGlass);
+                    this.addEventListener('mouseleave', removeMagnifyingGlass);
+                });
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
             const nextButton = document.getElementById('nextButton');
     
