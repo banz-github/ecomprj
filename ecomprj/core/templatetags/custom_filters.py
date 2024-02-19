@@ -1,4 +1,5 @@
 from django import template
+import json
 
 register = template.Library()
 
@@ -22,3 +23,22 @@ def random_neutral_color(value):
     neutral_colors = shades_of_gray
     
     return random.choice(neutral_colors)
+
+
+@register.filter
+def parse_change_message(change_message):
+    try:
+        change_message_dict = json.loads(change_message)
+        parsed_message = ""
+
+        for key, value in change_message_dict.items():
+            if key == 'added':
+                for field_name, field_value in value.items():
+                    parsed_message += f"Added {field_value['name']}: {field_value['object']}<br>"
+            elif key == 'changed':
+                for field_name in value['fields']:
+                    parsed_message += f"Changed {field_name}<br>"
+
+        return parsed_message
+    except json.JSONDecodeError:
+        return change_message

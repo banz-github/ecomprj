@@ -1,4 +1,53 @@
-<!DOCTYPE html>
+{% extends 'admindash/base-dash.html' %}
+{% load static %}
+{% block content %}       
+{% load humanize %}
+{% load custom_filters %}
+
+
+<main>
+    <div class="recent-orders">
+        <div class="table-container">
+
+            <h1>Recent Admin Actions</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ADMIN NAME </th>
+                        {% comment %} <th>ORDER</th> {% endcomment %}
+                        <th>ORDER DETAIL</th>
+                        <th>ACTION</th>
+                        <th>DATE</th>
+                    </tr>
+                    
+                </thead>
+                <tbody>
+                    {% for action in recent_actions %}
+                    <tr>
+                        <td><strong>{{ action.user.profile }}</strong>: <br></td>
+                        {% comment %} <td>{{ action.content_type }}</td> {% endcomment %}
+                        <td>{{ action.object_repr }}</td>
+                        <td>{{ action.change_message  }}<br></td>
+                        <td>{{ action.action_time}}</td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    
+
+</main>
+
+
+
+
+
+{% endblock content %}
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,4 +65,6 @@
         {% endfor %}
     </ul>
 </body>
-</html>
+</html> {% endcomment %}
+
+

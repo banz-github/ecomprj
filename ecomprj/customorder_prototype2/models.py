@@ -139,7 +139,7 @@ class CustomizationOrder(models.Model):
         super().delete(*args, **kwargs)    
 
     def __str__(self):
-        return f"{self.co_id} - {self.product_type} {self.material} {self.color} | {self.percentage_progress} | {self.receipt_submitted} | {self.with_downpayment} | {self.date_approved}"
+        return f"{self.co_id} - {self.product_type} {self.material} {self.color} | PROGRESS: {self.percentage_progress}% | {self.receipt_submitted} | {self.with_downpayment} | {self.date_approved}"
 
     
 class Analytics(models.Model):

@@ -50,6 +50,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 
 foam_types_display = FoamType.objects.annotate(order_count=Count('customizationorder'))
 
+
 # admin dashboard 
 #@allowed_users(allowed_roles=['admin'])
 @allowed_users(allowed_roles=['admin'])
@@ -603,13 +604,15 @@ from django.utils.html import escape
 from django.contrib.contenttypes.models import ContentType
 
 def recent_admin_actions(request):
+    custom_order_list_not_approved = CustomizationOrder.objects.filter(with_downpayment=False, receipt_submitted=True)
+
     # Get the content type for the CustomizationOrder model
     customization_order_content_type = ContentType.objects.get_for_model(CustomizationOrder)
     
     # Filter recent actions related to the CustomizationOrder model
     recent_actions = LogEntry.objects.filter(content_type=customization_order_content_type).order_by('-action_time')[:10]
     
-    context = {'recent_actions': recent_actions}
+    context = {'recent_actions': recent_actions, "custom_order_list_not_approved":custom_order_list_not_approved, "foam_types_display":foam_types_display,}
     return render(request, 'admindash/admin-logs.html', context)
 
 # Create your views here.
