@@ -80,12 +80,37 @@ class FoamType(models.Model):
     def __str__(self):
         return self.name
     
+class ProductTypeSizes(models.Model):
+    product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
+    size_title = models.CharField(max_length=100)
+    size_spec = models.CharField(max_length=500)
+    size_desc = models.CharField(max_length=500)
+    
+
+    fabric_yard_v2 = models.DecimalField(max_digits=10, decimal_places=2) #multiplier
+    foam_amount_v2 = models.DecimalField(max_digits=10, decimal_places=2) #multiplier
+
+    #Estimated TIme of Arrival
+    month_eta_v2 = models.DecimalField(max_digits=10, decimal_places=2, default=1)
+
+    image = models.ImageField(upload_to='product_size', null=True, blank=True) #optional
+
+    def __str__(self):
+        return f"{self.size_title} - {self.product_type}"
+
+
+
+
+    
 class CustomizationOrder(models.Model):
     co_id = ShortUUIDField(unique=True, max_length=25, prefix="CO", alphabet="abcdefgh12345")
     product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
     foam_type = models.ForeignKey(FoamType, on_delete=models.CASCADE)
+
+    size = models.ForeignKey(ProductTypeSizes, on_delete=models.CASCADE, null=True, blank=True) #newly added
+
 
     qty = models.IntegerField(default=1)
     ##############date
@@ -140,7 +165,7 @@ class CustomizationOrder(models.Model):
 
     def __str__(self):
         return f"{self.co_id} - {self.product_type} {self.material} {self.color} | PROGRESS: {self.percentage_progress}% | {self.receipt_submitted} | {self.with_downpayment} | {self.date_approved}"
-
+    
     
 class Analytics(models.Model):
     product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE)

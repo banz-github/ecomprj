@@ -1,5 +1,5 @@
 from django.contrib import admin
-from customorder_prototype2.models import ProductType, Material, Color, CustomizationOrder,Analytics, FoamType
+from customorder_prototype2.models import ProductType, Material, Color, CustomizationOrder,Analytics, FoamType, ProductTypeSizes
 
 class MaterialInline(admin.TabularInline):
     model = Material
@@ -10,9 +10,13 @@ class ColorInline(admin.TabularInline):
     extra = 1
 
 
+class SizeInline(admin.TabularInline):
+    model = ProductTypeSizes
+    extra = 1
+
 
 class ProductTypeAdmin(admin.ModelAdmin):
-    inlines = [MaterialInline]
+    inlines = [MaterialInline, SizeInline]
 
 class MaterialAdmin(admin.ModelAdmin):
     inlines = [ColorInline]
@@ -23,3 +27,5 @@ admin.site.register(Color)
 admin.site.register(CustomizationOrder)
 admin.site.register(Analytics)
 admin.site.register(FoamType)
+
+admin.site.register(ProductTypeSizes)
