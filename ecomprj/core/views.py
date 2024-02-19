@@ -597,6 +597,20 @@ def report_dash(request):
     }
     return render(request, 'admindash/report-dash.html', context)
 
+from django.contrib.admin.models import LogEntry
+from django.shortcuts import render
+from django.utils.html import escape
+from django.contrib.contenttypes.models import ContentType
+
+def recent_admin_actions(request):
+    # Get the content type for the CustomizationOrder model
+    customization_order_content_type = ContentType.objects.get_for_model(CustomizationOrder)
+    
+    # Filter recent actions related to the CustomizationOrder model
+    recent_actions = LogEntry.objects.filter(content_type=customization_order_content_type).order_by('-action_time')[:10]
+    
+    context = {'recent_actions': recent_actions}
+    return render(request, 'admindash/admin-logs.html', context)
 
 # Create your views here.
 #@allowed_users(allowed_roles=['customer'])

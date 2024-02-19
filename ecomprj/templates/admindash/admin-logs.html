@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recent Admin Actions</title>
+</head>
+<body>
+    <h1>Recent Admin Actions</h1>
+    <ul>
+        {% for action in recent_actions %}
+            <li>
+                <strong>{{ action.user }}</strong>: {{ action.content_type }} - {{ action.object_repr }}<br>
+                {{ action.change_message }}<br>
+                {{ action.action_time|timesince }} ago
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
