@@ -3,7 +3,7 @@
 
 from django.shortcuts import render, HttpResponse, redirect
 from django.http import Http404, HttpResponseServerError
-from .models import ProductType, Material, Color,FoamType, CustomizationOrder
+from .models import ProductType, Material, Color,FoamType, CustomizationOrder, ProductTypeSizes
 from userauths.models import User,Profile
 from urllib.parse import unquote
 from django.contrib import messages
@@ -135,7 +135,7 @@ def choose_color_x(request, product_type, foam_types ,material_name):
 #         raise Http404("Color does not exist")
 from .forms import CustomizationOrderDetails
 #@login_required
-def custom_details(request, product_type, foam_types, material_name, color_name):
+def custom_details(request, product_type, foam_types, material_name, color_name): # ,size pansamantala , estimated price
     ORDER_PURPOSE = (
     ("private", "Private"),
     ("business", "Business"),
@@ -145,6 +145,11 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
     foam_types = foam_types.upper()
     material_name = material_name.upper()
     color_name = color_name.upper()
+
+    size = ProductTypeSizes.objects.filter(product_type__name=product_type) #Pansamantalang munang walang argument at di napapasama sa order
+
+    
+
 
     material_name = material_name.replace('_', ' ')
     material_name = unquote(material_name)
@@ -162,7 +167,23 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
     foam_type_instance = FoamType.objects.get(name=foam_types)
     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
 
-    
+    # Try to display advance
+    # quantity = None
+    # size_title = None
+    # if request.method == 'POST' and request.is_ajax():
+    #     quantity = int(request.POST.get('quantity'))
+    #     size_title = request.POST.get('size')
+
+    #     # Fetch product type and size
+    #     product_type = ProductType.objects.get(name=request.POST.get('product_type'))
+    #     size = ProductTypeSizes.objects.filter(product_type__name=product_type)
+
+    #     # Calculate estimated price
+    #     estimated_price = (
+    #         ((product_type.fabric_yard_v2 * size.fabric_yard_v2 * quantity) * material_name.fabric_peryard_price) +
+    #         ((product_type.foam_amount_v2 * size.foam_amount_v2 * quantity) * foam_types.foam_percubicft_price)
+    #     )
+    #     return JsonResponse({'estimated_price': estimated_price})
 
     if request.method == 'POST':
         form = CustomizationOrderDetails(request.POST, request.FILES)  # Include request.FILES for file upload handling
@@ -189,7 +210,7 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
         # Debugging information
         print('Color Image Path:', color_instance.image.url)
 
-        colors = Color.objects.filter(material=material_instance)
+        colors = Color.objects.filter(material=material_instance) 
 
     
 
@@ -201,9 +222,16 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
             'material_name': material_name,
             'color_name': color_name,
             'color': color_instance,
+            'size':size,
             'user_profile': request.user.profile,
             'form': form,
             'ORDER_PURPOSE': ORDER_PURPOSE,
+
+            # 'quantity':quantity, 'size_title':size_title,
+
+            # 'estimated_price_display':estimated_price,
+
+
         }
 
         return render(request, 'customorder_prototype2/customorder_details.html', context)

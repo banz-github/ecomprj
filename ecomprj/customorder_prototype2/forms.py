@@ -27,4 +27,4 @@ class CustomOrderUpdateForm(forms.ModelForm):
 class CustomizationOrderDetails(forms.ModelForm):
     class Meta:
         model = CustomizationOrder
-        fields = ['purpose','make_or_repair' , 'receipt_img' ]
+        fields = ['size','purpose','make_or_repair' , 'receipt_img' ]
