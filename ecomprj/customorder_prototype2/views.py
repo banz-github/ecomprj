@@ -147,7 +147,9 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
     color_name = color_name.upper()
 
     size = ProductTypeSizes.objects.filter(product_type__name=product_type) #Pansamantalang munang walang argument at di napapasama sa order
+    ########### WRITE HERE ############
 
+    ########### WRITE HERE ############
     
 
 
@@ -166,6 +168,18 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
     product_type_instance = ProductType.objects.get(name=product_type)
     foam_type_instance = FoamType.objects.get(name=foam_types)
     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
+
+    ########### WRITE HERE ############
+
+    # estimated_price_display = (
+    #     (foam_type_instance.foam_percubicft_price * size.foam_amount_v2) +
+    #     (material_instance.fabric_peryard_price * size.fabric_yard_v2)
+    # ) * quantity
+
+    print(foam_type_instance.foam_percubicft_price)
+    print(material_instance.fabric_peryard_price)
+    # print(selectedSize)
+    ########### WRITE HERE ############
 
     # Try to display advance
     # quantity = None
@@ -239,6 +253,33 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
     except Color.DoesNotExist:
         raise Http404("Color does not exist")
 
+
+
+
+# def calculate_price(request):
+#     size_title = request.GET.get('size')
+#     quantity = int(request.GET.get('quantity'))
+
+#     # Retrieve the selected size instance
+#     try:
+#         size_instance = ProductTypeSizes.objects.get(size_title=size_title)
+#     except ProductTypeSizes.DoesNotExist:
+#         return JsonResponse({'error': 'Size not found'}, status=400)
+
+#     # Retrieve the foam type instance and material instance
+#     foam_type_instance = size_instance.product_type.foamtype_set.first()  # Assuming one foam type per product type
+#     material_instance = Material.objects.get(name=size_instance.material)
+
+#     # Extract required attributes
+#     foam_percubicft_price = foam_type_instance.foam_percubicft_price
+#     fabric_peryard_price = material_instance.fabric_peryard_price
+#     foam_amount_v2 = size_instance.foam_amount_v2
+#     fabric_yard_v2 = size_instance.fabric_yard_v2
+
+#     # Calculate estimated price
+#     estimated_price = ((foam_percubicft_price * foam_amount_v2) + (fabric_peryard_price * fabric_yard_v2)) * quantity
+
+#     return JsonResponse({'estimated_price': estimated_price})
 
 #The below is working
 # def custom_details(request, product_type,foam_types, material_name, color_name):

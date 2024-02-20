@@ -13,7 +13,11 @@ urlpatterns = [
 
     path('choose_material_<slug:product_type>/<slug:foam_types>/', choose_material_x, name='choose_material_x'),
     path('choose_color_x/<slug:product_type>/<slug:foam_types>/<slug:material_name>/', choose_color_x, name='choose_color_x'),
+
     path('custom_order_details/<str:product_type>/<slug:foam_types>/<str:material_name>/<str:color_name>/', custom_details, name='custom_details'),
+
+    # path('calculate_price/', calculate_price, name='calculate_price'),
+
 
     path('submit_order/<str:product_type>/<str:foam_types>/<str:material_name>/<str:color_name>/', submit_order, name='submit_order'),
 

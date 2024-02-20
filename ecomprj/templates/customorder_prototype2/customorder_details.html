@@ -73,7 +73,7 @@
                         {% csrf_token %}
 
                         {% comment %}  {% endcomment %}
-                        <div class="form-group">
+                        {% comment %} <div class="form-group">
                             <label for="size">Size:</label>
                             <select class="form-control" name="size">
                                 {% if product_type %}
@@ -84,14 +84,40 @@
                                     <option>No sizes available</option>
                                 {% endif %}
                             </select>
-                        </div>
+                        </div> {% endcomment %}
                         
                         
                         {% comment %}  {% endcomment %}
+{% comment %}                         
                         <div class="form-group">
                             <label for="quantity">Quantity:</label>
-                            <input type="number" class="form-control" name="quantity" min="1" max="4" required>
+                            <input type="number" class="form-control" name="quantity" min="1" max="4" value="1" required>
+                        </div> {% endcomment %}
+                        <!-- HTML template -->
+                        <div class="form-group">
+                            <label for="size">Size:</label>
+                            <select class="form-control" name="size" id="size">
+                                {% if product_type %}
+                                    {% for s in size %}
+                                        <option value="{{ s.size_title }}">{{ s.size_title }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option>No sizes available</option>
+                                {% endif %}
+                            </select>
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" class="form-control" name="quantity" id="quantity" min="1" max="4" value="1" required>
+                        </div>
+                        
+                        <!-- Display the selected Size and Quantity -->
+                        <div>
+                            Selected Size: <span id="selectedSize">None</span><br>
+                            Selected Quantity: <span id="selectedQuantity">None</span>
+                        </div>
+                        
 
                         <div class="form-group">
                             <label for="customer_notes">Customer Notes:</label>
@@ -141,12 +167,12 @@
                 <div class="card-header">
                 </div>
                 <div class="card-body">
-                    <h1>Total Estimated Price: <span id="estimated_price"></span></h1>
+                    <h1>Total Estimated Price:</h1>
                     <br>
                     <h1>Downpayment Requirement:</h1>
-
                 </div>
-            </div> 
+            </div>
+            
 
             <div class="card">
                 <div class="card-header">
@@ -169,10 +195,32 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
+
+
 <!-- Client-side validation -->
+<!-- Add this script at the end of your HTML body -->
+<!-- JavaScript code -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sizeSelect = document.getElementById('size');
+        const quantityInput = document.getElementById('quantity');
+        const selectedSizeSpan = document.getElementById('selectedSize');
+        const selectedQuantitySpan = document.getElementById('selectedQuantity');
+
+        sizeSelect.addEventListener('change', function () {
+            selectedSizeSpan.textContent = sizeSelect.value;
+        });
+
+        quantityInput.addEventListener('input', function () {
+            selectedQuantitySpan.textContent = quantityInput.value;
+        });
+    });
+</script>
+
+
 <script>
     
+
 
     function validateForm() {
         var quantity = document.getElementById("quantity").value;
