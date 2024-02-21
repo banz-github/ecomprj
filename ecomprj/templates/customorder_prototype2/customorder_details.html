@@ -364,6 +364,7 @@
         // Define variables to hold size specifications and description
         let sizeSpecs = "";
         let sizeDesc = "";
+
         
     
         const sizeSelect = document.getElementById('size');
@@ -377,11 +378,17 @@
         const sizeSpecDisplaySpan = document.getElementById('sizeSpecDisplay');
         const sizeDescDisplaySpan = document.getElementById('sizeDescDisplay');
         const sizeEtaDisplaySpan = document.getElementById('sizeEtaDisplay');
+
+        
+
+        
     
         sizeSelect.addEventListener('change', function () {
             const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
             const foamAmount = parseFloat(selectedOption.getAttribute('data-foam-amount'));
             const fabricAmount = parseFloat(selectedOption.getAttribute('data-fabric-amount'));
+
+                
     
             sizeSpecs = selectedOption.getAttribute('data-size-specs');
             sizeDesc = selectedOption.getAttribute('data-size-desc');
@@ -393,11 +400,15 @@
             sizeTitleDisplaySpan.textContent = sizeTitle;
             sizeSpecDisplaySpan.textContent = sizeSpecs;
             sizeDescDisplaySpan.textContent = sizeDesc;
-            sizeEtaDisplaySpan.textContent = sizeEta;
-    
+
+            sizeEtaFloat = parseFloat(sizeEta);
+
+
+            sizeEtaDisplaySpan.textContent = (sizeEtaFloat + 0.2) * 30; //band aid solution, originally just sizeEta
+            // https://chat.openai.com/c/f3621858-4726-4a5b-b89e-b22ed2765b77 note na yung suggestion ni gpt ay outside nanaman ng function
             estimatedPrice(foamAmount, fabricAmount);
         });
-    
+
         quantityInput.addEventListener('input', function () {
             selectedQuantitySpan.textContent = quantityInput.value;
             estimatedPrice(
@@ -408,6 +419,8 @@
             console.log('Quantity:', quantity);
 
         });
+    
+        
     
         function estimatedPrice(foamAmount, fabricAmount, quantity) {
             const foamPerCubicFtPrice = parseFloat("{{ foam_percubicft_price_display }}");
@@ -429,8 +442,8 @@
 
 
             
-            // Calculate estimated days of finish
-            let sizeEtaFloat = parseFloat(sizeEta); // Ensure sizeEta is a number
+
+            let sizeEtaFloat = parseFloat(sizeEta);
             let quantityFloat = parseFloat(quantity);
 
             console.log('Size Eta:', sizeEtaFloat); // Log sizeEta to check its value
