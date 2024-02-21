@@ -59,8 +59,8 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Product Type:</strong> {{ product_type }}</p>
-                    <p><strong>Foam:</strong> {{ foam_types }}</p>
-                    <p><strong>Material:</strong> {{ material_name }}</p>
+                    <p><strong>Foam:</strong> {{ foam_types }} | ₱{{ foam_percubicft_price_display}} per Cubic Feet</p>
+                    <p><strong>Material:</strong> {{ material_name }} | ₱{{fabric_peryard_price_display}} per Yard</p>
                     <p><strong>Color:</strong> {{ color_name }}</p>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                             <select class="form-control" name="size" id="size">
                                 {% if product_type %}
                                     {% for s in size %}
-                                        <option value="{{ s.size_title }}">{{ s.size_title }}</option>
+                                        <option value={{s.foam_amount_v2}}>{{ s.size_title }}</option>
                                     {% endfor %}
                                 {% else %}
                                     <option>No sizes available</option>

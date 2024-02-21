@@ -169,6 +169,10 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
     foam_type_instance = FoamType.objects.get(name=foam_types)
     material_instance = Material.objects.get(name=material_name, product_type=product_type_instance)
 
+    # foam_percubicft_price = FoamType.objects.get(name=foam_types.foa)
+    foam_percubicft_price_display =foam_type_instance.foam_percubicft_price
+
+    fabric_peryard_price_display = material_instance.fabric_peryard_price
     ########### WRITE HERE ############
 
     # estimated_price_display = (
@@ -244,6 +248,8 @@ def custom_details(request, product_type, foam_types, material_name, color_name)
             # 'quantity':quantity, 'size_title':size_title,
 
             # 'estimated_price_display':estimated_price,
+            'foam_percubicft_price_display': foam_percubicft_price_display,
+            'fabric_peryard_price_display':fabric_peryard_price_display,
 
 
         }
