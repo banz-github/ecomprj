@@ -113,12 +113,20 @@
                         <select class="form-control" name="size" id="size">
                             {% if product_type %}
                                 {% for s in size %}
-                                    <option value="{{ s.foam_amount_v2 }}" data-foam-amount="{{ s.foam_amount_v2 }}" data-fabric-amount="{{ s.fabric_yard_v2 }}">{{ s.size_title }}</option>
+                                    <option value="{{ s.foam_amount_v2 }}" 
+                                            data-foam-amount="{{ s.foam_amount_v2 }}" 
+                                            data-fabric-amount="{{ s.fabric_yard_v2 }}" 
+                                            data-size-specs="{{ s.size_spec }}" 
+                                            data-size-desc="{{ s.size_desc }}" 
+                                            data-size-title="{{ s.size_title }}"
+                                            data-size-eta="{{ s.month_eta_v2 }}">{{ s.size_title }}</option>
                                 {% endfor %}
                             {% else %}
                                 <option>No sizes available</option>
                             {% endif %}
                         </select>
+                        
+                        
                         
                         <div class="form-group">
                             <label for="quantity">Quantity:</label>
@@ -134,6 +142,18 @@
                             Estimated Price: <span id="resultDisplay"></span>
                             <br>
                             Downpayment Requirement: <span id="downpaymentDisplay"></span>
+                            <br>
+                            <br>
+                            Size: <span id="sizeTitleDisplay"></span>
+                            <br>
+                            <br>
+                            Specification: <span id="sizeSpecDisplay"></span>
+                            <br>
+                            <br>
+                            Description: <span id="sizeDescDisplay"></span>
+                            <br>
+                            <br>
+                            Estimated Month of Finish: <span id="sizeEtaDisplay"></span>
                             <br>
                             <br>
                         </div>
@@ -279,17 +299,33 @@
         const selectedFabricSpan = document.getElementById('selectedFabric');
         const resultDisplaySpan = document.getElementById('resultDisplay');
         const downpaymentDisplaySpan = document.getElementById('downpaymentDisplay');
+        const sizeTitleDisplaySpan = document.getElementById('sizeTitleDisplay');
+        const sizeSpecDisplaySpan = document.getElementById('sizeSpecDisplay');
+        const sizeDescDisplaySpan = document.getElementById('sizeDescDisplay');
+
+        const sizeEtaDisplaySpan = document.getElementById('sizeEtaDisplay');
     
         sizeSelect.addEventListener('change', function () {
             const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
             const foamAmount = parseFloat(selectedOption.getAttribute('data-foam-amount'));
             const fabricAmount = parseFloat(selectedOption.getAttribute('data-fabric-amount'));
-    
+            const sizeSpecs = selectedOption.getAttribute('data-size-specs');
+            const sizeDesc = selectedOption.getAttribute('data-size-desc');
+            const sizeTitle = selectedOption.getAttribute('data-size-title');
+
+            const sizeEta = selectedOption.getAttribute('data-size-eta');
+        
             selectedSizeSpan.textContent = foamAmount.toFixed(2);
             selectedFabricSpan.textContent = fabricAmount.toFixed(2);
-    
+            sizeTitleDisplaySpan.textContent = sizeTitle;
+            sizeSpecDisplaySpan.textContent = sizeSpecs;
+            sizeDescDisplaySpan.textContent = sizeDesc;
+
+            sizeEtaDisplaySpan.textContent = sizeEta;
+        
             estimatedPrice(foamAmount, fabricAmount);
         });
+        
     
         quantityInput.addEventListener('input', function () {
             selectedQuantitySpan.textContent = quantityInput.value;
