@@ -119,7 +119,7 @@
                                             data-size-specs="{{ s.size_spec }}" 
                                             data-size-desc="{{ s.size_desc }}" 
                                             data-size-title="{{ s.size_title }}"
-                                            data-size-eta="{{ s.month_eta_v2 }}">{{ s.size_title }}</option>
+                                            data-size-eta={{ s.month_eta_v2 }}>{{ s.size_title }}</option>
                                 {% endfor %}
                             {% else %}
                                 <option>No sizes available</option>
@@ -364,6 +364,7 @@
         // Define variables to hold size specifications and description
         let sizeSpecs = "";
         let sizeDesc = "";
+        
     
         const sizeSelect = document.getElementById('size');
         const quantityInput = document.getElementById('quantity');
@@ -404,25 +405,48 @@
                 parseFloat(selectedFabricSpan.textContent),
                 parseFloat(selectedQuantitySpan.textContent)
             );
+            console.log('Quantity:', quantity);
+
         });
     
         function estimatedPrice(foamAmount, fabricAmount, quantity) {
             const foamPerCubicFtPrice = parseFloat("{{ foam_percubicft_price_display }}");
             const fabricPerYardPrice = parseFloat("{{ fabric_peryard_price_display }}");
-    
+            
             const estimated_price_display = ((foamPerCubicFtPrice * foamAmount) + (fabricPerYardPrice * fabricAmount)) * quantity;
             resultDisplaySpan.textContent = estimated_price_display.toFixed(2);
-    
+            
             // Calculate the downpayment requirement
             const downpayment_requirement = estimated_price_display / 2;
             downpaymentDisplaySpan.textContent = downpayment_requirement.toFixed(2);
-    
+            
             // Update the spans in the card section
             document.getElementById('resultDisplayCard').textContent = estimated_price_display.toFixed(2);
             document.getElementById('downpaymentDisplayCard').textContent = downpayment_requirement.toFixed(2);
             document.getElementById('descDisplayCard').textContent = sizeDesc;
             document.getElementById('specDisplayCard').textContent = sizeSpecs;
+
+
+
+            
+            // Calculate estimated days of finish
+            let sizeEtaFloat = parseFloat(sizeEta); // Ensure sizeEta is a number
+            let quantityFloat = parseFloat(quantity);
+
+            console.log('Size Eta:', sizeEtaFloat); // Log sizeEta to check its value
+            if (isNaN(sizeEtaFloat)) {
+                console.warn('Size Eta is not a valid number:', sizeEtaFloat);
+                sizeEtaFloat = 0; // Assign a default value or handle the NaN case
+            }
+            console.log('Qty:', quantityFloat);
+
+            console.log('Size Eta:', sizeEtaFloat);
+            console.log('Data Type of Size Eta:', typeof sizeEtaFloat);
+            const estimated_days_of_finish = ((sizeEtaFloat) * (30.00));
+            console.log('Estimated Days of Finish:', estimated_days_of_finish); // Log the estimate days of finish
+            sizeEtaDisplaySpan.textContent = estimated_days_of_finish; // Display estimated days of finish
         }
+        
     });
     
 </script>
