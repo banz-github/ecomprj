@@ -59,7 +59,7 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Product Type:</strong> {{ product_type }}</p>
-                    <p><strong>Foam:</strong> {{ foam_types }} | ₱{{ foam_percubicft_price_display}} per Cubic Feet</p>
+                    <p><strong>Foam:</strong> {{ foam_types }} ({{foam_intesity_display}}) | ₱{{ foam_percubicft_price_display}} per Cubic Feet</p>
                     <p><strong>Material:</strong> {{ material_name }} | ₱{{fabric_peryard_price_display}} per Yard</p>
                     <p><strong>Color:</strong> {{ color_name }}</p>
                 </div>
@@ -127,11 +127,15 @@
                         
                         <!-- Display the selected Size and Quantity -->
                         <div>
-                            Selected Size's Foam Amount: <span id="selectedSize">None</span><br>
-                            Selected Size's Fabric Amount: <span id="selectedFabric">None</span><br>
-                            Selected Quantity: <span id="selectedQuantity">None</span>
-
-                            Calculation Dummy: <span id="resultDisplay">None</span>
+                            Selected Size's Foam Amount: <span id="selectedSize"></span><br>
+                            Selected Size's Fabric Amount: <span id="selectedFabric"></span><br>
+                            Selected Quantity: <span id="selectedQuantity"></span>
+                            <br>
+                            Estimated Price: <span id="resultDisplay"></span>
+                            <br>
+                            Downpayment Requirement: <span id="downpaymentDisplay"></span>
+                            <br>
+                            <br>
                         </div>
                         
                         
@@ -184,11 +188,19 @@
                 <div class="card-header">
                 </div>
                 <div class="card-body">
-                    <h1>Total Estimated Price:</h1>
+                    <h1>Total Estimated Price: <span id="resultDisplayCard"></span></h1>
                     <br>
-                    <h1>Downpayment Requirement:</h1>
+                    <h1>Downpayment Requirement: <span id="downpaymentDisplayCard"></span></h1>
                 </div>
+
+                <div class="card-body">
+                    <p>X's Size Description: #Ito ay kasama na rin sa value </p>
+                    <p>X's Size Specification: #Ito ay kasama rin sa value</p> 
+
+                </div>
+
             </div>
+            
             
 
             <div class="card">
@@ -266,30 +278,43 @@
         const selectedQuantitySpan = document.getElementById('selectedQuantity');
         const selectedFabricSpan = document.getElementById('selectedFabric');
         const resultDisplaySpan = document.getElementById('resultDisplay');
-
+        const downpaymentDisplaySpan = document.getElementById('downpaymentDisplay');
+    
         sizeSelect.addEventListener('change', function () {
             const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
             const foamAmount = parseFloat(selectedOption.getAttribute('data-foam-amount'));
             const fabricAmount = parseFloat(selectedOption.getAttribute('data-fabric-amount'));
-
+    
             selectedSizeSpan.textContent = foamAmount.toFixed(2);
             selectedFabricSpan.textContent = fabricAmount.toFixed(2);
-
-            calculateSum(foamAmount, fabricAmount);
+    
+            estimatedPrice(foamAmount, fabricAmount);
         });
-
+    
         quantityInput.addEventListener('input', function () {
             selectedQuantitySpan.textContent = quantityInput.value;
+            estimatedPrice(parseFloat(selectedSizeSpan.textContent), parseFloat(selectedFabricSpan.textContent), parseFloat(selectedQuantitySpan.textContent));
         });
-
-        function calculateSum(foamAmount, fabricAmount) {
+    
+        function estimatedPrice(foamAmount, fabricAmount, quantity) {
             const foamPerCubicFtPrice = parseFloat("{{ foam_percubicft_price_display }}");
             const fabricPerYardPrice = parseFloat("{{ fabric_peryard_price_display }}");
-
-            const sum = foamPerCubicFtPrice + fabricPerYardPrice + foamAmount + fabricAmount;
-            resultDisplaySpan.textContent = sum.toFixed(2);
+    
+            const estimated_price_display = ((foamPerCubicFtPrice * foamAmount) + (fabricPerYardPrice * fabricAmount)) * quantity;
+            resultDisplaySpan.textContent = estimated_price_display.toFixed(2);
+    
+            // Calculate the downpayment requirement
+            const downpayment_requirement = estimated_price_display / 2;
+            downpaymentDisplaySpan.textContent = downpayment_requirement.toFixed(2);
+    
+            // Update the spans in the card section
+            document.getElementById('resultDisplayCard').textContent = estimated_price_display.toFixed(2);
+            document.getElementById('downpaymentDisplayCard').textContent = downpayment_requirement.toFixed(2);
         }
     });
+    
+    
+    
 </script>
 
 
