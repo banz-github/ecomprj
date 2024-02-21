@@ -94,7 +94,8 @@
                             <input type="number" class="form-control" name="quantity" min="1" max="4" value="1" required>
                         </div> {% endcomment %}
                         <!-- HTML template -->
-                        <div class="form-group">
+
+                        {% comment %} <div class="form-group">
                             <label for="size">Size:</label>
                             <select class="form-control" name="size" id="size">
                                 {% if product_type %}
@@ -105,7 +106,19 @@
                                     <option>No sizes available</option>
                                 {% endif %}
                             </select>
-                        </div>
+                        </div> {% endcomment %}
+
+                        <!--NEWWWW-->
+
+                        <select class="form-control" name="size" id="size">
+                            {% if product_type %}
+                                {% for s in size %}
+                                    <option value="{{ s.foam_amount_v2 }}" data-foam-amount="{{ s.foam_amount_v2 }}" data-fabric-amount="{{ s.fabric_yard_v2 }}">{{ s.size_title }}</option>
+                                {% endfor %}
+                            {% else %}
+                                <option>No sizes available</option>
+                            {% endif %}
+                        </select>
                         
                         <div class="form-group">
                             <label for="quantity">Quantity:</label>
@@ -114,9 +127,11 @@
                         
                         <!-- Display the selected Size and Quantity -->
                         <div>
-                            Selected Size: <span id="selectedSize">None</span><br>
+                            Selected Size's Foam Amount: <span id="selectedSize">None</span><br>
+                            Selected Size's Fabric Amount: <span id="selectedFabric">None</span><br>
                             Selected Quantity: <span id="selectedQuantity">None</span>
                         </div>
+                        
                         
 
                         <div class="form-group">
@@ -200,7 +215,9 @@
 <!-- Client-side validation -->
 <!-- Add this script at the end of your HTML body -->
 <!-- JavaScript code -->
-<script>
+
+<!-- THIS ONE BELOW IS WORKING-->
+{% comment %} <script>
     document.addEventListener('DOMContentLoaded', function () {
         const sizeSelect = document.getElementById('size');
         const quantityInput = document.getElementById('quantity');
@@ -215,8 +232,30 @@
             selectedQuantitySpan.textContent = quantityInput.value;
         });
     });
-</script>
+</script> {% endcomment %}
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sizeSelect = document.getElementById('size');
+        const quantityInput = document.getElementById('quantity');
+        const selectedSizeSpan = document.getElementById('selectedSize');
+        const selectedQuantitySpan = document.getElementById('selectedQuantity');
+        const selectedFabricSpan = document.getElementById('selectedFabric');
+
+        sizeSelect.addEventListener('change', function () {
+            const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+            const foamAmount = parseFloat(selectedOption.getAttribute('data-foam-amount'));
+            const fabricAmount = parseFloat(selectedOption.getAttribute('data-fabric-amount'));
+
+            selectedSizeSpan.textContent = foamAmount.toFixed(2); // Ensure it's displayed with two decimal places
+            selectedFabricSpan.textContent = fabricAmount.toFixed(2); // Ensure it's displayed with two decimal places
+        });
+
+        quantityInput.addEventListener('input', function () {
+            selectedQuantitySpan.textContent = quantityInput.value;
+        });
+    });
+</script>
 
 <script>
     
