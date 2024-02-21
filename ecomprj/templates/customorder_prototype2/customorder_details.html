@@ -130,6 +130,8 @@
                             Selected Size's Foam Amount: <span id="selectedSize">None</span><br>
                             Selected Size's Fabric Amount: <span id="selectedFabric">None</span><br>
                             Selected Quantity: <span id="selectedQuantity">None</span>
+
+                            Calculation Dummy: <span id="resultDisplay">None</span>
                         </div>
                         
                         
@@ -233,7 +235,7 @@
         });
     });
 </script> {% endcomment %}
-
+{% comment %} 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const sizeSelect = document.getElementById('size');
@@ -255,7 +257,41 @@
             selectedQuantitySpan.textContent = quantityInput.value;
         });
     });
+</script> {% endcomment %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sizeSelect = document.getElementById('size');
+        const quantityInput = document.getElementById('quantity');
+        const selectedSizeSpan = document.getElementById('selectedSize');
+        const selectedQuantitySpan = document.getElementById('selectedQuantity');
+        const selectedFabricSpan = document.getElementById('selectedFabric');
+        const resultDisplaySpan = document.getElementById('resultDisplay');
+
+        sizeSelect.addEventListener('change', function () {
+            const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+            const foamAmount = parseFloat(selectedOption.getAttribute('data-foam-amount'));
+            const fabricAmount = parseFloat(selectedOption.getAttribute('data-fabric-amount'));
+
+            selectedSizeSpan.textContent = foamAmount.toFixed(2);
+            selectedFabricSpan.textContent = fabricAmount.toFixed(2);
+
+            calculateSum(foamAmount, fabricAmount);
+        });
+
+        quantityInput.addEventListener('input', function () {
+            selectedQuantitySpan.textContent = quantityInput.value;
+        });
+
+        function calculateSum(foamAmount, fabricAmount) {
+            const foamPerCubicFtPrice = parseFloat("{{ foam_percubicft_price_display }}");
+            const fabricPerYardPrice = parseFloat("{{ fabric_peryard_price_display }}");
+
+            const sum = foamPerCubicFtPrice + fabricPerYardPrice + foamAmount + fabricAmount;
+            resultDisplaySpan.textContent = sum.toFixed(2);
+        }
+    });
 </script>
+
 
 <script>
     
