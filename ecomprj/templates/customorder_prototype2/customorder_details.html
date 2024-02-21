@@ -214,8 +214,8 @@
                 </div>
 
                 <div class="card-body">
-                    <p>X's Size Description: #Ito ay kasama na rin sa value </p>
-                    <p>X's Size Specification: #Ito ay kasama rin sa value</p> 
+                    <p>{{product_type|title}}'s Size Description: <span id="descDisplayCard"></span> </p>
+                    <p>{{product_type|title}}'s Size Specification: <span id="specDisplayCard"></span></p> 
 
                 </div>
 
@@ -290,6 +290,7 @@
         });
     });
 </script> {% endcomment %}
+{% comment %} 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const sizeSelect = document.getElementById('size');
@@ -302,6 +303,7 @@
         const sizeTitleDisplaySpan = document.getElementById('sizeTitleDisplay');
         const sizeSpecDisplaySpan = document.getElementById('sizeSpecDisplay');
         const sizeDescDisplaySpan = document.getElementById('sizeDescDisplay');
+
 
         const sizeEtaDisplaySpan = document.getElementById('sizeEtaDisplay');
     
@@ -346,13 +348,84 @@
             // Update the spans in the card section
             document.getElementById('resultDisplayCard').textContent = estimated_price_display.toFixed(2);
             document.getElementById('downpaymentDisplayCard').textContent = downpayment_requirement.toFixed(2);
+
+            document.getElementById('descDisplayCard').textContent = sizeDesc;
+            document.getElementById('specDisplayCard').textContent = sizeSpecs;
+
         }
     });
     
     
     
-</script>
+</script> {% endcomment %}
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Define variables to hold size specifications and description
+        let sizeSpecs = "";
+        let sizeDesc = "";
+    
+        const sizeSelect = document.getElementById('size');
+        const quantityInput = document.getElementById('quantity');
+        const selectedSizeSpan = document.getElementById('selectedSize');
+        const selectedQuantitySpan = document.getElementById('selectedQuantity');
+        const selectedFabricSpan = document.getElementById('selectedFabric');
+        const resultDisplaySpan = document.getElementById('resultDisplay');
+        const downpaymentDisplaySpan = document.getElementById('downpaymentDisplay');
+        const sizeTitleDisplaySpan = document.getElementById('sizeTitleDisplay');
+        const sizeSpecDisplaySpan = document.getElementById('sizeSpecDisplay');
+        const sizeDescDisplaySpan = document.getElementById('sizeDescDisplay');
+        const sizeEtaDisplaySpan = document.getElementById('sizeEtaDisplay');
+    
+        sizeSelect.addEventListener('change', function () {
+            const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+            const foamAmount = parseFloat(selectedOption.getAttribute('data-foam-amount'));
+            const fabricAmount = parseFloat(selectedOption.getAttribute('data-fabric-amount'));
+    
+            sizeSpecs = selectedOption.getAttribute('data-size-specs');
+            sizeDesc = selectedOption.getAttribute('data-size-desc');
+            const sizeTitle = selectedOption.getAttribute('data-size-title');
+            const sizeEta = selectedOption.getAttribute('data-size-eta');
+    
+            selectedSizeSpan.textContent = foamAmount.toFixed(2);
+            selectedFabricSpan.textContent = fabricAmount.toFixed(2);
+            sizeTitleDisplaySpan.textContent = sizeTitle;
+            sizeSpecDisplaySpan.textContent = sizeSpecs;
+            sizeDescDisplaySpan.textContent = sizeDesc;
+            sizeEtaDisplaySpan.textContent = sizeEta;
+    
+            estimatedPrice(foamAmount, fabricAmount);
+        });
+    
+        quantityInput.addEventListener('input', function () {
+            selectedQuantitySpan.textContent = quantityInput.value;
+            estimatedPrice(
+                parseFloat(selectedSizeSpan.textContent),
+                parseFloat(selectedFabricSpan.textContent),
+                parseFloat(selectedQuantitySpan.textContent)
+            );
+        });
+    
+        function estimatedPrice(foamAmount, fabricAmount, quantity) {
+            const foamPerCubicFtPrice = parseFloat("{{ foam_percubicft_price_display }}");
+            const fabricPerYardPrice = parseFloat("{{ fabric_peryard_price_display }}");
+    
+            const estimated_price_display = ((foamPerCubicFtPrice * foamAmount) + (fabricPerYardPrice * fabricAmount)) * quantity;
+            resultDisplaySpan.textContent = estimated_price_display.toFixed(2);
+    
+            // Calculate the downpayment requirement
+            const downpayment_requirement = estimated_price_display / 2;
+            downpaymentDisplaySpan.textContent = downpayment_requirement.toFixed(2);
+    
+            // Update the spans in the card section
+            document.getElementById('resultDisplayCard').textContent = estimated_price_display.toFixed(2);
+            document.getElementById('downpaymentDisplayCard').textContent = downpayment_requirement.toFixed(2);
+            document.getElementById('descDisplayCard').textContent = sizeDesc;
+            document.getElementById('specDisplayCard').textContent = sizeSpecs;
+        }
+    });
+    
+</script>
 
 <script>
     
